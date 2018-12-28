@@ -68,7 +68,8 @@ import java.util.List;
         2.拿服务器的数据进行事件比较，看是否有新数据过来
         3.将数据保存到本地的数据库（如果数据过多，看是否需要放在其他的table） */
 
-
+        CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
+        Log.i("mypath",":"+dao.allCaseNum());
         mCategoryBean=Tooljson.JsonParse(getContext());
 
     }
@@ -83,11 +84,11 @@ import java.util.List;
 
     }
         //查询数据
-        public void QueryData(DBHelper dbHelper) {
+    public void QueryData(DBHelper dbHelper) {
 
-            CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-            Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
-        }
+        CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
+        Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
+     }
 
         public void initRecyclerView() {
 

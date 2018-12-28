@@ -14,11 +14,33 @@ import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 /**
  * Created by renren on 2016/9/20.
  */
 public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
+  public   enum OrderName
+    {
+        CompleteOrder("CompleteOrder"),
+        ShopMallOrder("2"),
+        SweepCode("3"),
+        DetailCommission("4"),
+        DailyOrder("5");
+
+        private String type;
+
+        OrderName(String type) {
+            this.type = type;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+    }
     private List<CategoryBean> mCategoryBeen = new ArrayList<>();
 
     public static final int TYPE_HEADER = 0;
@@ -31,6 +53,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     protected static boolean mSweepCode;
     protected static boolean mDailyOrder;
+
+    protected  static OrderName mOrdername=OrderName.CompleteOrder;
 
     public CategoryAdapter(boolean sweepCode,boolean dailyOrder){
         mSweepCode=sweepCode;
@@ -151,15 +175,42 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
-            holder1.oderType.setText(categoryBean.getOderType());
-            holder1.itemPrice.setText(categoryBean.getItemPrice());
+
+          //支付时间
+            holder1.playTime.setText(categoryBean.getPlayTime());
+
+            switch (mOrdername)
+            {
+                case  CompleteOrder:
+                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.itemPrice.setText(categoryBean.getItemPrice());
+                    break;
+                case ShopMallOrder:
+                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.itemPrice.setText(categoryBean.getItemPrice());
+                    break;
+                case SweepCode:
+                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.itemPrice.setText(categoryBean.getItemPrice());
+                    break;
+                case DetailCommission:
+                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.itemPrice.setText(categoryBean.getItemPrice());
+                case DailyOrder:
+                    holder1.playTime.setVisibility(View.GONE);
+                    break;
+                    default:
+                        break;
+
+            }
+
             holder1.platformDeduction.setText(categoryBean.getPlatformDeduction());
             holder1.userPlay.setText(categoryBean.getUserPlay());
             holder1.storeEntry.setText(categoryBean.getStoreEntry());
-            if(!mDailyOrder)
+           /* if(!mDailyOrder)
             holder1.playTime.setText(categoryBean.getPlayTime());
             else
-                holder1.playTime.setVisibility(View.GONE);
+                holder1.playTime.setVisibility(View.GONE);*/
 
             ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

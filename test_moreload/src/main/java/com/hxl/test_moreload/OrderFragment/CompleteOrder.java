@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.hxl.test_moreload.CategoryAdapter;
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.DividerItemDecoration;
+import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
+import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.hxl.test_moreload.R;
 
 import java.util.ArrayList;
@@ -76,6 +78,12 @@ public class CompleteOrder  extends BaseFragment {
     public void LoadRecycleViewclass() {
         super.LoadRecycleViewclass();
         super.InserDatabase();
+    }
+
+    public void QueryData(DBHelper dbHelper) {
+
+        CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
+        Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
     }
 }
 
