@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorwhite"
+    android:fitsSystemWindows="true" >
+
+
+    <!--RecycleView中的数据-->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/table_v_divider"
+        android:orientation="vertical"
+        android:showDividers="middle|beginning|end">
+
+
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/table_h_divider"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/orderNumber"
+                android:layout_width="@dimen/orderNumber_dp"
+                android:layout_height="wrap_content"
+                android:text="订单编号"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:layout_width="@dimen/orderType_dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/oderType"
+                android:text="订单类型"
+                android:textSize="@dimen/order_in_text" />
+
+            <LinearLayout
+                android:id="@+id/addCountpage"
+                android:layout_width="@dimen/itemPrice_dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/itemPrice"
+                style="@style/style_table_gray6_18_130_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="加价购"
+                android:textSize="@dimen/order_in_text"  />
+
+            <ImageView
+                android:id="@+id/addCount"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@mipmap/moredetail" />
+            </LinearLayout>
+
+           <!-- <LinearLayout
+                android:id="@+id/addCountpage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/itemPrice"
+                    style="@style/style_table_gray6_18_130_text"
+                    android:layout_width="@dimen/itemPrice_dp"
+                    android:layout_height="wrap_content"
+                    android:text="商品原价"
+                    android:textSize="@dimen/order_in_text" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/moredetail" />
+
+            </LinearLayout>-->
+
+
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/platformDeduction"
+                android:layout_width="@dimen/platformDeduction_dp"
+                android:layout_height="wrap_content"
+                android:text="平台抵扣"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/userPlay"
+                android:layout_width="@dimen/userPlay_dp"
+                android:layout_height="wrap_content"
+                android:text="用户支付"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/storeEntry"
+                android:layout_width="@dimen/storeEntry_dp"
+                android:layout_height="wrap_content"
+                android:text="门店入账"
+                android:textSize="@dimen/order_in_text" />
+
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/playTime"
+                android:layout_width="@dimen/playTime_dp"
+                android:layout_height="wrap_content"
+                android:text="支付时间"
+                android:textSize="@dimen/order_in_text" />
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
