@@ -93,4 +93,19 @@ public class CategoryBeanDAO {
         }
         return arrayList;
     }
+
+    /**
+     * 查询数据库中的总条数.
+     * @return
+     */
+    public long allCaseNum(){
+        String sql = "select count(*)from "+DBHelper.COMPELETE_ORDER_TABLE_NAME;
+        SQLiteDatabase db=dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        long count = cursor.getLong(0);
+        cursor.close();
+        return count;
+    }
+
 }

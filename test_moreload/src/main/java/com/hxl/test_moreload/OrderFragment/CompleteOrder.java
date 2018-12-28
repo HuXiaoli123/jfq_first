@@ -1,5 +1,6 @@
 package com.hxl.test_moreload.OrderFragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class CompleteOrder  extends BaseFragment {
 
+    String TAG="path";
     //初始化特有数据
     public  CompleteOrder()
     {
@@ -36,18 +38,46 @@ public class CompleteOrder  extends BaseFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+       Log.i("path","onCreateView");
         mCategoryAdapter=new CategoryAdapter(false,false);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
+    //---------------------------
+    @Override
+    public void onAttach(Context context) {
+        //由于 onCreate 是在 onAttach 后执行，故此时 mTitle 为空
+        Log.i(TAG, "Fragment id = "+ " is onAttach.");
+        super.onAttach(context);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.i(TAG, " is onActivityCreated.");
+        super.onActivityCreated(savedInstanceState);
+        //测试 onCreate() 是 Activity 的 UI 是否初始化完成
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, " is onStart.");
+    }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("messageFrament",hidden+"");
+        if(!hidden){}
+           // QueryData(dbHelper);
+
+    }
+
+    //---------------------------
+    @Override
+    public void LoadRecycleViewclass() {
+        super.LoadRecycleViewclass();
+        super.InserDatabase();
+    }
 }
-
-
-
-
-
-
-
 
 
 /*public class CompleteOrder  extends Fragment {

@@ -32,7 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String shopmallsql="create table "+ COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"oderType text not null,"+"itemPrice text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
-                "playTime date not null,"+"addpriceName text not null)" ;
+                "playTime date not null,"+"addpriceName text)" ;
 
         String sweepcode_sql="create table "+ SWEEP_CODE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"GoodName text not null,"+"addCountshopping text not null,"

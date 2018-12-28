@@ -39,7 +39,6 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
                 int temp=0;
                 byte[]buff=new byte[1024];
                 while ((temp=inputStream.read(buff))!=-1){
-
                     outputStream.write(buff,0,temp);
                 }
             } else
@@ -66,7 +65,13 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         if(!"".equals(s)&&s!=null)
          {
              List<CompeleteOrder> mCompeleteOrder=Tooljson.getjfqdata("content",s,true);
-             for(int i=0;i<mCompeleteOrder.size();i++)
+             int len=mCompeleteOrder.size();
+
+             //如果数据数量没有变化，不需要插入数据
+             CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
+             Log.i("mypath",len+":"+dao.allCaseNum());
+             if(dao.allCaseNum()>=len)return;
+             for(int i=0;i<len;i++)
              {
                  InsertData(mContext,mCompeleteOrder.get(i),DBHelper.COMPELETE_ORDER_TABLE_NAME);
              }

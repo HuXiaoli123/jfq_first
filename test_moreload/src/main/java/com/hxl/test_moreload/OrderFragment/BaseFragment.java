@@ -63,35 +63,36 @@ import java.util.List;
         LinearLayoutManager manager=null;
 
 
-    private void LoadRecycleViewclass() {
+    public void LoadRecycleViewclass() {
        /*   1.请求数据
         2.拿服务器的数据进行事件比较，看是否有新数据过来
         3.将数据保存到本地的数据库（如果数据过多，看是否需要放在其他的table） */
 
-       /*
-       异步加载网页数据
-        */
-       Log.i("path",path);
-        new DownLoadAsyncTask(getActivity()).execute(path);
 
         mCategoryBean=Tooljson.JsonParse(getContext());
+
+    }
+
+    public  void   InserDatabase()
+    {
+          /*
+       异步加载网页数据
+        */
+        new DownLoadAsyncTask(getActivity()).execute(path);
         QueryData(new DBHelper(getActivity()));
+
     }
-    //查询数据
-    public void QueryData(DBHelper dbHelper) {
+        //查询数据
+        public void QueryData(DBHelper dbHelper) {
 
-
-        CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-
-       Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
-    }
+            CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
+            Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
+        }
 
         public void initRecyclerView() {
 
             //出现bughttps://blog.csdn.net/lovexieyuan520/article/details/50537846
             /*  manager = new LinearLayoutManager(getActivity());*/
-
-
             manager=new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
             mRecyclerView.setLayoutManager(manager);
@@ -116,7 +117,6 @@ import java.util.List;
         /*
         控制第一次刷新的条数
          */
-
             if(mCategoryBean.size()>17)
             {
                 for(int i=0;i<18;i++)

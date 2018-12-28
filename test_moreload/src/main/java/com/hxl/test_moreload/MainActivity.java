@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity   {
 
         ft = fm.beginTransaction();
         hideFragment(ft);
+        Log.i("messageFrament","hideall");
         //R.id.fl在activity_initial.xml的fragment中------------------------------如何使用公有父类抽象类---增加扩展-----减少case的添加呢
         switch (index) {
             case R.layout.complete_layout1:
@@ -171,8 +172,10 @@ public class MainActivity extends AppCompatActivity   {
     }
     //用于隐藏fragment
     private void hideFragment(FragmentTransaction ft){
+        Log.i("messageFrament",mCompleteOrder+","+mShopMallOrder);
         if(mCompleteOrder!=null){
             ft.hide(mCompleteOrder);
+            Log.i("messageFrament","hide");
         }if(mShopMallOrder!=null){
             ft.hide(mShopMallOrder);
         }if (mSweepCode!=null)
