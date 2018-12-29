@@ -54,7 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     protected static boolean mSweepCode;
     protected static boolean mDailyOrder;
 
-    protected  static OrderName mOrdername=OrderName.CompleteOrder;
+    public   static OrderName mOrdername=OrderName.CompleteOrder;
 
     public CategoryAdapter(boolean sweepCode,boolean dailyOrder){
         mSweepCode=sweepCode;
@@ -97,13 +97,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ++count;
-      //  Log.i("mytypt----------", ++count+","+mCategoryBeen.size());
+
         mLayoutInflater=LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_HEADER:
                 return new ViewHolder(mHeaderView);
             case TYPE_NORMAL:
-                if(count>mCategoryBeen.size())  { Log.i("mycount","erro");  return new ViewHolder(mLayoutInflater.inflate(R.layout.errorlayout,parent,false));}
+               /* if(count>mCategoryBeen.size())  {
+                    Log.i("mycount","erro");
+                    return new ViewHolder(mLayoutInflater.inflate(R.layout.errorlayout,parent,false));
+                }*/
                 return new ViewHolder(mLayoutInflater.inflate(R.layout.category_item_layout,parent,false));
             case TYPE_FOOTER:
                 return new FooterViewHolder(mLayoutInflater.inflate(R.layout.item_foot,parent,false));
@@ -111,21 +114,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return null;
         }
 
-        /*if (mHeaderView != null && viewType == TYPE_HEADER) return new ViewHolder(mHeaderView);
-        if (viewType == TYPE_FOOTER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_foot, parent, false);
-            Log.i("mytypt",  "TYPE_FOOTER)");
-            return new FooterViewHolder(view);
 
-        }else if(viewType==TYPE_HEADER)
-        {
-            Log.i("mytypt", ""+"TYPE_NORMAL");
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_header, parent, false);
-            return new FooterViewHolder(view);
-        }
-        Log.i("mytypt----------", (viewType)+"");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, parent, false);
-        return new ViewHolder(view);*/
     }
 
     /**
@@ -140,8 +129,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param position  当前位置
      * @param payloads  如果为null，则刷新item全部内容  否则局部刷新
      */
+
+
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position, List<Object> payloads) {
 
         super.onBindViewHolder(holder, position, payloads);
         if (getItemViewType(position) == TYPE_HEADER) return;
@@ -152,27 +143,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return;
             }
             CategoryBean categoryBean = mCategoryBeen.get(pos);
-            /*holder1.mCategoryDes.setText(categoryBean.getCategory_des());
-            holder1.mCategoryTitle.setText(categoryBean.getCategory_title());
-            holder1.mCategoryImg.setBackgroundResource(categoryBean.getImgUrl());*/
-
-          if(mSweepCode)
-          {
-              Log.i("MySweepCode",mSweepCode+"");
-          }
-
-            if(mSweepCode){
-                holder1.mMoreDetail.setVisibility(View.VISIBLE);
-
-                ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Log.i("MySweepCode","我是加价购");
-                    }
-                });
-
-            }
 
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
 
@@ -185,13 +155,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder1.oderType.setText(categoryBean.getOderType());
                     holder1.itemPrice.setText(categoryBean.getItemPrice());
                     break;
-                case ShopMallOrder:
+                case ShopMallOrder: //商城订单暂时不写
                     holder1.oderType.setText(categoryBean.getOderType());
                     holder1.itemPrice.setText(categoryBean.getItemPrice());
                     break;
                 case SweepCode:
-                    holder1.oderType.setText(categoryBean.getOderType());
-                    holder1.itemPrice.setText(categoryBean.getItemPrice());
+                    holder1.oderType.setText(categoryBean.getItemPrice());
+                    holder1.itemPrice.setText(categoryBean.getAddpriceAmount());
+                    holder1.mMoreDetail.setVisibility(View.VISIBLE);
+
+                    //给加价购提供点击事件
+                    ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Log.i("MySweepCode","我是加价购");
+                            if (mOnItemClickListener != null) {
+                                mOnItemClickListener.OnItemClick(v, pos, mCategoryBeen.get(pos));
+                                Log.i("MySweepCode","我是加价购"+pos+","+position);
+                            }
+                        }
+                    });
                     break;
                 case DetailCommission:
                     holder1.oderType.setText(categoryBean.getOderType());
@@ -212,12 +196,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             else
                 holder1.playTime.setVisibility(View.GONE);*/
 
+           //这一行可以不需要：这是为所有的Item添加点击事件
             ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnItemClickListener != null) {
                         mOnItemClickListener.OnItemClick(view, pos, mCategoryBeen.get(pos));
-
                     }
                 }
             });
@@ -256,7 +240,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mHeaderView == null ? position : position - 1;
     }
 
-    //    @Override
+   /* //    @Override
 //    public void onBindViewHolder(ViewHolder holder, int position) {
 //        if (getItemViewType(position) == TYPE_HEADER) return;
 //        final int pos = getRealPosition(holder);
@@ -276,7 +260,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //            });
 //        }
 //
-//    }
+//    }*/
     @Override
     public int getItemCount() {
 
@@ -327,6 +311,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
+
     }
 
     public interface OnItemClickListener {

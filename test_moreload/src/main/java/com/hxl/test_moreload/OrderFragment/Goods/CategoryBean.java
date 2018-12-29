@@ -6,34 +6,36 @@ package com.hxl.test_moreload.OrderFragment.Goods;
 public class CategoryBean {
 
 
-
     private  int _id;
 
-    private  String orderNumber;
-    private String oderType;
-    private String itemPrice;
-    private String platformDeduction;
-    private String userPlay;
-    private String storeEntry;
-    private String playTime;
+    private  String orderNumber; //订单编号
+    private String oderType;     //订单类型
+    private String itemPrice;   //商品原价
+    private String platformDeduction;//平台抵扣
+    private String userPlay;      //用户实际支付
+    private String storeEntry;    //门店入账
+    private String playTime;       //支付时间
+    private String addpriceAmount;
+    private String addpriceName;   //加价购商品名称
 
-    public CategoryBean(String orderNumber, String oderType, String itemPrice, String platformDeduction, String userPlay, String storeEntry, String playTime) {
-        this.orderNumber = orderNumber;
-        this.oderType = oderType;
-        this.itemPrice = itemPrice;
-        this.platformDeduction = platformDeduction;
-        this.userPlay = userPlay;
-        this.storeEntry = storeEntry;
-        this.playTime = playTime;
+
+    public String getAddpriceAmount() {
+        return addpriceAmount;
     }
 
-    public CategoryBean() {
-
+    public void setAddpriceAmount(String addpriceAmount) {
+        this.addpriceAmount = addpriceAmount;
     }
 
-    public int get_id() {   return _id; }
 
-    public void set_id(int _id) {  this._id = _id;  }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
     public String getOrderNumber() {
         return orderNumber;
@@ -89,5 +91,13 @@ public class CategoryBean {
 
     public void setPlayTime(String playTime) {
         this.playTime = playTime;
+    }
+
+    public String getAddpriceName() {
+        return addpriceName;
+    }
+
+    public void setAddpriceName(String addpriceName) {
+        this.addpriceName = addpriceName;
     }
 }

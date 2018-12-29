@@ -3,6 +3,7 @@ package com.hxl.test_moreload.OrderFragment.Util.ToolDataBase;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
@@ -19,7 +20,7 @@ public class CategoryBeanDAO {
     /*
         插入一条数据
      */
-    public void insertDB(CompeleteOrder listInfo, String tableName){
+    public void insertDB(CategoryBean listInfo, String tableName){
         ContentValues cv=new ContentValues();
 
        // cv.put("_id",null);
@@ -39,7 +40,10 @@ public class CategoryBeanDAO {
         cv.put("userPlay",listInfo.getUserPlay());
         cv.put("storeEntry",listInfo.getStoreEntry());
         cv.put("playTime",listInfo.getPlayTime());
+        cv.put("addpriceAmount",listInfo.getAddpriceAmount());
         cv.put("addpriceName",listInfo.getAddpriceName());
+
+        Log.i("addpriceAmount",listInfo.getAddpriceAmount());
 
 
         SQLiteDatabase writeDB=dbHelper.getWritableDatabase();
@@ -74,12 +78,12 @@ public class CategoryBeanDAO {
         查询
      */
     public ArrayList queryDB(String tableName){
-        ArrayList<CompeleteOrder> arrayList=new ArrayList<>();
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
-        Cursor results=readDB.query(tableName,new String[]{"_id","orderNumber","oderType","itemPrice","platformDeduction","userPlay","storeEntry","playTime","addpriceName"},null,null,null,null,null);
+        Cursor results=readDB.query(tableName,new String[]{"_id","orderNumber","oderType","itemPrice","platformDeduction","userPlay","storeEntry","playTime","addpriceAmount","addpriceName"},null,null,null,null,null);
 
         for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
-            CompeleteOrder listInfo=new CompeleteOrder();
+            CategoryBean listInfo=new CategoryBean();
             listInfo.set_id(results.getInt(0));
             listInfo.setOrderNumber(results.getString(1));
             listInfo.setOderType(results.getString(2));
@@ -88,7 +92,30 @@ public class CategoryBeanDAO {
             listInfo.setUserPlay(results.getString(5));
             listInfo.setStoreEntry(results.getString(6));
             listInfo.setPlayTime(results.getString(7));
-            listInfo.setAddpriceName(results.getString(8));
+            listInfo.setAddpriceAmount(results.getString(8));
+            listInfo.setAddpriceName(results.getString(9));
+            arrayList.add(listInfo);
+        }
+        return arrayList;
+    }
+
+    public ArrayList queryById(int  id){
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase();
+        Cursor results=readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME,new String[]{"_id","orderNumber","oderType","itemPrice","platformDeduction","userPlay","storeEntry","playTime","addpriceAmount","addpriceName"},null,null,null,null,null);
+
+        for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
+            CategoryBean listInfo=new CategoryBean();
+            listInfo.set_id(results.getInt(0));
+            listInfo.setOrderNumber(results.getString(1));
+            listInfo.setOderType(results.getString(2));
+            listInfo.setItemPrice(results.getString(3));
+            listInfo.setPlatformDeduction(results.getString(4));
+            listInfo.setUserPlay(results.getString(5));
+            listInfo.setStoreEntry(results.getString(6));
+            listInfo.setPlayTime(results.getString(7));
+            listInfo.setAddpriceAmount(results.getString(8));
+            listInfo.setAddpriceName(results.getString(9));
             arrayList.add(listInfo);
         }
         return arrayList;

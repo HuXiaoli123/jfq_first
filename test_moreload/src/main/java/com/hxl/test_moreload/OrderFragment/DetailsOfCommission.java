@@ -16,7 +16,7 @@ public class DetailsOfCommission extends  BaseFragment {
     public  DetailsOfCommission()
     {
         pageLayout= R.layout.detailsofcommission4;
-
+        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.DetailCommission;
     }
 
     @Override

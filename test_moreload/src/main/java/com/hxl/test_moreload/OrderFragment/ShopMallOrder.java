@@ -17,7 +17,7 @@ public class ShopMallOrder  extends BaseFragment {
     public  ShopMallOrder()
     {
         pageLayout= R.layout.sweep_code_layout3;
-
+        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.ShopMallOrder;
 
     }
 

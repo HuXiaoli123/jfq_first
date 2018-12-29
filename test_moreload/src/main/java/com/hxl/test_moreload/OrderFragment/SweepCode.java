@@ -17,6 +17,7 @@ public class SweepCode  extends BaseFragment {
     public  SweepCode()
     {
          pageLayout= R.layout.sweep_code_layout3;
+         CategoryAdapter.mOrdername=CategoryAdapter.OrderName.SweepCode;
     }
 
     @Override

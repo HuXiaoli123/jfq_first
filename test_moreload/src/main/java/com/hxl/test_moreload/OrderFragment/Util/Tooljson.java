@@ -39,7 +39,7 @@ public class Tooljson {
          */
          List<CategoryBean> mCategoryBean = new ArrayList<>();
          List<SweepCodeOrder> mSweepCodeOrder= new ArrayList<>();
-        CategoryBean myCategoryBean=new CategoryBean("1234567","商城订单","29","2.6","26.4","29","12-11/14:27");
+        CategoryBean myCategoryBean=new CategoryBean();
 
         SweepCodeOrder mySweepCodeOrder=new SweepCodeOrder("1234567","商城订单","29","2.6","26.4","29","12-11/14:27");
 
@@ -83,6 +83,7 @@ public class Tooljson {
         return mCategoryBean;
 
     }
+
 
     public static    List<CategoryBean> JsonParse(Context context )
     {
@@ -128,7 +129,7 @@ public class Tooljson {
     }
 
 
-    public static List<CompeleteOrder> getjfqdata(String key, String jsonString,boolean is) {
+    public static List<CategoryBean> getjfqdata(String key, String jsonString,boolean is) {
         List list = new ArrayList();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -137,11 +138,14 @@ public class Tooljson {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
 
-                CompeleteOrder orderGood = new CompeleteOrder();
+                CategoryBean orderGood = new CategoryBean();
                 String  orderNumber=jsonObject2.getString("code");
                 orderGood.setOrderNumber(orderNumber); //订单编号orderType
                 orderGood.setOderType(jsonObject2.getString("orderType")); //订单类型
-                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee"))); //商品原价
+
+                 Double allitemprice=jsonObject2.getDouble("totalFee");//总商品原价
+
+                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee"))); //商品原价  ----下面需要修改 因为它包括了原商品价格+加价购商品价格
 
                 orderGood.setPlatformDeduction(String.valueOf(jsonObject2.getJSONObject("loyaltyPromotions")
                         .getDouble("totalReduction")));//平台抵扣
@@ -153,16 +157,21 @@ public class Tooljson {
                 orderGood.setPlayTime( StringToDate(date));//支付时间入账
                 String addpriceName="";
                 StringBuilder builder = new StringBuilder();
+                Double addpriceAmount=0.0;
 
                 JSONArray addPricejsonArray = jsonObject2.getJSONArray("items");
                 for(int j=0 ,len=addPricejsonArray.length();j<len;j++)
                 {
-                    JSONObject addPriceObject = addPricejsonArray.getJSONObject(j);
-                    builder.append(addPriceObject.getJSONObject("sku").getString("name")).append("-");
-                    orderGood.setAddpriceName(builder.toString());
+                    JSONObject addPriceObject = addPricejsonArray.getJSONObject(j).getJSONObject("sku");
 
+                    builder.append(addPriceObject.getString("name")).append("-");
+
+                    addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");
                 }
-                Log.i("path",builder.toString());
+                orderGood.setAddpriceName(builder.toString());
+                orderGood.setAddpriceAmount(String.valueOf(addpriceAmount));
+                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee")-addpriceAmount));
+                Log.i("path",builder.toString()+","+addpriceAmount);
 
                 list.add(orderGood);
             }
@@ -185,18 +194,20 @@ public class Tooljson {
 
     private static String StringToDate(String time) throws ParseException {
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date;
-        try {
+        /*SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date=new Date();
+      *//*  try {
             date = format.parse(time);
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }finally {
             date=new Date();
-        }
-        SimpleDateFormat format1 = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+        }*//*
+
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String s = format1.format(date);
-        return s;
+        Log.i("s",s+"");*/
+        return time;
 
     }
 

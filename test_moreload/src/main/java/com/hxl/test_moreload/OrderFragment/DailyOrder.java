@@ -16,7 +16,7 @@ public class DailyOrder  extends BaseFragment {
     public  DailyOrder()
     {
         pageLayout= R.layout.dailyoder5;
-
+        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.DailyOrder;
 
     }
 

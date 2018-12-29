@@ -4,14 +4,26 @@ public class CompeleteOrder {
 
     private  int _id;
 
-    private  String orderNumber; //订单编号
-    private String oderType;     //订单类型
-    private String itemPrice;   //商品原价
-    private String platformDeduction;//平台抵扣
-    private String userPlay;      //用户实际支付
-    private String storeEntry;    //门店入账
-    private String playTime;       //支付时间
-    private String addpriceName;   //加价购商品名称
+    protected   String orderNumber; //订单编号
+    protected String oderType;     //订单类型
+    protected String itemPrice;   //商品原价
+    protected String platformDeduction;//平台抵扣
+    protected String userPlay;      //用户实际支付
+    protected String storeEntry;    //门店入账
+    protected String playTime;       //支付时间
+    protected String addpriceAmount; //加价购商品价格
+    protected String addpriceName;   //加价购商品名称
+
+
+    public String getAddpriceAmount() {
+        return addpriceAmount;
+    }
+
+    public void setAddpriceAmount(String addpriceAmount) {
+        this.addpriceAmount = addpriceAmount;
+    }
+
+
 
     public int get_id() {
         return _id;

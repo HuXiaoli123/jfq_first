@@ -35,13 +35,15 @@ public class CompleteOrder  extends BaseFragment {
         pageLayout= R.layout.completeorder1_main;
        /* path="http://store.tuihs.com/store/orders?page=0&size=10";*/
         path="https://blog.csdn.net/qq_37140150/article/details/85287751";
+        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.CompleteOrder;
 
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        Log.i("path","onCreateView");
-        mCategoryAdapter=new CategoryAdapter(false,false);
+
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
     //---------------------------
@@ -76,15 +78,11 @@ public class CompleteOrder  extends BaseFragment {
     //---------------------------
     @Override
     public void LoadRecycleViewclass() {
-        super.LoadRecycleViewclass();
+        Log.i("mytest","InserDatabase");
         super.InserDatabase();
+        super.LoadRecycleViewclass();
     }
 
-    public void QueryData(DBHelper dbHelper) {
-
-        CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-        Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
-    }
 }
 
 

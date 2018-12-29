@@ -70,7 +70,7 @@ import java.util.List;
 
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath",":"+dao.allCaseNum());
-        mCategoryBean=Tooljson.JsonParse(getContext());
+        /*mCategoryBean=Tooljson.JsonParse(getContext());*/
 
     }
 
@@ -84,10 +84,11 @@ import java.util.List;
 
     }
         //查询数据
-    public void QueryData(DBHelper dbHelper) {
+    public List<CategoryBean> QueryData(DBHelper dbHelper) {
 
         CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
         Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
+        return  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME);
      }
 
         public void initRecyclerView() {
@@ -99,6 +100,11 @@ import java.util.List;
             mRecyclerView.setLayoutManager(manager);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            mCategoryBean=QueryData(new DBHelper(getActivity()));
+
+
+
 
             //下方注释的代码用来解决headerview和footerview加载到头一个或者最后一个item  而不是占据一行的bug
         /*final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -231,5 +237,13 @@ import java.util.List;
 
         }
 
+    public  void getState(int position){
+        RecyclerView.ViewHolder viewHolder =
+                (RecyclerView.ViewHolder)mRecyclerView
+                        .getChildViewHolder(mRecyclerView.getChildAt(position));
+
     }
+
+
+}
 
