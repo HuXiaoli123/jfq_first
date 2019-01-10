@@ -48,7 +48,7 @@
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:textSize="@dimen/text_title"
-                        android:text="全部订单" />
+                        android:text="未支付订单" />
 
                 </TableRow>
                 <TableRow
@@ -117,16 +117,12 @@
                         android:text="支付时间"
                         android:textSize="@dimen/text_title" />
 
+
+
                 </TableRow>
             </TableLayout>
 
-            <!--<android.support.v7.widget.AppCompatTextView
-                android:id="@+id/list_tip_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="没有数据"
-                android:textSize="16sp" />-->
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"

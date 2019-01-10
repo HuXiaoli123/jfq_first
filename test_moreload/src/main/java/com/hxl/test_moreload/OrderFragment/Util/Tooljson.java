@@ -17,9 +17,14 @@ import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.DownLoadAsyncTask;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.FormatFlagsConversionMismatchException;
+import java.util.Formatter;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -87,7 +92,6 @@ public class Tooljson {
 
     public static    List<CategoryBean> JsonParse(Context context )
     {
-
         return getjfqdata("content",dataSource);
     }
 /*
@@ -136,12 +140,16 @@ public class Tooljson {
             // 返回json的数组   1.获取json对象数组
             JSONArray jsonArray = jsonObject.getJSONArray(key);
             for (int i = 0; i < jsonArray.length(); i++) {
+
+
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
+
+
 
                 CategoryBean orderGood = new CategoryBean();
                 String  orderNumber=jsonObject2.getString("code");
                 orderGood.setOrderNumber(orderNumber); //订单编号orderType
-                orderGood.setOderType(jsonObject2.getString("orderType")); //订单类型
+                orderGood.setOderType(EngToChinese(jsonObject2.getString("orderType")) ); //订单类型
 
                  Double allitemprice=jsonObject2.getDouble("totalFee");//总商品原价
 
@@ -158,22 +166,63 @@ public class Tooljson {
                 String addpriceName="";
                 StringBuilder builder = new StringBuilder();
                 Double addpriceAmount=0.0;
+                Double totalBargain=0.0;
 
                 JSONArray addPricejsonArray = jsonObject2.getJSONArray("items");
                 for(int j=0 ,len=addPricejsonArray.length();j<len;j++)
                 {
-                    JSONObject addPriceObject = addPricejsonArray.getJSONObject(j).getJSONObject("sku");
+                    JSONObject jsonObject3=addPricejsonArray.getJSONObject(j);
+                    JSONObject addPriceObject =jsonObject3 .getJSONObject("sku");
 
-                    builder.append(addPriceObject.getString("name")).append("-");
 
-                    addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");
+
+                    if(jsonObject3.optJSONObject("bargainActivity")!=null) {
+
+                        Log.i("ordertypr",   jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain")+"元");
+                        //将每个加价购的砍价的价格相加起来
+                        totalBargain= add(totalBargain, jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain"));//商家最后获取的价格-加价购商品
+
+                    }else
+                    {
+                        Log.i("ordertypr",    "元");
+                    }
+
+                    if(j!=0)
+                    builder.append("-").append(addPriceObject.getString("name"));
+                    else builder.append(addPriceObject.getString("name"));
+                    addpriceAmount= add(addpriceAmount,addPriceObject.getJSONObject("offerPrice").getDouble("price"));
+                    /*addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");*/
+                    Log.i("addpriceName",","+addPriceObject.getJSONObject("offerPrice").getDouble("price")+"len:"+len);
+
                 }
-                orderGood.setAddpriceName(builder.toString());
-                orderGood.setAddpriceAmount(String.valueOf(addpriceAmount));
-                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee")-addpriceAmount));
-                Log.i("path",builder.toString()+","+addpriceAmount);
+                if((jsonObject2.getString("orderType").equals("commodity"))) //判断是否为商城订单
+                {
+                    orderGood.setNameOfCommodity(builder.toString());
+                }else  //为加价购
+                {
+                    orderGood.setAddpriceName(builder.toString());
+                    orderGood.setAddpriceAmount(String.valueOf(addpriceAmount));
+                }
 
-                list.add(orderGood);
+
+                Double temp=sub(jsonObject2.getDouble("totalFee"),addpriceAmount);////商家最后获取的价格-加价购商品 （未去掉bargin的价格）
+                orderGood.setItemPrice(String.valueOf(add(temp,totalBargain)));
+
+                orderGood.setPayStatus(jsonObject2.getJSONObject("status").getString("code")); //支付状态
+                Log.i("mysleepy",jsonObject2.getJSONObject("status").getString("code"));
+
+                 /*
+                    判断是否为已经支付
+                 */
+               /* if(jsonObject2.getJSONObject("status").getString("code").equals("paid"))
+                {
+                    continue;
+                }*/
+
+                    list.add(orderGood);
+
+
+
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -183,33 +232,106 @@ public class Tooljson {
         return list;
     }
 
-   /* //插入数据
-    public static void InsertData(Context context, SweepCodeOrder info, String tableName)
+
+
+    //插入数据
+    public static void InsertData(Context context, CategoryBean info, String tableName)
     {
         Log.i("Inserttable","Inserttable");
         //调用DAO辅助操作数据库
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(context) );
         dao.insertDB(info,tableName);
-    }*/
+    }
 
-    private static String StringToDate(String time) throws ParseException {
+   private  static String StringToDate(String str)
+   {
+       String raw = "hello";
+       String str1 = String.format("%1$7s", raw);
+      Log.i("newStr",str1);
 
-        /*SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       StringBuilder sb = new StringBuilder();
+       for(int i = 0; i <str.length();  i++) {
+
+           switch (i)
+           {
+               case 4 :
+               case 6:
+                   sb.append("-");
+                   break;
+               case 8:
+                   sb.append(" ");
+                   break;
+               case 10:
+               case 12:
+                   sb.append(":");
+                   break;
+                   default:
+                       break;
+
+           }
+           sb.append(str.charAt(i));
+       }
+       Log.i("newStr1",sb.toString());
+
+       return sb.toString();
+
+   }
+
+
+   private  static  String EngToChinese(String word)
+   {
+       if(word.equals("combined"))return "加价购订单";
+       else if(word.equals("pay")) return "扫码支付订单";
+       else if(word.equals("commodity")) return "商城订单";
+       return  word;
+
+   }
+
+   /* private static String StringToDate(String time) throws ParseException {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date=new Date();
-      *//*  try {
+        try {
             date = format.parse(time);
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }finally {
             date=new Date();
-        }*//*
+        }
 
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String s = format1.format(date);
-        Log.i("s",s+"");*/
+        Log.i("s",s+"");
         return time;
 
+    }*/
+
+    /**
+     * 两个Double相加
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public  static Double add (Double v1,Double v2)
+    {
+        BigDecimal b1=new BigDecimal((v1.toString()));
+        BigDecimal b2=new BigDecimal(v2.toString());
+        return  b1.add(b2).doubleValue();
     }
+
+    /**
+     * 两个double相减
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public  static Double sub(Double v1,Double v2)
+    {
+        BigDecimal b1=new BigDecimal((v1.toString()));
+        BigDecimal b2=new BigDecimal(v2.toString());
+        return  b1.subtract(b2).doubleValue();
+    }
+
 
 
     public static  String dataSource= "{\n" +

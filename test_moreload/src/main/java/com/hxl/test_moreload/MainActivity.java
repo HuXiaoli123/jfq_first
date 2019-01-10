@@ -17,6 +17,7 @@ import com.hxl.test_moreload.OrderFragment.DailyOrder;
 import com.hxl.test_moreload.OrderFragment.DetailsOfCommission;
 import com.hxl.test_moreload.OrderFragment.ShopMallOrder;
 import com.hxl.test_moreload.OrderFragment.SweepCode;
+import com.hxl.test_moreload.OrderFragment.UnPayOrder;
 
 public class MainActivity extends AppCompatActivity   {
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity   {
     SweepCode mSweepCode;
     DetailsOfCommission mDetailCommission;
     DailyOrder mDailyOrder;
+    UnPayOrder mUnPayOrder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -83,8 +85,9 @@ public class MainActivity extends AppCompatActivity   {
                 case 3:
                     setTabSelection(R.layout.detailsofcommission4);
                     break;
-                default:
+                case  4:
                     setTabSelection(R.layout.dailyoder5);
+                case 5:setTabSelection(R.layout.unplayorder6);
                     break;
 
             }
@@ -167,6 +170,15 @@ public class MainActivity extends AppCompatActivity   {
                 }else
                     ft.show(mDailyOrder);
                 break;
+            case R.layout.unplayorder6:
+                {
+                    if(mUnPayOrder==null){
+                        mUnPayOrder = new UnPayOrder();
+                        ft.add(R.id.fl, mUnPayOrder);
+                    }else
+                        ft.show(mUnPayOrder);
+                }
+                break;
         }
         ft.commit();
     }
@@ -184,6 +196,8 @@ public class MainActivity extends AppCompatActivity   {
             ft.hide(mDetailCommission) ;
         if (mDailyOrder!=null)
             ft.hide(mDailyOrder) ;
+        if(mUnPayOrder!=null)
+            ft.hide(mUnPayOrder);
     }
 
 

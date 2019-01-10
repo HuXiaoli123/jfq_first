@@ -1,6 +1,7 @@
 package com.hxl.test_moreload.OrderFragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.hxl.test_moreload.CategoryAdapter;
@@ -31,13 +33,13 @@ import java.util.List;
 
         //公共属性
         protected RecyclerView mRecyclerView;
-        protected List<CategoryBean> mCategoryBean = new ArrayList<>();
+        protected  List<CategoryBean>  mCategoryBean = new ArrayList<>();
         protected List<CategoryBean>mCategoryTemp=new ArrayList<>();
         protected CategoryAdapter mCategoryAdapter;
         protected View headerView;
-        protected Handler handler = new Handler();
+        protected Handler handler =null;
 
-        protected  String path;
+        protected  String path="";
 
         int  posindex;
 
@@ -45,33 +47,123 @@ import java.util.List;
         public int pageLayout;
 
 
+
         public  View  onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
             View view = View.inflate(getActivity(),pageLayout, null);
+
+            handler=new Handler()
+            {
+                @Override
+                public void handleMessage(Message msg) {
+                    Log.i("message",""+msg);
+                    initRecyclerView();
+                }
+            };
 
             Log.i("我的页面","completeorder1_main");
             mRecyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
             manager = new LinearLayoutManager(getActivity());
 
-
             LoadRecycleViewclass();
-            initRecyclerView();
+            //initRecyclerView();
             return view;
         }
 
         boolean isLoading;
         LinearLayoutManager manager=null;
 
+      private  boolean isFirstTime=true;
 
-    public void LoadRecycleViewclass() {
+    public void LoadRecycleViewclass()  {
        /*   1.请求数据
         2.拿服务器的数据进行事件比较，看是否有新数据过来
         3.将数据保存到本地的数据库（如果数据过多，看是否需要放在其他的table） */
 
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath",":"+dao.allCaseNum());
+       final DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
 
+
+
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+               long exitTime=System.currentTimeMillis();
+               //进行数据库查询
+               CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
+
+               /*判断数据库是否有数据*/
+               switch (CategoryAdapter.mOrdername)
+               {
+                   case CompleteOrder:
+                       if(isFirstTime) {
+                           isFirstTime=false;
+                           myAsyTask.execute(path);
+                       }
+                       while(dao.allCaseNum()<=0)
+                       {
+                           //超时了还没有数据显示
+                           if(OverTime(3,exitTime)) break;
+                       }
+                       //  mCategoryBean=myAsyTask.getCompeleteOrder();
+                       //从数据库中获取
+                       mCategoryBean=QueryData(new DBHelper(getActivity()),"paid");
+                       break;
+                   case ShopMallOrder:
+                       while(dao.allCaseNum()<=0)
+                       {
+                           //超时了还没有数据显示
+                           if(OverTime(3,exitTime)) break;
+                       }
+                       mCategoryBean=dao.findByOrderType("商城订单");//找到订单类型为商城订单
+                       break;
+                   case SweepCode:
+                       while(dao.allCaseNum()<=0)
+                       {
+                           //超时了还没有数据显示
+                           if(OverTime(3,exitTime)) break;
+                       }
+                       mCategoryBean=dao.findByOrderType("加价购订单");//找到订单类型为商城订单
+                       break;
+                   case DetailCommission:
+                       break;
+                   case DailyOrder:
+                       break;
+                   case UnpayOrder:
+                       while(QueryData(new DBHelper(getActivity()),"paid").size()<=0)
+                       {
+                           if(OverTime(3,exitTime))  break;
+                       }
+                       mCategoryBean=QueryData(new DBHelper(getActivity()),"unpaid");
+                       break;
+               }
+
+               handler.sendEmptyMessage(0);
+
+           }
+       }).start();
+
+    }
+
+    /**
+     * 超时
+     * @param time  :超过多久时间
+     * @param lastTime  ：触发开始时间
+     */
+    private  boolean  OverTime(float time ,float lastTime)
+    {
+        if ((System.currentTimeMillis() - lastTime) > 3000)   return  true;
+        return  false;
+    }
+    private  boolean OverTime(CategoryBeanDAO dao,float time ,float lastTime)
+    {
+        while (dao.allCaseNum()<=0)
+        {
+            if ((System.currentTimeMillis() - lastTime) > 3000)   return  true;
+        }
+        return  false;
     }
 
     public  void   InserDatabase()
@@ -79,32 +171,31 @@ import java.util.List;
           /*
        异步加载网页数据
         */
-        new DownLoadAsyncTask(getActivity()).execute(path);
-        QueryData(new DBHelper(getActivity()));
+        /*new DownLoadAsyncTask(getActivity(),mCategoryBean).execute(path);
+        QueryData(new DBHelper(getActivity()));*/
 
     }
         //查询数据
-    public List<CategoryBean> QueryData(DBHelper dbHelper) {
-
+    public ArrayList QueryData(DBHelper dbHelper,String status) {
         CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-        Log.i("path",  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME).size()+"数据库数据长度");
-        return  dao.queryDB(DBHelper.COMPELETE_ORDER_TABLE_NAME);
+        return  dao.findOrderByName(DBHelper.COMPELETE_ORDER_TABLE_NAME,status);
      }
 
-        public void initRecyclerView() {
+        public   void initRecyclerView() {
+
 
             //出现bughttps://blog.csdn.net/lovexieyuan520/article/details/50537846
             /*  manager = new LinearLayoutManager(getActivity());*/
             manager=new WrapContentLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
             mRecyclerView.setLayoutManager(manager);
-            mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
+           // mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST)); //添加水平划线
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-            mCategoryBean=QueryData(new DBHelper(getActivity()));
+           // mCategoryBean=QueryData(new DBHelper(getActivity()));
 
 
-
+            Log.i("sleep","waiting+my"+mCategoryBean.size());
 
             //下方注释的代码用来解决headerview和footerview加载到头一个或者最后一个item  而不是占据一行的bug
         /*final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -131,11 +222,11 @@ import java.util.List;
                     mCategoryTemp.add(mCategoryBean.get(i));
                 }
 
-                mCategoryAdapter = new CategoryAdapter(mCategoryTemp);
+                mCategoryAdapter = new CategoryAdapter(mCategoryTemp,getActivity());
             }else
             {
 
-                mCategoryAdapter = new CategoryAdapter(mCategoryBean);
+                mCategoryAdapter = new CategoryAdapter(mCategoryBean,getActivity());
             }
             mRecyclerView.setAdapter(mCategoryAdapter);
 
@@ -145,11 +236,8 @@ import java.util.List;
             mCategoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
                 @Override
                 public void OnItemClick(View view, int position, CategoryBean categoryBean) {
-                    Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();
+                   /* Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();*/
                     posindex=position;
-                    /*CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getContext()) );
-                    Toast.makeText(getContext(), "公有数据" + dao.queryDB(DBHelper.SWEEP_CODE_ORDER_TABLE_NAME).size() + "条", Toast.LENGTH_SHORT).show();  ;*/
-
                 }
             });
 
@@ -243,6 +331,9 @@ import java.util.List;
                         .getChildViewHolder(mRecyclerView.getChildAt(position));
 
     }
+
+
+
 
 
 }

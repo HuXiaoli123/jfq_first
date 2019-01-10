@@ -116,6 +116,14 @@
                 android:text="支付时间"
                 android:textSize="@dimen/order_in_text" />
 
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/payStatus"
+                android:layout_width="@dimen/playTime_dp"
+                android:layout_height="wrap_content"
+                android:text="支付时间"
+                android:textSize="@dimen/order_in_text" />
+
         </TableRow>
     </TableLayout>
 

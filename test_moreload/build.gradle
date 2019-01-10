@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-
-
-
     defaultConfig {
         applicationId "com.hxl.test_moreload"
         minSdkVersion 21
@@ -37,6 +34,17 @@ android {
         folders.add(file(resFolder).parentFile.absolutePath)
         return folders
     }
+
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/layout/orderView',
+                            'src/main/res'
+                    ]
+        }
+    }
+
 
 }
 

@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_content"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:background="@color/colorwhite"
+
     android:fitsSystemWindows="true" >
 
-
+<!--丢弃使用-->
 
     <TableLayout
         android:layout_width="match_parent"
@@ -76,6 +77,7 @@
                 android:layout_width="@dimen/playTime_dp"
                 android:layout_height="wrap_content"
                 android:text="支付时间"
+                android:textStyle="bold"
                 android:textSize="@dimen/order_in_text" />
 
         </TableRow>

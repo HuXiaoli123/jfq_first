@@ -10,24 +10,22 @@ import android.view.ViewGroup;
 import com.hxl.test_moreload.CategoryAdapter;
 import com.hxl.test_moreload.R;
 
-public class ShopMallOrder  extends BaseFragment {
+/*
+未支付订单
+ */
+public class UnPayOrder extends  BaseFragment {
 
-
-    //初始化特有数据
-    public  ShopMallOrder()
+    public UnPayOrder()
     {
-        pageLayout= R.layout.shopmalloder2;
-        path="http://store.tuihs.com/store/orders/paid?page=0&size=10";
-        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.ShopMallOrder;
-
+        pageLayout= R.layout.unplayorder6;
+        path="unpaid";
+        /*path="https://blog.csdn.net/qq_37140150/article/details/85287751";
+        path="file:///D:/A/OrderPrj/allOrder.html";*/
+        CategoryAdapter.mOrdername=CategoryAdapter.OrderName.UnpayOrder;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        mCategoryAdapter=new CategoryAdapter(false,false);
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
-
 }

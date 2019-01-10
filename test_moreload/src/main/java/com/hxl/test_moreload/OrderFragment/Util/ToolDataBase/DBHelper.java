@@ -9,11 +9,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME="mygetuitest01_DB";
 
 
-    public static final String COMPELETE_ORDER_TABLE_NAME ="compelete_order_table";//商城订单----------------
+    public static final String COMPELETE_ORDER_TABLE_NAME ="compelete_order_table";//全部订单----------------
 
-    public static final String SWEEP_CODE_ORDER_TABLE_NAME ="sweepcode_order_table";//扫码订单----------------
+    /*public static final String SWEEP_CODE_ORDER_TABLE_NAME ="sweepcode_order_table";//扫码订单----------------
 
-    public static final String ITEM_DRTAIL_TABLE_NAME="itemdetail_table";//细节商品----------------
+    public static final String ITEM_DRTAIL_TABLE_NAME="itemdetail_table";//细节商品----------------*/
 
     public static final int VERSION=1;
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -26,31 +26,28 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.d("sql__onCreate","-----------创建表："+ SWEEP_CODE_ORDER_TABLE_NAME);
-
-
+        Log.i("mydatabase","shopmallsql");
         String shopmallsql="create table "+ COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"oderType text not null,"+"itemPrice text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
-                "playTime date not null,"+"addpriceAmount text,"+"addpriceName text)" ;
+                "playTime date not null,"+"addpriceAmount text,"+"addpriceName text,"+"nameOfCommodity text," +"payStatus text)" ;
 
-        String sweepcode_sql="create table "+ SWEEP_CODE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
+       /* String sweepcode_sql="create table "+ SWEEP_CODE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"GoodName text not null,"+"addCountshopping text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
                 "playTime date not null)" ;
 
-        String itemdetail="create table "+ ITEM_DRTAIL_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"+"GoodName text not null)"  ;
+        String itemdetail="create table "+ ITEM_DRTAIL_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"+"GoodName text not null)"  ;*/
 
 
         db.execSQL(shopmallsql);
-        db.execSQL(sweepcode_sql);
-        db.execSQL(itemdetail);
+        /*db.execSQL(sweepcode_sql);
+        db.execSQL(itemdetail);*/
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         String sql="drop table if exists "+DATABASE_NAME;
         db.execSQL(sql);
-        Log.d("sql__","-----------更新数据库："+ SWEEP_CODE_ORDER_TABLE_NAME);
         this.onCreate(db);
     }
 }

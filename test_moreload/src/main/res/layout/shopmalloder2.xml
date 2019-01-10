@@ -21,8 +21,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TableLayout
@@ -114,6 +114,7 @@
                         style="@style/style_table_gray6_18_130_text"
                         android:layout_width="@dimen/playTime_dp"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:text="支付时间"
                         android:textSize="@dimen/text_title" />
 

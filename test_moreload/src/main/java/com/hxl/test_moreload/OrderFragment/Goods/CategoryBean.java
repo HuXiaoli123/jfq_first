@@ -15,8 +15,29 @@ public class CategoryBean {
     private String userPlay;      //用户实际支付
     private String storeEntry;    //门店入账
     private String playTime;       //支付时间
-    private String addpriceAmount;
+    private String addpriceAmount;  //加价购的价格
     private String addpriceName;   //加价购商品名称
+    private  String nameOfCommodity; //商城订单物品名称
+    private String payStatus;     //支付状态
+
+    public String getNameOfCommodity() {
+        return nameOfCommodity;
+    }
+
+    public void setNameOfCommodity(String nameOfCommodity) {
+        this.nameOfCommodity = nameOfCommodity;
+    }
+
+
+    public String getPayStatus() {
+        return payStatus;
+    }
+
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
+    }
+
+
 
 
     public String getAddpriceAmount() {

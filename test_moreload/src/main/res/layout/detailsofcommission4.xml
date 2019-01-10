@@ -111,6 +111,7 @@
                         style="@style/style_table_gray6_18_130_text"
                         android:layout_width="@dimen/playTime_dp"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:text="支付时间"
                         android:textSize="@dimen/text_title" />
 

@@ -33,8 +33,9 @@ public class CompleteOrder  extends BaseFragment {
     public  CompleteOrder()
     {
         pageLayout= R.layout.completeorder1_main;
-       /* path="http://store.tuihs.com/store/orders?page=0&size=10";*/
-        path="https://blog.csdn.net/qq_37140150/article/details/85287751";
+        path="http://store.tuihs.com/store/orders?page=0&size=10";
+        /*path="https://blog.csdn.net/qq_37140150/article/details/85287751";
+        path="file:///D:/A/OrderPrj/allOrder.html";*/
         CategoryAdapter.mOrdername=CategoryAdapter.OrderName.CompleteOrder;
 
     }
@@ -42,8 +43,6 @@ public class CompleteOrder  extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        Log.i("path","onCreateView");
-
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
     //---------------------------

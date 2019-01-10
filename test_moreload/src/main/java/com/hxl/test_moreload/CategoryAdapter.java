@@ -1,19 +1,30 @@
 package com.hxl.test_moreload;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
+import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
+import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.DBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+划线的路径;E:\Picture\Pic\appcollections\MPAndroidChart-master
+ */
 
 
 /**
@@ -28,7 +39,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ShopMallOrder("2"),
         SweepCode("3"),
         DetailCommission("4"),
-        DailyOrder("5");
+        DailyOrder("5"),
+        UnpayOrder("6");
 
         private String type;
 
@@ -42,6 +54,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
     private List<CategoryBean> mCategoryBeen = new ArrayList<>();
+    private Context mContext;
+    CategoryBeanDAO dao;
 
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_NORMAL = 1;
@@ -55,6 +69,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     protected static boolean mDailyOrder;
 
     public   static OrderName mOrdername=OrderName.CompleteOrder;
+
 
     public CategoryAdapter(boolean sweepCode,boolean dailyOrder){
         mSweepCode=sweepCode;
@@ -72,15 +87,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //        notifyItemChanged(1,1);
     }
 
+    /*
+    在什么位置显示什么模块，比如说  第一行，设为头部  中间部分：普通的表格   最后一行设置为尾部
+     */
     @Override
     public int getItemViewType(int position) {
 
+        Log.i("mytype", position+","+mHeaderView+","+getItemCount());
         if (mHeaderView == null) return TYPE_NORMAL;
         if (position == 0) return TYPE_HEADER;
         if (mHeaderView != null && position + 1 == getItemCount() ) return TYPE_FOOTER;
         if (mHeaderView == null && position == getItemCount()) return TYPE_FOOTER;
 
-        Log.i("mytype", position+","+mHeaderView+","+getItemCount());
+
         return TYPE_NORMAL;
     }
 
@@ -88,15 +107,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mHeaderView;
     }
 
-    public CategoryAdapter(List<CategoryBean> categoryBeen) {
+    public CategoryAdapter(List<CategoryBean> categoryBeen,Context context) {
         this.mCategoryBeen = categoryBeen;
+        this.mContext=context;
     }
 
 
     int count;
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ++count;
+
 
         mLayoutInflater=LayoutInflater.from(parent.getContext());
         switch (viewType) {
@@ -112,6 +132,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return new FooterViewHolder(mLayoutInflater.inflate(R.layout.item_foot,parent,false));
             default:
                 return null;
+
+
         }
 
 
@@ -143,9 +165,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return;
             }
             CategoryBean categoryBean = mCategoryBeen.get(pos);
-
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
-
           //支付时间
             holder1.playTime.setText(categoryBean.getPlayTime());
 
@@ -156,26 +176,43 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder1.itemPrice.setText(categoryBean.getItemPrice());
                     break;
                 case ShopMallOrder: //商城订单暂时不写
-                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.oderType.setText(categoryBean.getNameOfCommodity());
                     holder1.itemPrice.setText(categoryBean.getItemPrice());
                     break;
-                case SweepCode:
+                case SweepCode:  //扫码订单
                     holder1.oderType.setText(categoryBean.getItemPrice());
-                    holder1.itemPrice.setText(categoryBean.getAddpriceAmount());
-                    holder1.mMoreDetail.setVisibility(View.VISIBLE);
+                    if(!"0.0".equals(categoryBean.getAddpriceAmount()))
+                    {
+                        holder1.itemPrice.setText(categoryBean.getAddpriceAmount());
+                        holder1.mMoreDetail.setVisibility(View.VISIBLE);
+                        dao=new CategoryBeanDAO(new DBHelper(mContext));
 
-                    //给加价购提供点击事件
-                    ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
 
-                            Log.i("MySweepCode","我是加价购");
-                            if (mOnItemClickListener != null) {
-                                mOnItemClickListener.OnItemClick(v, pos, mCategoryBeen.get(pos));
-                                Log.i("MySweepCode","我是加价购"+pos+","+position);
+                        //给加价购提供点击事件
+                        ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Log.i("MySweepCode","我是加价购");
+                                if (mOnItemClickListener != null) {
+                                    mOnItemClickListener.OnItemClick(v, pos, mCategoryBeen.get(pos));
+                                    Log.i("MySweepCode","我是加价购"+pos+","+position);
+                                    String addPriceName=dao.queryById(pos+1);//因为数据库中的id是从1开始的
+                                    Log.i("path","我是加价购"+pos+","+position);
+                                    String[] allPriceName=addPriceName.split("-");
+
+                                    //弹出加价购的详细信息
+                                    DetailMsg(allPriceName);
+
+
+                                }
                             }
-                        }
-                    });
+                        });
+                    }else
+                    {
+                        holder1.itemPrice.setText("无");
+                    }
+
                     break;
                 case DetailCommission:
                     holder1.oderType.setText(categoryBean.getOderType());
@@ -183,6 +220,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 case DailyOrder:
                     holder1.playTime.setVisibility(View.GONE);
                     break;
+                case UnpayOrder:
+                    holder1.oderType.setText(categoryBean.getOderType());
+                    holder1.itemPrice.setText(categoryBean.getItemPrice());
                     default:
                         break;
 
@@ -206,6 +246,55 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }
+
+    }
+
+    //暂时不需要
+    protected void study2(AlertDialog.Builder builder) {
+        builder.setTitle("标题");
+        builder.setView(new EditText(mContext));
+        builder.setPositiveButton("确定", null);
+        builder.setIcon(android.R.drawable.ic_dialog_info);
+        builder.setMessage("简单消息框");
+        builder.show();
+    }
+
+    public  void DetailMsg( String []allPriceName)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
+        View view = LayoutInflater.from(mContext).inflate(R.layout.addcountpage, null);
+// 设置我们自己定义的布局文件作为弹出框的Content
+        builder.setView(view);
+//这个位置十分重要，只有位于这个位置逻辑才是正确的
+        final AlertDialog dialog = builder.show();
+        final TextView et_Threshold = view.findViewById(R.id.edThreshold);
+
+        Log.i("path",allPriceName.length+"");
+        StringBuilder s=new StringBuilder();
+        if(allPriceName!=null)
+        {
+            for(int i=0;i<allPriceName.length;i++)
+            {
+                Log.i("path",allPriceName[i]);
+                s.append(allPriceName[i]).append("\n");
+            }
+        }
+
+        et_Threshold.setText(s.toString());
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //确认
+
+                //写相关的服务代码
+
+                //关闭对话框
+                dialog.dismiss();
+            }
+        });
+
 
     }
 
@@ -263,9 +352,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //    }*/
     @Override
     public int getItemCount() {
-
-
+        if(mCategoryBeen.size()>17)
         return mHeaderView == null ? mCategoryBeen.size() + 1 : mCategoryBeen.size() + 2;
+        return  mCategoryBeen.size() ;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -277,6 +366,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView  userPlay;
         private TextView storeEntry;
         private TextView playTime;
+        private TextView  payStatus;
 
         private ImageView mMoreDetail;
         private LinearLayout addCountpage;
@@ -294,8 +384,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             userPlay = (TextView) itemView.findViewById(R.id.userPlay);
             storeEntry= (TextView) itemView.findViewById(R.id.storeEntry);
             playTime = (TextView) itemView.findViewById(R.id.playTime);
-
-
         }
     }
 

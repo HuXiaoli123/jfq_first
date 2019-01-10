@@ -16,7 +16,8 @@ public class SweepCode  extends BaseFragment {
     //初始化特有数据
     public  SweepCode()
     {
-         pageLayout= R.layout.sweep_code_layout3;
+        pageLayout= R.layout.sweep_code_layout3;
+        path="http://store.tuihs.com/store/orders/paid?page=0&size=10";
          CategoryAdapter.mOrdername=CategoryAdapter.OrderName.SweepCode;
     }
 
