@@ -5,17 +5,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import static android.provider.Settings.System.DATE_FORMAT;
+
 public class DBHelper extends SQLiteOpenHelper {
+
+    /**
+     * 数据库信息
+     */
     public static final String DATABASE_NAME="mygetuitest01_DB";
-
-
-    public static final String COMPELETE_ORDER_TABLE_NAME ="compelete_order_table";//全部订单----------------
-
-    /*public static final String SWEEP_CODE_ORDER_TABLE_NAME ="sweepcode_order_table";//扫码订单----------------
-
-    public static final String ITEM_DRTAIL_TABLE_NAME="itemdetail_table";//细节商品----------------*/
-
     public static final int VERSION=1;
+
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -26,23 +25,96 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.i("mydatabase","shopmallsql");
-        String shopmallsql="create table "+ COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
+       /* String compelteOrserSql="create table "+ Data.COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"oderType text not null,"+"itemPrice text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
-                "playTime date not null,"+"addpriceAmount text,"+"addpriceName text,"+"nameOfCommodity text," +"payStatus text)" ;
+                "playTime date not null,"+"addpriceAmount text,"+"addpriceName text,"+"nameOfCommodity text," +"payStatus text)" ;*/
+       //创建所有订单的表
+        String compelteOrserSql="create table "+ Data.COMPELETE_ORDER_TABLE_NAME +"("+Data.COLUMN_id+" integer primary key AUTOINCREMENT,"+
+                Data. orderNumber+" text,"+
+                Data.  oderType+" text,"+
+                Data. itemPrice+" text,"+
+                Data.  platformDeduction+" text,"+
+                Data. userPlay+" text,"+
+                Data.  storeEntry+" text,"+
+                Data. playTime+" time,"+
+                Data. addpriceAmount+" text,"+
+                Data. addpriceName+" text,"+
+                Data. nameOfCommodity+" text,"+
+                Data. payStatus+" text,"+
+                Data. sweepPay+" text"
+                +")";
 
-       /* String sweepcode_sql="create table "+ SWEEP_CODE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
-                +"orderNumber text not null,"+"GoodName text not null,"+"addCountshopping text not null,"
-                +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
-                "playTime date not null)" ;
+        //创建佣金明细表
+        String CREATE_DETAILOFCOMMISSION="create table "+ Data.DETAILS_OF_COMMISSION +"("+
+                Data.COLUMN_id+" integer primary key autoincrement,"+
+                Data.COLUMN_Number+" text,"+
+                Data.COLUMN_Type+" text,"+
+                Data.COLUMN_Price+" text,"+
+                Data.COLUMN_platformDeduction+" text,"+
+                Data.COLUMN_userPlay+" text,"+
+                Data.COLUMN_Entry+" text,"+
+                Data.COLUMN_playTime+" time"  +")";
 
-        String itemdetail="create table "+ ITEM_DRTAIL_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"+"GoodName text not null)"  ;*/
+       //创建每日订单表
+        String CREATE_DailyOrder="create table "+ Data.ORDERDAILY_TABLE_NAME +"("+
+                Data.COLUMN_id+" integer primary key autoincrement,"+
+                Data.COLUMN_playTime+" text,"+
+                Data.sweepPay+" text,"+
+                Data.addpriceAmount+" text,"+
+                Data.comdityOrder+" text,"+
+                Data.comissionOrder+" text,"+
+                Data.entryValue+" time"  +")";
+        /*String CREATE_DailyOrder="create table "+ Data.ORDERDAILY_TABLE_NAME +" as select SUM(storeEntry) "+
+                Data.sweepPay +" from "+Data.VIEW_SWEEPCODE +" GROUP BY date(playTime) ";*/
+
+        //创建商城订单视图
+        String CreateView_Comodity=" create view "+Data.VIEW_COMODITYORDER+" as select "+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.orderNumber+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.nameOfCommodity+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemPrice+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+" from "+
+                Data.COMPELETE_ORDER_TABLE_NAME +" where "+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+"商城订单"+"'"+" and "+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
 
 
-        db.execSQL(shopmallsql);
+
+//USER_NAME + "='" + userName+"'"
+        /*String DATA_VIEW_COMMISSION_DETAIL=" create view "
+                + Data.VIEW_NAME + " as select "
+                + Number + ".*" + ", "
+                + Data.DETAILS_OF_COMMISSION + ".*" + " from "
+                + Data.COMPELETE_ORDER_TABLE_NAME + ", "
+                + Data.DETAILS_OF_COMMISSION + " where "
+
+                + Data.DETAILS_OF_COMMISSION+ "."
+                + Data.COLUMN_id+ " = "
+                + Data.DETAILS_OF_COMMISSION + "._id";*/
+
+
+
+        db.execSQL(compelteOrserSql);
+        db.execSQL(CREATE_DETAILOFCOMMISSION);
+       /* db.execSQL(DATA_VIEW_COMMISSION_DETAIL); //佣金明细View
+        db.execSQL(DATA_VIEW_DAILY_ORDER); //每日订单*/
+        db.execSQL(CreateView_Comodity);
+        db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.userPlay,Data.addpriceAmount));
+        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"加价购订单",Data.userPlay,Data.addpriceAmount));
+        db.execSQL(CREATE_DailyOrder);//每日订单表
         /*db.execSQL(sweepcode_sql);
         db.execSQL(itemdetail);*/
+        // SELECT date(playTime), SUM(storeEntry)  as c  from completeOrder  GROUP BY date(playTime)   按每天定义统计数据
+        //
+        // create table orderdaily  as select SUM(storeEntry)  as sweepcodepay   from   SweepCodeView   GROUP BY date(playTime) ,SUM(storeEntry)  as comoditypay   from   comodityOrder   GROUP BY date(playTime) ,
+        // SUM(storeEntry)  as comoditypay   from   comodityOrder   GROUP BY date(playTime), SUM(storeEntry)  as addCountpay   from   addCountView   GROUP BY date(playTime)
+
+
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -50,4 +122,57 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         this.onCreate(db);
     }
+
+    /*
+    打开数据库执行的操作
+     */
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+
+
+
+
+    }
+
+    /**
+     * 创建视图的同一方式
+     * @param view_Name :订单的类型 商城订单 扫码/加价购
+     * @param orderType :订单的类型 商城订单 扫码/加价购
+     * @param item  商品名称 /扫码支付  ----视图的第三个参数
+     * @param price  ----视图的第四个参数
+     * @return
+     */
+     public  String CreateViewSql(String view_Name,String orderType,String item,String price)
+     {
+         String CreateView_Mode=" create view "+view_Name+" as select "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.orderNumber+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+item+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+price+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+" from "+
+                 Data.COMPELETE_ORDER_TABLE_NAME +" where "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+orderType+"'"+" and "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
+         return  CreateView_Mode;
+     }
+
+
+   /* *//** 创建视图: View_DailyOrder *//*
+    private void createViewTransponders() {
+        Data.DATA_VIEW_DAILY_ORDER = "create view "
+                + Data.VIEW_NAME + " as select "
+                + Data.COMPELETE_ORDER_TABLE_NAME + ".*" + ", "
+                + Data.DETAILS_OF_COMMISSION + ".*" + " from "
+                + Data.COMPELETE_ORDER_TABLE_NAME + ", "
+                + Data.DETAILS_OF_COMMISSION + " where "
+
+                + Data.DETAILS_OF_COMMISSION+ "."
+                + Data.COLUMN_id+ " = "
+                + Data.DETAILS_OF_COMMISSION + "._id";
+    }*/
+
 }

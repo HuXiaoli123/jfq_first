@@ -32,8 +32,6 @@ public class CategoryBeanDAO {
         cv.put("userPlay",listInfo.getStoreEntry());
         cv.put("storeEntry",listInfo.getPlayTime());
         cv.put("playTime",listInfo.getPlayTime());*/
-
-
         cv.put("orderNumber",listInfo.getOrderNumber());
         cv.put("oderType",listInfo.getOderType());
         cv.put("itemPrice",listInfo.getItemPrice());
@@ -45,15 +43,24 @@ public class CategoryBeanDAO {
         cv.put("addpriceName",listInfo.getAddpriceName());
         cv.put("nameOfCommodity",listInfo.getNameOfCommodity());
         cv.put("payStatus",listInfo.getPayStatus());
+        cv.put(Data.sweepPay,listInfo.getSweepPay());
 
         Log.i("mypayStatus",listInfo.getPayStatus());
-
-
         SQLiteDatabase writeDB=dbHelper.getWritableDatabase();
         /*writeDB.insert(DBHelper.SWEEP_CODE_ORDER_TABLE_NAME,null,cv);*/
         writeDB.insert(tableName,null,cv);
         writeDB.close();
+
     }
+    void Insert()
+    {
+        ContentValues cv=new ContentValues();
+        String sql="select SUM(storeEntry)  as sweepcodepay  from SweepCodeView GROUP BY date(playTime)";
+
+        SQLiteDatabase db=dbHelper.getReadableDatabase();
+
+    }
+
     /*
         删除一条数据
      */
@@ -61,7 +68,7 @@ public class CategoryBeanDAO {
         String whereCaluse="where _id=";
         String whereArgs[]=new String[]{String.valueOf(listInfo.get_id())};
         SQLiteDatabase writeDB=dbHelper.getWritableDatabase();
-        writeDB.delete(DBHelper.COMPELETE_ORDER_TABLE_NAME,whereCaluse,whereArgs);
+        writeDB.delete(Data.COMPELETE_ORDER_TABLE_NAME,whereCaluse,whereArgs);
         writeDB.close();
     }
     /*
@@ -114,7 +121,7 @@ public class CategoryBeanDAO {
         {
             results=readDB.query(tableName,new String[]{"_id","orderNumber","oderType","itemPrice","platformDeduction",
                     "userPlay","storeEntry","playTime","addpriceAmount","addpriceName","payStatus"},
-                    "payStatus"+ "="+status,null,null,null,null);
+                    "payStatus"+ "="+status,null,null,null,ORDER_BY);
         }catch (Exception e)
         {
             System.out.print(e.toString());
@@ -136,23 +143,27 @@ public class CategoryBeanDAO {
         }
         return arrayList;
     }
-
+    /**
+     * 时间字段的降序，采用date函数比较
+     */
+    public static final String COLUMN_DATE="playTime";
+    public static final String ORDER_BY="date("+COLUMN_DATE+") desc";
     /*
     查询商城订单并且不是未支付的订单
      */
     public  ArrayList findByOrderType(String orderType)
     {
-
         ArrayList<CategoryBean> arrayList=new ArrayList<>();
         SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
        /* Cursor cursor = readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME,
                 null, "oderType" + "='" + ""+"'", null, null, null, null);*/
 
         /*Cursor cursor = rdb.query("user", new String[]{"name","phone"}, "name=?", new String[]{"zhangsan"}, null, null, "_id desc");*/
-        /* 将数据库中数据倒序的取出*/
-        Cursor cursor = readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME,
-                new String[]{ }, "oderType=? and  payStatus=?", new String[]{orderType,"paid"}, null, null, "_id desc");
 
+        /* 将数据库中数据倒序的取出*/
+        Cursor cursor = readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                new String[]{ }, "oderType=? and  payStatus=?", new String[]{orderType,"paid"},
+                null, null, ORDER_BY);
 
         if (cursor != null) {
 
@@ -163,6 +174,7 @@ public class CategoryBeanDAO {
         Log.i("myadapter","findByOrderType"+cursor.getCount());
         return GetData(cursor);
     }
+
 
     private  ArrayList GetData(Cursor results)
     {
@@ -187,10 +199,12 @@ public class CategoryBeanDAO {
         return arrayList;
     }
 
+
     public ArrayList findOrderByName( String tableName,String payStatus) {
         ArrayList<CategoryBean> arrayList=new ArrayList<>();
         SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
-        Cursor results = readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME, null, "payStatus" + "='" + payStatus+"'", null, null, null, null);
+        Cursor results = readDB.query(Data.COMPELETE_ORDER_TABLE_NAME, null,
+                "payStatus" + "='" + payStatus+"'", null, null, null, ORDER_BY);
         /*if (cursor != null) {
             result = cursor.getCount();
             cursor.close();
@@ -219,11 +233,11 @@ public class CategoryBeanDAO {
         Log.d("name", "msg pid:"+id);
         String  addpriceName="";
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
-        Cursor results=readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME,new String[]{ "addpriceName"},"_id"+ "="+id,null,null,null,null);
+        Cursor results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "addpriceName"},"_id"+ "="+id,null,null,null,null);
 
 
 
-        results=readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME, new String[]{"addpriceName"}, "_id ="+id, null, null, null, null);
+        results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME, new String[]{"addpriceName"}, "_id ="+id, null, null, null, null);
         if(results.moveToFirst()){
             do{
                 addpriceName=results.getString(results.getColumnIndex("addpriceName"));
@@ -239,7 +253,7 @@ public class CategoryBeanDAO {
      * @return
      */
     public long allCaseNum(){
-        String sql = "select count(*)from "+DBHelper.COMPELETE_ORDER_TABLE_NAME;
+        String sql = "select count(*)from "+Data.COMPELETE_ORDER_TABLE_NAME;
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -247,5 +261,39 @@ public class CategoryBeanDAO {
         cursor.close();
         return count;
     }
+
+    /**
+     * 测试：统计每一天的总销量
+     */
+    public Double DailySales()
+    {
+
+
+        String sql="select storeEntry from SweepCodeView GROUP BY date(playTime)";
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase();
+        Cursor results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
+
+        String sqls = "select SUM(storeEntry) from SweepCodeView GROUP BY date(playTime)";
+        Cursor cursor = readDB.rawQuery(sqls, null);
+
+        if(results.moveToFirst()){
+            do{
+                Log.i("cursor----","--------"+results.getString(0)+";"+
+                        results.getString(results.getColumnIndex("SUM(storeEntry)")));
+            }while(results.moveToNext());
+        }
+
+        return  null;
+
+        //select  playTime>=datetime('now','start of day','-7 day','weekday 1') AND playTime<datetime('now','start of day','+0 day','weekday 1') from completeOrder
+    }
+
+    public void  InsertIntoDaily()
+    {
+
+    }
+
+
 
 }

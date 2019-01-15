@@ -8,6 +8,7 @@ import android.text.Html;
 import android.util.Log;
 
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
+import com.hxl.test_moreload.OrderFragment.Goods.CommissionDetailOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.SweepCodeOrder;
 import com.hxl.test_moreload.OrderFragment.Util.Tooljson;
@@ -22,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
@@ -80,36 +82,80 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String s) {
 
-        Log.i("mytest1",s);
+
         if(!"".equals(s)&&s!=null)
          {
-             Log.i("sleep",s);
-             /*s=parseData(s);*/
-             List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
+
+             InsertToDetailTable(mContext);
+            // s=parseData(s);
+            // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
              mCompeleteOrder=Tooljson.getjfqdata("content",s,true);
-             int len=myCompeleteOrder.size();
-             Log.i("sleep_asy",""+mCompeleteOrder.size());
+             //mCompeleteOrder=testData();
+             int newDownData=mCompeleteOrder.size();  //新下载的网络数据
              //如果数据数量没有变化，不需要插入数据
              CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
-             Log.i("mypath",len+":"+dao.allCaseNum());
-             if(dao.allCaseNum()>=len)return;
+             long dataBaseData=dao.allCaseNum();  //数据库中总长度
+             dao.DailySales();//    ----------------------test
+             Log.i("mypath",dataBaseData+":"+newDownData);
+             if(dataBaseData>=newDownData)return;
 
-             for(int i=0;i<len;i++)
+             int index=(int)(newDownData-dataBaseData-1);
+             Log.i("mypath",index+":"+newDownData);
+             for(int i=index;i>=0;i--)
              {
-                 InsertData(mContext,myCompeleteOrder.get(i),DBHelper.COMPELETE_ORDER_TABLE_NAME);
+                 Log.i("mypath",index +"第几个："+i+"");
+                 InsertData(mContext,mCompeleteOrder.get(i),Data.COMPELETE_ORDER_TABLE_NAME);
              }
+
+
          }
     }
 
     //因为是我自己在sdn博客做的测试，所进行以下解析
     public  String parseData(String s)
-    {
+    {  Log.i("sleep",s);
         s=Html.fromHtml(s).toString();
+        Log.i("mytest1",s);
         int begin=s.indexOf("{\"request\":");
         int last=s.length();
         s=s.substring(begin,last);
         Log.i("path",s);
         return s;
+    }
+
+    public List<CategoryBean> testData() {
+
+        CategoryBean myCategoryBean=new CategoryBean("1234567","商城订单","29","2.6",
+                "26.4","29","12-11/14:27","12",
+                "桃子","香蕉","paid");
+
+        List<CategoryBean> oderdatalist=new ArrayList<CategoryBean>() ;
+
+        oderdatalist.add(myCategoryBean);
+        List<CategoryBean> mCategoryBean=new ArrayList<>();
+        for (int i = 0; i <10; i++) {
+
+
+            CategoryBean orderGood = new CategoryBean();
+
+            orderGood.setOrderNumber(oderdatalist.get(0).getOrderNumber());
+            orderGood.setOderType(oderdatalist.get(0).getOderType());
+            orderGood.setItemPrice(oderdatalist.get(0).getItemPrice());
+            orderGood.setPlatformDeduction(oderdatalist.get(0).getPlatformDeduction());
+            orderGood.setUserPlay(oderdatalist.get(0).getUserPlay());
+            orderGood.setStoreEntry(oderdatalist.get(0).getStoreEntry());
+            orderGood.setPlayTime("2018-12-"+new Random().nextInt(31)%(31-1+1)+" 16:30");
+            orderGood.setAddpriceAmount(oderdatalist.get(0).getAddpriceAmount());
+            orderGood.setAddpriceName(oderdatalist.get(0).getAddpriceName());
+            orderGood.setNameOfCommodity(oderdatalist.get(0).getNameOfCommodity());
+            orderGood.setPayStatus(oderdatalist.get(0).getPayStatus());
+
+            // orderGoodses.add(orderGood);
+
+            mCategoryBean.add(orderGood);
+        }
+
+        return mCategoryBean;
     }
 
     //插入数据
@@ -119,6 +165,21 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         //调用DAO辅助操作数据库
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(context) );
         dao.insertDB(info,tableName);
+    }
+    /*插入数据到细节表中*/
+    public void InsertToDetailTable(Context context)
+    {
+        DetailDao detailDao=new DetailDao(context);
+        CommissionDetailOrder detailOrder=new CommissionDetailOrder();
+       // detailOrder.set_id(cursor.getInt(cursor.getColumnIndex(Data.COLUMN_id)));
+        detailOrder.setOrderNumber("123");
+        detailOrder.setCommissionType("注册佣金");
+        detailOrder.setItemPrice("15");
+        detailOrder.setPlatformDeduction("2");
+        detailOrder.setUserPlay("13");
+        detailOrder.setStoreEntry("15");
+        detailOrder.setPlayTime("2019-01-12 11:33:09");
+        detailDao.insert(detailOrder);
     }
 
   public static String DownLoadData(final String orderUrl)

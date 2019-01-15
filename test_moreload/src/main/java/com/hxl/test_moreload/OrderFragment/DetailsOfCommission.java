@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hxl.test_moreload.CategoryAdapter;
+import com.hxl.test_moreload.OrderFragment.Goods.BasicOrder;
+import com.hxl.test_moreload.OrderFragment.Goods.CommissionDetailOrder;
 import com.hxl.test_moreload.R;
 
 public class DetailsOfCommission extends  BaseFragment {
@@ -24,5 +26,12 @@ public class DetailsOfCommission extends  BaseFragment {
 
         mCategoryAdapter=new CategoryAdapter(false,false);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void LoadRecycleViewclass() {
+        super.LoadRecycleViewclass();
+
+        BasicOrder detailorder=new CommissionDetailOrder();
     }
 }

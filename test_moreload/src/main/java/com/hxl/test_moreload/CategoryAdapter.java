@@ -93,7 +93,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
 
-        Log.i("mytype", position+","+mHeaderView+","+getItemCount());
+        Log.i("mytype", position+","+getItemCount());
         if (mHeaderView == null) return TYPE_NORMAL;
         if (position == 0) return TYPE_HEADER;
         if (mHeaderView != null && position + 1 == getItemCount() ) return TYPE_FOOTER;
@@ -165,6 +165,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return;
             }
             CategoryBean categoryBean = mCategoryBeen.get(pos);
+
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
           //支付时间
             holder1.playTime.setText(categoryBean.getPlayTime());
@@ -197,13 +198,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 if (mOnItemClickListener != null) {
                                     mOnItemClickListener.OnItemClick(v, pos, mCategoryBeen.get(pos));
                                     Log.i("MySweepCode","我是加价购"+pos+","+position);
-                                    String addPriceName=dao.queryById(pos+1);//因为数据库中的id是从1开始的
+                                    String addPriceName=dao.queryById(mCategoryBeen.get(pos).get_id());//因为数据库中的id是从1开始的
                                     Log.i("path","我是加价购"+pos+","+position);
                                     String[] allPriceName=addPriceName.split("-");
 
+                                    Log.i("mytest_", mCategoryBeen.get(pos).getOrderNumber()+";"+ mCategoryBeen.get(pos).get_id());
                                     //弹出加价购的详细信息
                                     DetailMsg(allPriceName);
-
+                                    mCategoryBeen.get(pos).getOrderNumber();
 
                                 }
                             }

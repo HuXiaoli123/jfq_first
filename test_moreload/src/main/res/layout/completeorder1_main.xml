@@ -18,7 +18,7 @@
         android:layout_height="match_parent"/>-->
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,29 +114,49 @@
                         style="@style/style_table_gray6_18_130_text"
                         android:layout_width="@dimen/playTime_dp"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:text="支付时间"
                         android:textSize="@dimen/text_title" />
 
                 </TableRow>
             </TableLayout>
 
-            <!--<android.support.v7.widget.AppCompatTextView
-                android:id="@+id/list_tip_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="没有数据"
-                android:textSize="16sp" />-->
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 />
 
+
+
         </LinearLayout>
+
+
     </HorizontalScrollView>
 
+    <!--helloChart折线-->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff" >
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
+            android:background="#0affffff" />
+
+
+    </RelativeLayout>
 
 
 </LinearLayout>

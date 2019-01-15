@@ -3,7 +3,7 @@ package com.hxl.test_moreload.OrderFragment.Goods;
 /**
  * Created by renren on 2016/9/20.
  */
-public class CategoryBean {
+public  class CategoryBean extends  BasicOrder{
 
 
     private  int _id;
@@ -19,6 +19,32 @@ public class CategoryBean {
     private String addpriceName;   //加价购商品名称
     private  String nameOfCommodity; //商城订单物品名称
     private String payStatus;     //支付状态
+    private String sweepPay;//扫码支付的价格
+
+    //下面两行代码为了测试用的
+    public  CategoryBean(){};
+    public CategoryBean(String orderNumber, String oderType, String itemPrice, String platformDeduction, String userPlay, String storeEntry, String playTime, String addpriceAmount, String addpriceName, String nameOfCommodity, String payStatus) {
+        this.orderNumber = orderNumber;
+        this.oderType = oderType;
+        this.itemPrice = itemPrice;
+        this.platformDeduction = platformDeduction;
+        this.userPlay = userPlay;
+        this.storeEntry = storeEntry;
+        this.playTime = playTime;
+        this.addpriceAmount = addpriceAmount;
+        this.addpriceName = addpriceName;
+        this.nameOfCommodity = nameOfCommodity;
+        this.payStatus = payStatus;
+    }
+
+
+    public String getSweepPay() {
+        return sweepPay;
+    }
+
+    public void setSweepPay(String sweepPay) {
+        this.sweepPay = sweepPay;
+    }
 
     public String getNameOfCommodity() {
         return nameOfCommodity;

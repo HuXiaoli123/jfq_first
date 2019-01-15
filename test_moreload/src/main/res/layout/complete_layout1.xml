@@ -15,10 +15,6 @@
         android:divider="@drawable/table_v_divider"
         android:orientation="vertical"
         android:showDividers="middle|beginning|end">
-
-
-
-
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"

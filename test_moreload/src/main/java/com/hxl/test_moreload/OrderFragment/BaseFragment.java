@@ -20,6 +20,7 @@ import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.DividerItemDecoration;
 import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.DBHelper;
+import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.Data;
 import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.DownLoadAsyncTask;
 import com.hxl.test_moreload.OrderFragment.Util.Tooljson;
 import com.hxl.test_moreload.R;
@@ -33,6 +34,7 @@ import java.util.List;
 
         //公共属性
         protected RecyclerView mRecyclerView;
+
         protected  List<CategoryBean>  mCategoryBean = new ArrayList<>();
         protected List<CategoryBean>mCategoryTemp=new ArrayList<>();
         protected CategoryAdapter mCategoryAdapter;
@@ -101,11 +103,17 @@ import java.util.List;
                        if(isFirstTime) {
                            isFirstTime=false;
                            myAsyTask.execute(path);
-                       }
-                       while(dao.allCaseNum()<=0)
+                       }else
                        {
+
+                       }
+                       //当数据库中数据<新加载的数据
+                       Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
+                       while(dao.allCaseNum()<=0|| dao.allCaseNum()<myAsyTask.getCompeleteOrder().size())
+                       {
+                           Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
                            //超时了还没有数据显示
-                           if(OverTime(3,exitTime)) break;
+                           if(OverTime(4,exitTime)) break;
                        }
                        //  mCategoryBean=myAsyTask.getCompeleteOrder();
                        //从数据库中获取
@@ -178,7 +186,7 @@ import java.util.List;
         //查询数据
     public ArrayList QueryData(DBHelper dbHelper,String status) {
         CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-        return  dao.findOrderByName(DBHelper.COMPELETE_ORDER_TABLE_NAME,status);
+        return  dao.findOrderByName(Data.COMPELETE_ORDER_TABLE_NAME,status);
      }
 
         public   void initRecyclerView() {
@@ -238,6 +246,7 @@ import java.util.List;
                 public void OnItemClick(View view, int position, CategoryBean categoryBean) {
                    /* Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();*/
                     posindex=position;
+
                 }
             });
 
