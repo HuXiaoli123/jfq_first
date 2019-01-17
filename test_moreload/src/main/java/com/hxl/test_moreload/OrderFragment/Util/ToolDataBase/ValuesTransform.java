@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.hxl.test_moreload.OrderFragment.Goods.CommissionDetailOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
+import com.hxl.test_moreload.OrderFragment.Goods.DailyOrder;
 
 /**
  *  Create by${胡小丽} on 2019/1/12
@@ -52,6 +53,38 @@ public class ValuesTransform {
         return  contentValues;
     }
 
+    /**
+     * 从DailyOrder生成ContentValues
+     * @param daily
+     * @return
+     */
+    public static ContentValues transformDailyValues(DailyOrder daily){
+        ContentValues contentValues=new ContentValues();
+        // contentValues.put(Data.COLUMN_id,detail.get_id());
+        contentValues.put(Data.COLUMN_playTime,daily.getPlayTime());
+        contentValues.put(Data.sweepPay,daily.getSweepPay());
+        contentValues.put(Data.addpriceAmount,daily.getAddpriceAmount());
+        contentValues.put(Data.comdityOrder,daily.getComdityOrder());
+        contentValues.put(Data.comissionOrder,daily.getComissionOrder());
+        contentValues.put(Data.entryValue,daily.getEntryValue());
+        return  contentValues;
+    }
 
+    /**
+     * 从Cursor生成CommissionDetailOrder对象
+     * @param cursor
+     * @return
+     */
+    public static DailyOrder transformDailyOrder(Cursor cursor){
+        DailyOrder detailOrder=new DailyOrder();
+        detailOrder.set_id(cursor.getInt(cursor.getColumnIndex(Data.COLUMN_id)));
+        detailOrder.setPlayTime(cursor.getString(cursor.getColumnIndex(Data.COLUMN_playTime)));
+        detailOrder.setSweepPay(cursor.getString(cursor.getColumnIndex(Data.sweepPay)));
+        detailOrder.setAddpriceAmount(cursor.getString(cursor.getColumnIndex(Data.addpriceAmount)));
+        detailOrder.setComdityOrder(cursor.getString(cursor.getColumnIndex(Data.comdityOrder)));
+        detailOrder.setComissionOrder(cursor.getString(cursor.getColumnIndex(Data.comissionOrder)));
+        detailOrder.setEntryValue(cursor.getString(cursor.getColumnIndex(Data.entryValue)));
+        return  detailOrder;
+    }
 
 }

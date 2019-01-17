@@ -7,11 +7,14 @@ import android.util.Log;
 
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
+import com.hxl.test_moreload.OrderFragment.Goods.DailyOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.SweepCodeOrder;
 import com.hxl.test_moreload.OrderFragment.SweepCode;
+import com.hxl.test_moreload.OrderFragment.Util.Tooljson;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoryBeanDAO {
     DBHelper dbHelper=null;
@@ -161,8 +164,15 @@ public class CategoryBeanDAO {
         /*Cursor cursor = rdb.query("user", new String[]{"name","phone"}, "name=?", new String[]{"zhangsan"}, null, null, "_id desc");*/
 
         /* 将数据库中数据倒序的取出*/
-        Cursor cursor = readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
-                new String[]{ }, "oderType=? and  payStatus=?", new String[]{orderType,"paid"},
+        Cursor cursor;
+        if(orderType.equals("扫码订单"))
+        {
+            cursor=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"加价购订单","paid"},
+                    null, null, ORDER_BY);
+        }
+        else   cursor = readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                new String[]{ }, "oderType=? and  payStatus=? ", new String[]{orderType,"paid"},
                 null, null, ORDER_BY);
 
         if (cursor != null) {
@@ -265,33 +275,101 @@ public class CategoryBeanDAO {
     /**
      * 测试：统计每一天的总销量
      */
-    public Double DailySales()
+    public  List<DailyOrder> DailySales()
     {
 
-
-        String sql="select storeEntry from SweepCodeView GROUP BY date(playTime)";
+        List<DailyOrder> dailyOrderList=new ArrayList<>();
+      /* // String sql="select storeEntry from SweepCodeView GROUP BY date(playTime)";
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
         Cursor results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
                 "date(playTime)",null,null);
 
-        String sqls = "select SUM(storeEntry) from SweepCodeView GROUP BY date(playTime)";
-        Cursor cursor = readDB.rawQuery(sqls, null);
+        Cursor r2=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
+        Cursor r3=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
 
         if(results.moveToFirst()){
             do{
                 Log.i("cursor----","--------"+results.getString(0)+";"+
                         results.getString(results.getColumnIndex("SUM(storeEntry)")));
             }while(results.moveToNext());
+        }*/
+        SQLiteDatabase Db=dbHelper.getReadableDatabase();
+        Cursor compelteCusor=resultCursor(Db,Data.VIEW_ALL_ORDER,new String[]{"date("+Data.playTime+")"},null);
+        Cursor sweepcodeCursor=resultCursor(Db,Data.VIEW_SWEEPCODE);
+        Cursor addCountCursor=resultCursor(Db,Data.VIEW_AddCount);
+        Cursor comodityOrderCursor=resultCursor(Db,Data.VIEW_COMODITYORDER);
+        Cursor commissionCursor=resultCursor(Db,Data.DETAILS_OF_COMMISSION);
+        if(compelteCusor.moveToFirst()){
+            do{
+                 Log.i("cursor1----",""+compelteCusor.getString(0));
+                Double sumEntry=0.0;
+                DailyOrder dailyOrder=new DailyOrder();
+                dailyOrder.setPlayTime(compelteCusor.getString(0));
+                if(sweepcodeCursor.moveToNext())
+                {
+                    dailyOrder.setSweepPay(sweepcodeCursor.getString(0));
+                    sumEntry=Tooljson.addthree(sumEntry.toString(),sweepcodeCursor.getString(0));
+                    Log.i("cursor1----","--------" +sweepcodeCursor.getString(1) +":"+sweepcodeCursor.getString(0));
+                }else
+                    dailyOrder.setSweepPay("0");
+                if(addCountCursor.moveToNext()) {
+                    dailyOrder.setAddpriceAmount(addCountCursor.getString(0));
+                    sumEntry=Tooljson.addthree(sumEntry.toString(),addCountCursor.getString(0));
+                    Log.i("cursor2----","--------" +addCountCursor.getString(1)  +":"+addCountCursor.getString(0));
+                }else
+                    dailyOrder.setAddpriceAmount("0");
+                if(comodityOrderCursor.moveToNext()) {
+                    dailyOrder.setComdityOrder(comodityOrderCursor.getString(0));
+                    sumEntry=Tooljson.addthree(sumEntry.toString(),comodityOrderCursor.getString(0)) ;
+                    Log.i("cursor3----","--------" +comodityOrderCursor.getString(1)  +":"+comodityOrderCursor.getString(0));
+                }else
+                    dailyOrder.setComdityOrder("0");
+                if(commissionCursor.moveToNext()) {
+                    dailyOrder.setComissionOrder(commissionCursor.getString(0));
+                    sumEntry=Tooljson.addthree(sumEntry.toString(),commissionCursor.getString(0)) ;
+                   Log.i("cursor4----","--------" +commissionCursor.getString(1) +":"+commissionCursor.getString(0));
+                }else
+                    dailyOrder.setComissionOrder("0");
+                dailyOrder.setEntryValue(sumEntry.toString());
+
+                dailyOrderList.add(dailyOrder);
+
+
+            }while(compelteCusor.moveToNext());
+
+
+        }else
+        {
+            Log.i("cursor1----"," No data" );
         }
 
-        return  null;
+
+        return  dailyOrderList;
 
         //select  playTime>=datetime('now','start of day','-7 day','weekday 1') AND playTime<datetime('now','start of day','+0 day','weekday 1') from completeOrder
     }
 
-    public void  InsertIntoDaily()
+    /**
+     * 返回查询的结果集
+     * @param table
+     * @return
+     */
+    public  Cursor resultCursor(SQLiteDatabase readDB,String table,String[]columns, String selection)
     {
 
+       /* Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);*/
+        Cursor cursor=readDB.query(table,columns,Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
+        return cursor;
+    }
+    public  Cursor resultCursor(SQLiteDatabase readDB,String table)
+    {
+        Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
+        return cursor;
     }
 
 

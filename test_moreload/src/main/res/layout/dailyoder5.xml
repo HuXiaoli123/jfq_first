@@ -57,7 +57,7 @@
 
                     <TextView
                         style="@style/style_table_gray6_18_130_text"
-                        android:layout_width="@dimen/orderNumber_dp"
+                        android:layout_width="@dimen/date_dp"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
                         android:text="日期"
@@ -66,7 +66,7 @@
                     <TextView
                         style="@style/style_table_gray6_18_130_text"
                         android:paddingLeft="3dp"
-                        android:layout_width="@dimen/orderType_dp"
+                        android:layout_width="@dimen/sweeppay_dp"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:text="扫码支付"
@@ -75,7 +75,7 @@
                     <TextView
                         android:id="@+id/tv_table_name"
                         style="@style/style_table_gray6_18_130_text"
-                        android:layout_width="@dimen/itemPrice_dp"
+                        android:layout_width="@dimen/addCountOrder"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
                         android:textStyle="bold"
@@ -84,7 +84,7 @@
 
                     <TextView
                         style="@style/style_table_gray6_18_130_text"
-                        android:layout_width="@dimen/platformDeduction_dp"
+                        android:layout_width="@dimen/comdityorder_dp"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
                         android:textStyle="bold"
@@ -92,7 +92,7 @@
                         android:textSize="@dimen/text_title" />
                     <TextView
                         style="@style/style_table_gray6_18_130_text"
-                        android:layout_width="@dimen/userPlay_dp"
+                        android:layout_width="@dimen/comissionentry_dp"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
                         android:textStyle="bold"
@@ -100,7 +100,7 @@
                         android:textSize="@dimen/text_title" />
                     <TextView
                         style="@style/style_table_gray6_18_130_text"
-                        android:layout_width="@dimen/storeEntry_dp"
+                        android:layout_width="@dimen/entryvalue_dp"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
                         android:textStyle="bold"

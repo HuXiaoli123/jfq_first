@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.hxl.test_moreload.CategoryAdapter;
+import com.hxl.test_moreload.OrderFragment.Goods.BasicOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.DividerItemDecoration;
 import com.hxl.test_moreload.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
@@ -35,7 +36,9 @@ import java.util.List;
         //公共属性
         protected RecyclerView mRecyclerView;
 
-        protected  List<CategoryBean>  mCategoryBean = new ArrayList<>();
+        protected  List<CategoryBean>  mCategoryBean = new ArrayList<CategoryBean>();
+    /*List<? extends Number> num = new ArrayList<Double>();*/
+        BasicOrder b=new CategoryBean();
         protected List<CategoryBean>mCategoryTemp=new ArrayList<>();
         protected CategoryAdapter mCategoryAdapter;
         protected View headerView;
@@ -133,7 +136,7 @@ import java.util.List;
                            //超时了还没有数据显示
                            if(OverTime(3,exitTime)) break;
                        }
-                       mCategoryBean=dao.findByOrderType("加价购订单");//找到订单类型为商城订单
+                       mCategoryBean=dao.findByOrderType("扫码订单");//找到订单类型为商城订单
                        break;
                    case DetailCommission:
                        break;

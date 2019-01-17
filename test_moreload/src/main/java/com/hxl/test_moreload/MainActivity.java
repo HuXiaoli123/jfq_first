@@ -13,7 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hxl.test_moreload.OrderFragment.CompleteOrder;
-import com.hxl.test_moreload.OrderFragment.DailyOrder;
+import com.hxl.test_moreload.OrderFragment.DailyOrderFragment;
 import com.hxl.test_moreload.OrderFragment.DetailsOfCommission;
 import com.hxl.test_moreload.OrderFragment.ShopMallOrder;
 import com.hxl.test_moreload.OrderFragment.SweepCode;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity   {
     ShopMallOrder mShopMallOrder;
     SweepCode mSweepCode;
     DetailsOfCommission mDetailCommission;
-    DailyOrder mDailyOrder;
+    DailyOrderFragment mDailyOrder;
     UnPayOrder mUnPayOrder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity   {
                     break;
                 case  4:
                     setTabSelection(R.layout.dailyoder5);
+                    break;
                 case 5:setTabSelection(R.layout.unplayorder6);
                     break;
 
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity   {
                 break;
             case R.layout.dailyoder5:
                 if(mDailyOrder==null){
-                    mDailyOrder = new DailyOrder();
+                    mDailyOrder = new DailyOrderFragment();
                     ft.add(R.id.fl, mDailyOrder);
                 }else
                     ft.show(mDailyOrder);
@@ -178,6 +179,8 @@ public class MainActivity extends AppCompatActivity   {
                     }else
                         ft.show(mUnPayOrder);
                 }
+                break;
+            default:
                 break;
         }
         ft.commit();

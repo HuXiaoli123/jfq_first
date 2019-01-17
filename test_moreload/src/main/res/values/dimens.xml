@@ -29,4 +29,11 @@
     <dimen name="addCountOrder">90dp</dimen>
     <dimen name="x5">5dp</dimen>
 
+    <dimen name="date_dp">120dp</dimen>
+    <dimen name="sweeppay_dp">85dp</dimen>
+    <dimen name="addcountpay_dp">85dp</dimen>
+    <dimen name="comdityorder_dp">85dp</dimen>
+    <dimen name="comissionentry_dp">85dp</dimen>
+    <dimen name="entryvalue_dp">85dp</dimen>
+
 </resources>

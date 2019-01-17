@@ -10,6 +10,7 @@ import android.util.Log;
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.OrderFragment.Goods.CommissionDetailOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
+import com.hxl.test_moreload.OrderFragment.Goods.DailyOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.SweepCodeOrder;
 import com.hxl.test_moreload.OrderFragment.Util.Tooljson;
 
@@ -95,8 +96,11 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              //如果数据数量没有变化，不需要插入数据
              CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
              long dataBaseData=dao.allCaseNum();  //数据库中总长度
-             dao.DailySales();//    ----------------------test
+
              Log.i("mypath",dataBaseData+":"+newDownData);
+
+
+
              if(dataBaseData>=newDownData)return;
 
              int index=(int)(newDownData-dataBaseData-1);
@@ -105,6 +109,13 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              {
                  Log.i("mypath",index +"第几个："+i+"");
                  InsertData(mContext,mCompeleteOrder.get(i),Data.COMPELETE_ORDER_TABLE_NAME);
+             }
+
+             List<DailyOrder>myDailyOrder=dao.DailySales();//    ----------------------test
+             DailyOrderDao orderDao=new DailyOrderDao(mContext);
+             for(int i=0;i<myDailyOrder.size();i++)
+             {
+                 orderDao.insert(myDailyOrder.get(i));
              }
 
 

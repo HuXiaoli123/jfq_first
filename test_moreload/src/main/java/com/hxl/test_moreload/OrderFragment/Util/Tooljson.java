@@ -136,9 +136,6 @@ public class Tooljson {
 
 
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
-
-
-
                 CategoryBean orderGood = new CategoryBean();
                 String  orderNumber=jsonObject2.getString("code");
                 orderGood.setOrderNumber(orderNumber); //订单编号orderType
@@ -166,9 +163,6 @@ public class Tooljson {
                 {
                     JSONObject jsonObject3=addPricejsonArray.getJSONObject(j);
                     JSONObject addPriceObject =jsonObject3 .getJSONObject("sku");
-
-
-
                     if(jsonObject3.optJSONObject("bargainActivity")!=null) {
 
                         Log.i("ordertypr",   jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain")+"元");
@@ -310,6 +304,15 @@ public class Tooljson {
         BigDecimal b1=new BigDecimal((v1.toString()));
         BigDecimal b2=new BigDecimal(v2.toString());
         return  b1.add(b2).doubleValue();
+    }
+
+    public  static  Double addthree(String v1,String v2 )
+    {
+        BigDecimal b1=new BigDecimal(v1);
+        BigDecimal b2=new BigDecimal(v2);
+       return   b1.add(b2) .doubleValue();
+
+
     }
 
     /**

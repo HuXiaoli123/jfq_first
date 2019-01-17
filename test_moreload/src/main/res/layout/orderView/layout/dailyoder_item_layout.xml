@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorwhite"
+    android:fitsSystemWindows="true" >
+
+
+    <!--RecycleView中的数据-->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/table_v_divider"
+        android:orientation="vertical"
+        android:showDividers="middle|beginning|end">
+
+
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/table_h_divider"
+            android:orientation="horizontal"
+            android:showDividers="middle|beginning|end">
+
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/date"
+                android:layout_width="@dimen/date_dp"
+                android:layout_height="wrap_content"
+                android:text="日期"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:layout_width="@dimen/sweeppay_dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/sweepCodepay"
+                android:text="扫码支付"
+                android:textSize="@dimen/order_in_text" />
+
+            <TextView
+                android:id="@+id/addCountOrder"
+                style="@style/style_table_gray6_18_130_text"
+                android:layout_width="@dimen/addCountOrder"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="加价购订单"
+                android:textSize="@dimen/order_in_text"  />
+
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/comodityOrder"
+                android:layout_width="@dimen/comdityorder_dp"
+                android:layout_height="wrap_content"
+                android:text="商城订单"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/commissionEntry"
+                android:layout_width="@dimen/comissionentry_dp"
+                android:layout_height="wrap_content"
+                android:text="佣金入账"
+                android:textSize="@dimen/order_in_text" />
+            <TextView
+                style="@style/style_table_gray6_18_130_text"
+                android:id="@+id/entryValue"
+                android:layout_width="@dimen/entryvalue_dp"
+                android:layout_height="wrap_content"
+                android:text="入账总额"
+                android:textSize="@dimen/order_in_text" />
+
+
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
+

@@ -56,6 +56,7 @@ public class Data {
     创建数据库视图
      */
     public  static String VIEW_NAME="DailyView";//数据库视图的名称
+    public  static String VIEW_ALL_ORDER="allOrder";//数据库全部订单视图
     public  static String VIEW_COMODITYORDER="comodityOrder";//商城订单视图的名称
     public  static String VIEW_SWEEPCODE="SweepCodeView";//扫码订单视图的名称
     public  static String VIEW_AddCount="addCountView";//加价购视图的名称
