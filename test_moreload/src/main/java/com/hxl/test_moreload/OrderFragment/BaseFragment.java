@@ -244,14 +244,14 @@ import java.util.List;
             /*
             点击判断是哪一列
              */
-            mCategoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
+          /*  mCategoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
                 @Override
                 public void OnItemClick(View view, int position, CategoryBean categoryBean) {
-                   /* Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();*/
+                   *//* Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();*//*
                     posindex=position;
 
                 }
-            });
+            });*/
 
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -267,8 +267,8 @@ import java.util.List;
                     {
                         Log.i("compl","到头了"+lastVisiableItemPosition+":"+mCategoryAdapter.getItemCount());
 
-                        if(mCategoryBean.size()>17)
-                         setHeader(mRecyclerView);
+                       // if(mCategoryBean.size()>17)
+                         setHeader(mRecyclerView);  //上拉刷新数据
                     } else if (lastVisiableItemPosition + 1 == mCategoryAdapter.getItemCount()){
                         if (!isLoading){
                             isLoading = true;
@@ -292,7 +292,6 @@ import java.util.List;
 
         private void setHeader(RecyclerView view) {
             final View header = LayoutInflater.from(getContext()).inflate(R.layout.category_item_header, view, false);
-
             mCategoryAdapter.setHeaderView(header);
 
 

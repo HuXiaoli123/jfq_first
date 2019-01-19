@@ -58,7 +58,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
             //设置文件类型
             connection.setRequestProperty("Content-Type", "text/html; charset=UTF-8");
             /*不同用户需要要修改的Cookie值*/
-            connection.addRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+"c349e82e-1c13-4ef1-96ab-a94c767b2b95");
+            connection.addRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+"fa9f6b8c-0927-40f4-9e56-f33f4d7d3a87");
             int code=connection.getResponseCode();//响应码
             if(code==200){
                 InputStream inputStream=connection.getInputStream();//通过字节流的形式得到对象转换成流的操作
@@ -86,7 +86,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
         if(!"".equals(s)&&s!=null)
          {
-
+             Log.i("mypathtest1","112");
              InsertToDetailTable(mContext);
             // s=parseData(s);
             // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
@@ -97,8 +97,8 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
              long dataBaseData=dao.allCaseNum();  //数据库中总长度
 
-             Log.i("mypath",dataBaseData+":"+newDownData);
-
+             Log.i("mypathtest",dataBaseData+":"+newDownData);
+            // dao.DailySales();//    ----------------------test
 
 
              if(dataBaseData>=newDownData)return;
@@ -195,6 +195,8 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
   public static String DownLoadData(final String orderUrl)
     {
+
+
 
         new Thread(new Runnable() {
             @Override

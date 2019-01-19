@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Switch;
 
+import com.hxl.test_moreload.CategoryAdapter;
+import com.hxl.test_moreload.OrderFragment.Enum_Order.OrderName;
 import com.hxl.test_moreload.OrderFragment.Goods.CategoryBean;
 import com.hxl.test_moreload.OrderFragment.Goods.CompeleteOrder;
 import com.hxl.test_moreload.OrderFragment.Goods.DailyOrder;
@@ -14,7 +17,12 @@ import com.hxl.test_moreload.OrderFragment.Util.Tooljson;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class CategoryBeanDAO {
     DBHelper dbHelper=null;
@@ -272,13 +280,15 @@ public class CategoryBeanDAO {
         return count;
     }
 
+
+
     /**
      * 测试：统计每一天的总销量
      */
     public  List<DailyOrder> DailySales()
     {
 
-        List<DailyOrder> dailyOrderList=new ArrayList<>();
+
       /* // String sql="select storeEntry from SweepCodeView GROUP BY date(playTime)";
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
         Cursor results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,new String[]{ "SUM(storeEntry)"},Data.playTime+" < "+"date('now')",null,
@@ -301,55 +311,235 @@ public class CategoryBeanDAO {
         Cursor addCountCursor=resultCursor(Db,Data.VIEW_AddCount);
         Cursor comodityOrderCursor=resultCursor(Db,Data.VIEW_COMODITYORDER);
         Cursor commissionCursor=resultCursor(Db,Data.DETAILS_OF_COMMISSION);
-        if(compelteCusor.moveToFirst()){
+
+
+        Map<String,List<String>>mdic=new HashMap<>();
+        Cursor allOrderCusor=resultCursor(Db,Data.VIEW_ALL_ORDER,new String[]{"date("+Data.playTime+")"},null);
+
+       Db.execSQL(DBHelper.CreatTempTable());  //创建一张临时表
+        if(sweepcodeCursor.moveToFirst())
+        {
             do{
-                 Log.i("cursor1----",""+compelteCusor.getString(0));
+                final String swwepcodepay=sweepcodeCursor.getString(0);
+                Log.i("cursor1----","扫码" +sweepcodeCursor.getString(1) +":"+sweepcodeCursor.getString(0));
+                Db.insert(Data.TEMPORDERDAILY_TABLE_NAME,null,ValuesTransform.inserIntoTemp(
+                        sweepcodeCursor.getString(1),Data.sweepPay,sweepcodeCursor.getString(0)));
+
+            }while (sweepcodeCursor.moveToNext());
+        }
+
+        if(addCountCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=addCountCursor.getString(0);
+                Log.i("cursor1----","加价购" +addCountCursor.getString(1) +":"+addCountCursor.getString(0));
+                Db.insert(Data.TEMPORDERDAILY_TABLE_NAME,null,ValuesTransform.inserIntoTemp(
+                        addCountCursor.getString(1),Data.addpriceAmount,addCountCursor.getString(0)));
+            }while (addCountCursor.moveToNext());
+
+        }
+
+        if(comodityOrderCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=comodityOrderCursor.getString(0);
+
+                Db.insert(Data.TEMPORDERDAILY_TABLE_NAME,null,ValuesTransform.inserIntoTemp(
+                        comodityOrderCursor.getString(1),Data.comdityOrder,comodityOrderCursor.getString(0)));
+
+            }while (comodityOrderCursor.moveToNext());
+        }
+        if(commissionCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=commissionCursor.getString(0);
+                Log.i("cursor1----","佣金" +commissionCursor.getString(1) +":"+commissionCursor.getString(0));
+                Db.insert(Data.TEMPORDERDAILY_TABLE_NAME,null,ValuesTransform.inserIntoTemp(
+                        commissionCursor.getString(1),Data.comissionOrder,commissionCursor.getString(0)));
+            }while (commissionCursor.moveToNext());
+        }
+        List<DailyOrder> dailyOrderList=new ArrayList<>();
+
+        /**
+         * 对临时表进行整合
+         */
+        Cursor tempSummary=resultEndCursor(Db,Data.TEMPORDERDAILY_TABLE_NAME);
+        if(tempSummary.moveToFirst())
+        {
+            do{
+                DailyOrder dailyOrder=new DailyOrder();
+                dailyOrder.setPlayTime(tempSummary.getString(0));
+                dailyOrder.setSweepPay(tempSummary.getString(1));
+                dailyOrder.setAddpriceAmount(tempSummary.getString(2));
+                dailyOrder.setComdityOrder(tempSummary.getString(3));
+                dailyOrder.setComissionOrder(tempSummary.getString(4));
+                dailyOrder.setEntryValue(tempSummary.getString(5));
+                dailyOrderList.add(dailyOrder);
+
+                Log.i("my-----------",tempSummary.getString(0)+";"+tempSummary.getString(1)
+                +tempSummary.getString(2)+";"+tempSummary.getString(3)+
+                        tempSummary.getString(4)+";"+tempSummary.getString(5));
+            }while (tempSummary.moveToNext());
+        }
+        Log.i("my-----------","nodata");
+
+        /*if(sweepcodeCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=sweepcodeCursor.getString(0);
+                Log.i("cursor1----","扫码" +sweepcodeCursor.getString(1) +":"+sweepcodeCursor.getString(0));
+                values.add(sweepcodeCursor.getString(0)+"-"+OrderName.SweepCode);
+                mdic.put(sweepcodeCursor.getString(1),values);
+
+            }while (sweepcodeCursor.moveToNext());
+        }
+
+        if(addCountCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=addCountCursor.getString(0);
+                Log.i("cursor1----","加价购" +addCountCursor.getString(1) +":"+addCountCursor.getString(0));
+                values.add(addCountCursor.getString(0)+"-"+OrderName.AddCountOrder);
+                mdic.put(addCountCursor.getString(1),values);
+            }while (addCountCursor.moveToNext());
+
+        }
+
+        if(comodityOrderCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=comodityOrderCursor.getString(0);
+                Log.i("cursor1----","商城" +comodityOrderCursor.getString(1) +":"+comodityOrderCursor.getString(0));
+                values.add(comodityOrderCursor.getString(0)+"-"+OrderName.ComdityOrder);
+                mdic.put(comodityOrderCursor.getString(1),values);
+            }while (comodityOrderCursor.moveToNext());
+        }
+        if(commissionCursor.moveToFirst())
+        {
+            List<String>values=new ArrayList<>();
+            do{
+                final String swwepcodepay=commissionCursor.getString(0);
+                Log.i("cursor1----","佣金" +commissionCursor.getString(1) +":"+commissionCursor.getString(0));
+                values.add(commissionCursor.getString(0)+"-"+OrderName.CommissionEntry);
+                mdic.put(commissionCursor.getString(1),values);
+            }while (commissionCursor.moveToNext());
+        }*/
+
+
+        /*if(compelteCusor.moveToFirst()){
+            do{
                 Double sumEntry=0.0;
                 DailyOrder dailyOrder=new DailyOrder();
-                dailyOrder.setPlayTime(compelteCusor.getString(0));
+                List<String>values=new ArrayList<>();
+                Log.i("cursor1----","--------" +compelteCusor.getString(0));
                 if(sweepcodeCursor.moveToNext())
                 {
+                    final String swwepcodepay=sweepcodeCursor.getString(0);
                     dailyOrder.setSweepPay(sweepcodeCursor.getString(0));
                     sumEntry=Tooljson.addthree(sumEntry.toString(),sweepcodeCursor.getString(0));
-                    Log.i("cursor1----","--------" +sweepcodeCursor.getString(1) +":"+sweepcodeCursor.getString(0));
+
+                    Log.i("cursor1----","扫码" +sweepcodeCursor.getString(1) +":"+sweepcodeCursor.getString(0));
+                    values.add(sweepcodeCursor.getString(0)+"-扫码");
+                 mdic.put(sweepcodeCursor.getString(1),values);
+
                 }else
                     dailyOrder.setSweepPay("0");
+
                 if(addCountCursor.moveToNext()) {
+                    final String addcountpay=addCountCursor.getString(0);
                     dailyOrder.setAddpriceAmount(addCountCursor.getString(0));
                     sumEntry=Tooljson.addthree(sumEntry.toString(),addCountCursor.getString(0));
-                    Log.i("cursor2----","--------" +addCountCursor.getString(1)  +":"+addCountCursor.getString(0));
+                    Log.i("cursor2----","-加价购" +addCountCursor.getString(1)  +":"+addCountCursor.getString(0));
+
+                    values.add(addcountpay+"-加价购" );
+                    mdic.put(addCountCursor.getString(1),values);
+
                 }else
                     dailyOrder.setAddpriceAmount("0");
                 if(comodityOrderCursor.moveToNext()) {
+                    final String comoditypay=comodityOrderCursor.getString(0);
                     dailyOrder.setComdityOrder(comodityOrderCursor.getString(0));
                     sumEntry=Tooljson.addthree(sumEntry.toString(),comodityOrderCursor.getString(0)) ;
-                    Log.i("cursor3----","--------" +comodityOrderCursor.getString(1)  +":"+comodityOrderCursor.getString(0));
+                    Log.i("cursor3----","商城" +comodityOrderCursor.getString(1)  +":"+comodityOrderCursor.getString(0));
+
+                    values.add(comoditypay+"-商城");
+                    mdic.put(comodityOrderCursor.getString(1),values);
                 }else
                     dailyOrder.setComdityOrder("0");
                 if(commissionCursor.moveToNext()) {
+                    final String commissionpay=commissionCursor.getString(0);
                     dailyOrder.setComissionOrder(commissionCursor.getString(0));
                     sumEntry=Tooljson.addthree(sumEntry.toString(),commissionCursor.getString(0)) ;
-                   Log.i("cursor4----","--------" +commissionCursor.getString(1) +":"+commissionCursor.getString(0));
+
+                    values.add(commissionpay+"-佣金");
+                  mdic.put(commissionCursor.getString(1)+"---",values);
+                   Log.i("cursor4----","佣金明细" +commissionCursor.getString(1) +":"+commissionCursor.getString(0));
                 }else
                     dailyOrder.setComissionOrder("0");
-                dailyOrder.setEntryValue(sumEntry.toString());
 
+                dailyOrder.setEntryValue(sumEntry.toString());
                 dailyOrderList.add(dailyOrder);
 
-
             }while(compelteCusor.moveToNext());
-
-
         }else
         {
             Log.i("cursor1----"," No data" );
+        }*/
+
+       /* Iterator<Map.Entry<String,List<String>>> iter = mdic.entrySet().iterator();
+        while(iter.hasNext()){
+
+            Map.Entry<String,List<String>> entry = iter.next();
+            String key = entry.getKey();
+            DailyOrder dailyOrder=new DailyOrder();
+            Log.i("myOrder","-----"+key);
+            for(int i=0;i<mdic.get(key).size();i++)
+            {
+               *//* String value = entry.getKey().get(i);*//*
+                String value = mdic.get(key).get(i);
+                dailyOrder.setPlayTime(key);
+               // Parse(dailyOrder,value);
+                *//*dailyOrder.setSweepPay("1");
+                dailyOrder.setAddpriceAmount("2");
+                dailyOrder.setComdityOrder("3");
+                dailyOrder.setComissionOrder("4");*//*
+
+                String[]detali=value.split("-");
+                orderName=OrderName.valueOf(detali[1]);
+                Log.i("myOrder",detali[0]+":"+detali[1]);
+                switch(orderName )
+                {
+                    case SweepCode:
+                        dailyOrder.setSweepPay(detali[0]);
+                        break;
+                    case AddCountOrder:
+                        dailyOrder.setAddpriceAmount(detali[0]);
+                        break;
+                    case ComdityOrder:
+                        dailyOrder.setComdityOrder(detali[0]);
+                        break;
+                    case CommissionEntry:
+                        dailyOrder.setComissionOrder(detali[0]);
+                        break;
+                }
+
+                System.out.println("----"+key+" "+value);
+            }
+
+            dailyOrderList.add(dailyOrder);
         }
-
-
+     */
         return  dailyOrderList;
 
         //select  playTime>=datetime('now','start of day','-7 day','weekday 1') AND playTime<datetime('now','start of day','+0 day','weekday 1') from completeOrder
     }
+
 
     /**
      * 返回查询的结果集
@@ -372,6 +562,16 @@ public class CategoryBeanDAO {
         return cursor;
     }
 
-
+    /*
+    获取最后的总结结果
+     */
+    public  Cursor resultEndCursor(SQLiteDatabase readDB,String table)
+    {
+        Cursor cursor=readDB.query(table,new String[]{ "date("+Data.playTime+")","SUM("+Data.sweepPay+")", "SUM("+Data.addpriceAmount+")",
+                        "SUM("+Data.comdityOrder+")","SUM("+Data.comissionOrder+")",
+                       "SUM(sweepPay)+SUM(addpriceAmount)+SUM(comdityOrder)+SUM(comissionOrder)" },Data.playTime+" < "+"date('now')",null,
+                "date(playTime)",null,null);
+        return cursor;
+    }
 
 }

@@ -70,6 +70,14 @@ public class ValuesTransform {
         return  contentValues;
     }
 
+    public  static  ContentValues inserIntoTemp(String date,String key, String value)
+    {
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(Data.playTime,date);
+        contentValues.put(key,value);
+        return  contentValues;
+    }
+
     /**
      * 从Cursor生成CommissionDetailOrder对象
      * @param cursor

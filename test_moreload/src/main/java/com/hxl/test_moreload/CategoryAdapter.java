@@ -352,11 +352,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //        }
 //
 //    }*/
+
+   //动态决定视图中显示的item个数
     @Override
     public int getItemCount() {
-        if(mCategoryBeen.size()>17)
+        //if(mCategoryBeen.size()>17)
         return mHeaderView == null ? mCategoryBeen.size() + 1 : mCategoryBeen.size() + 2;
-        return  mCategoryBeen.size() ;
+       // return  mCategoryBeen.size() ;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

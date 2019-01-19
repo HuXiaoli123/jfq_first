@@ -100,15 +100,30 @@ public class DBHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    public  static  String CreatTempTable()
+    {
+ /*
+        创建一张临时表
+         */
+        //创建每日订单表
+        String CREATE_DailyOrder="create table "+ Data.TEMPORDERDAILY_TABLE_NAME +"("+
+                Data.COLUMN_id+" integer primary key autoincrement,"+
+                Data.COLUMN_playTime+" text,"+
+                Data.sweepPay+" text default '0',"+
+                Data.addpriceAmount+" text default '0',"+
+                Data.comdityOrder+" text default '0',"+
+                Data.comissionOrder+" text default '0',"+
+                Data.entryValue+" time default '0'"  +")";
+        return  CREATE_DailyOrder;
+    }
     /*
     打开数据库执行的操作
      */
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-
-
     }
+
 
     /**
      * 创建视图的同一方式

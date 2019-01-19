@@ -8,6 +8,8 @@ public class Data {
     public static final String DETAILS_OF_COMMISSION ="DetailsOfCommission"; //佣金明细表
     public static  final String ORDERDAILY_TABLE_NAME="orderdaily";
 
+    public static  final  String TEMPORDERDAILY_TABLE_NAME="temptable";
+
 
 
     public static final String COLUMN_id="_id";
