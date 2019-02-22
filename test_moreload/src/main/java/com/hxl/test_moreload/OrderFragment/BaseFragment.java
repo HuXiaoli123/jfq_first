@@ -76,6 +76,7 @@ import java.util.List;
         }
 
         boolean isLoading;
+        boolean isFreshing;
         LinearLayoutManager manager=null;
 
       private  boolean isFirstTime=true;
@@ -265,16 +266,31 @@ import java.util.List;
                     int lastVisiableItemPosition = manager.findLastVisibleItemPosition();
                     if( manager.findFirstCompletelyVisibleItemPosition()==0)
                     {
-                        Log.i("compl","到头了"+lastVisiableItemPosition+":"+mCategoryAdapter.getItemCount());
+                        Log.i(" Sroller","到定了"+lastVisiableItemPosition+":"+mCategoryAdapter.getItemCount());
 
                        // if(mCategoryBean.size()>17)
                          setHeader(mRecyclerView);  //上拉刷新数据
+                        if (!isFreshing){
+                            isFreshing = true;
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("Sroller ","上拉刷新");
+                                    //requestData();
+                                    requestLoadMoreData();
+                                    //    Toast.makeText(MainActivity.this, "已经没有新的了", Toast.LENGTH_SHORT).show();
+                                    isFreshing = false;
+                                    // adapter.notifyItemRemoved(adapter.getItemCount());
+                                }
+                            },1000);
+                        }
                     } else if (lastVisiableItemPosition + 1 == mCategoryAdapter.getItemCount()){
                         if (!isLoading){
                             isLoading = true;
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Log.i("Sroller ","到头了");
                                     //requestData();
                                     requestLoadMoreData();
                                     //    Toast.makeText(MainActivity.this, "已经没有新的了", Toast.LENGTH_SHORT).show();
@@ -293,8 +309,6 @@ import java.util.List;
         private void setHeader(RecyclerView view) {
             final View header = LayoutInflater.from(getContext()).inflate(R.layout.category_item_header, view, false);
             mCategoryAdapter.setHeaderView(header);
-
-
         }
         private void LoadMoreRecycleViewclass() {
 

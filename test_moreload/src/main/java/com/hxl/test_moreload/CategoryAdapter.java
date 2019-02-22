@@ -90,16 +90,31 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     /*
     在什么位置显示什么模块，比如说  第一行，设为头部  中间部分：普通的表格   最后一行设置为尾部
      */
+    //用来决定每一个Item对应的布局
     @Override
     public int getItemViewType(int position) {
 
-        Log.i("mytype", position+","+getItemCount());
-        if (mHeaderView == null) return TYPE_NORMAL;
-        if (position == 0) return TYPE_HEADER;
-        if (mHeaderView != null && position + 1 == getItemCount() ) return TYPE_FOOTER;
-        if (mHeaderView == null && position == getItemCount()) return TYPE_FOOTER;
 
+        if (mHeaderView == null)
+        {
+            Log.i("mytest_type", position+","+getItemCount());
+            Log.i("mytest_type1", "null");
+            return TYPE_NORMAL;
+        }
+        if (position == 0) {
+            Log.i("mytest_type1", "TYPE_HEADER");
+            return TYPE_HEADER;
+        }
+        if (mHeaderView != null && position + 1 == getItemCount() ) {
+            Log.i("mytest_type1", "TYPE_FOOTER");
+            return TYPE_FOOTER;
+        }
+        if (mHeaderView == null && position == getItemCount()){
+            Log.i("mytest_type1", "TYPE_FOOTER");
+            return TYPE_FOOTER;
+        }
 
+        Log.i("mytest_type11", "TYPE_NORMAL");
         return TYPE_NORMAL;
     }
 
@@ -113,32 +128,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    int count;
+     //用来创建ViewHolder，用来避免错位问题和提高加载效率
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-
+Log.i("viewType", viewType+"");
         mLayoutInflater=LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_HEADER:
                 return new ViewHolder(mHeaderView);
             case TYPE_NORMAL:
-               /* if(count>mCategoryBeen.size())  {
-                    Log.i("mycount","erro");
-                    return new ViewHolder(mLayoutInflater.inflate(R.layout.errorlayout,parent,false));
-                }*/
                 return new ViewHolder(mLayoutInflater.inflate(R.layout.category_item_layout,parent,false));
             case TYPE_FOOTER:
                 return new FooterViewHolder(mLayoutInflater.inflate(R.layout.item_foot,parent,false));
             default:
                 return null;
-
-
         }
-
-
     }
-
     /**
      * 1.重写onBindViewHolder(VH holder, int position, List<Object> payloads)这个方法
      * <p>
@@ -152,7 +158,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
      * @param payloads  如果为null，则刷新item全部内容  否则局部刷新
      */
 
-
+    //用来添加相关逻辑处理和UI数据界面的显示
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position, List<Object> payloads) {
 
@@ -161,9 +167,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final int pos = getRealPosition(holder);
         if (holder instanceof ViewHolder) {
             ViewHolder holder1 = (ViewHolder) holder;
-            if (pos == mCategoryBeen.size()) {
+          /*  if (pos == mCategoryBeen.size()) {
                 return;
-            }
+            }*/
             CategoryBean categoryBean = mCategoryBeen.get(pos);
 
             holder1.orderNumber.setText(categoryBean.getOrderNumber());

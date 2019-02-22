@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <drawable name="fbutton_color_turquoise">#fcf9f9</drawable>
+    <drawable name="fbutton_color_turquoise_p">#fcf9f9</drawable>
+    <drawable name="fbutton_color_emerald">#FCF9F9</drawable>
+    <drawable name="line">#BEBEBE</drawable>
+    <drawable name="bg_center">#f0f0f0</drawable>
+    <drawable name="mycenter_item_n">#ffffff</drawable>
+    <drawable name="mycenter_item_p">#cecece</drawable>
+
+</resources>

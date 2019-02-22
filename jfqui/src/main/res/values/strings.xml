@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">JFQUI</string>
+
+    <!-- <string name="app_name">积分圈商户版</string>-->
+    <string name="post_url">https://store.tuihs.com/oauth/token?</string>
+    <string name="get_url">http://store.tuihs.com/oauth/signin/app?</string>
+    <string name="load_url">http://store.tuihs.com/index</string>
+
+    <!--<string name="post_url">http://192.168.0.109:8085/BJXT/PhoneServlet?</string>
+    <string name="get_url">http://192.168.0.109:8085/BJXT/PhoneServlet?</string>
+    <string name="load_url">http://192.168.0.109:8085/BJXT/index.jsp</string>-->
+
+    <string name="GETUI_APP_ID">HKxjsmoNuh76VKMECvzsr3</string>
+    <string name="GETUI_APP_KEY">7j5iQuNYsz6c7usgMvmrJ8</string>
+    <string name="GETUI_APP_SECRET">fpaN2LxPAN6O72qkQh2Ad9</string>
+
+
+    <string name="app_des">\"Mary Morstan mendatangi Sherlock Holmes untuk meminta bantuannya memecahkan sebuah misteri. Sepuluh tahun yang lalu, ayah Mary, Kapten Arthur Morstan, kembali ke London dengan mengambil cuti dari resimennya di India. Katanya, di sana ia dan seorang temannya, Thaddeus Sholto, mendapatkan harta karun yang sangat besar jumlahnya. Tapi ketika Mary tiba di hotel tempat ayahnya tinggal, sang ayah sudah lenyap tanpa jejak. Sherlock Holmes menyambut misteri ini sebagai tantangan menarik. Lebih menarik daripada kokain yang telah membuatnya ketagihan bila sedang tak ada kegiatan. Dan kali ini pun Dr. Watson menyertainya, terutama karena ia sangat tertarik pada Mary Morstan yang di matanya begitu memesona.\"</string>
+    <string name="loading">加载中...</string>
+    <string name="toping">已经加载到第一条</string>
+
+    <!-- 信息一览 -->
+    <string name="tab_main_title_text">主页</string>
+    <string name="title_main_allinfo">全部订单</string>
+    <string name="title_main_mallinfo">商城订单</string>
+    <string name="title_main_payinfo">扫码加价</string>
+    <string name="title_main_commissioninfo">佣金明细</string>
+    <string name="title_main_summaryinfo">每日汇总</string>
+
+
+    <!-- 消息-->
+    <string name="tab_message_title_text">消息</string>
+    <!-- 图片 -->
+    <string name="tab_search_title_text">查询</string>
+    <!-- 跟帖 -->
+    <string name="tab_mycenter_title_text">设置</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment1">全部订单1</string>
+    <string name="hello_blank_fragment2">商城订单2</string>
+    <string name="hello_blank_fragment3">扫码加价3</string>
+    <string name="hello_blank_fragment4">佣金明细4</string>
+    <string name="hello_blank_fragment5">每日汇总5</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>-->
+    <color name="gray">#a5a5a5</color>
+
+    <color name="colorwhite">#ffffff</color>
+    <color name="c_gray_6">#8a8a8a</color>
+    <color name="c_black_1">#8a8a8a</color>
+    <color name="line">#706d6d</color>
+
+</resources>

@@ -1,1 +1,1 @@
-include ':app', ':carview', ':mytabledata', ':test_moreload'
+include ':app', ':carview', ':mytabledata', ':test_moreload',':jfqui'
