@@ -30,4 +30,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="style_table_gray6_18_130_text"></style>
+
+    <style name="addNoteType_error_Dialog" parent="@style/AlertDialog.AppCompat">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>

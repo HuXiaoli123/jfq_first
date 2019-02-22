@@ -48,8 +48,6 @@ public class MainPayinfoFragment extends BaseFragment {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		Log.i("path--","onCreateView3");
-		mCategoryAdapter=new CategoryAdapter(true,false);
-
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 

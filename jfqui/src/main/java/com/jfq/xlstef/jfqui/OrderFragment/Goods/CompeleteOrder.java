@@ -4,7 +4,7 @@ public class CompeleteOrder {
 
     private  int _id;
 
-    protected   String orderNumber; //订单编号
+    protected String orderNumber; //订单编号
     protected String oderType;     //订单类型
     protected String itemPrice;   //商品原价
     protected String platformDeduction;//平台抵扣

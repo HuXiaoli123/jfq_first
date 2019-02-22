@@ -7,33 +7,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
+import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
-/*
-划线的路径;E:\Picture\Pic\appcollections\MPAndroidChart-master
- */
-
-
-/**
- * Created by renren on 2016/9/20.
- */
-public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-
-  public   enum OrderName
+public class MallinfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public   enum OrderName
     {
         CompleteOrder("CompleteOrder"),
         ShopMallOrder("2"),
@@ -67,7 +55,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
 
-    public   static   OrderName mOrdername= OrderName.CompleteOrder;
+    public   static CategoryAdapter.OrderName mOrdername= CategoryAdapter.OrderName.CompleteOrder;
     public   static boolean isMall;
 
 
@@ -115,25 +103,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mHeaderView;
     }
 
-    public CategoryAdapter(List<CategoryBean> categoryBeen, Context context) {
+    public MallinfoAdapter(List<CategoryBean> categoryBeen, Context context) {
         this.mCategoryBeen = categoryBeen;
         this.mContext=context;
     }
 
 
-     //用来创建ViewHolder，用来避免错位问题和提高加载效率
+    //用来创建ViewHolder，用来避免错位问题和提高加载效率
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-Log.i("viewType", viewType+"");
+        Log.i("viewType", viewType+"");
         mLayoutInflater=LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case TYPE_HEADER:
-                return new ViewHolder(mHeaderView);
+                return new MallinfoAdapter.ViewHolder(mHeaderView);
             case TYPE_NORMAL:
-                return new ViewHolder(mLayoutInflater.inflate(R.layout.category_item_layout,parent,false));
+                return new MallinfoAdapter.ViewHolder(mLayoutInflater.inflate(R.layout.category_item_layout,parent,false));
             case TYPE_FOOTER:
-                return new FooterViewHolder(mLayoutInflater.inflate(R.layout.item_foot,parent,false));
+                return new MallinfoAdapter.FooterViewHolder(mLayoutInflater.inflate(R.layout.item_foot,parent,false));
             default:
                 return null;
         }
@@ -158,15 +146,15 @@ Log.i("viewType", viewType+"");
         super.onBindViewHolder(holder, position, payloads);
         if (getItemViewType(position) == TYPE_HEADER) return;
         final int pos = getRealPosition(holder);
-        if (holder instanceof ViewHolder) {
-            ViewHolder holder1 = (ViewHolder) holder;
+        if (holder instanceof MallinfoAdapter.ViewHolder) {
+            MallinfoAdapter.ViewHolder holder1 = (MallinfoAdapter.ViewHolder) holder;
           /*  if (pos == mCategoryBeen.size()) {
                 return;
             }*/
             CategoryBean categoryBean = mCategoryBeen.get(pos);
 
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
-          //支付时间
+            //支付时间
             holder1.playTime.setText(categoryBean.getPlayTime());
 
 
@@ -184,68 +172,9 @@ Log.i("viewType", viewType+"");
                 return;
             }*/
 
-            switch (mOrdername)
-            {
-                case  CompleteOrder:
-                    holder1.oderType.setText(categoryBean.getOderType());
-                    holder1.itemPrice.setText(categoryBean.getItemPrice());
-                    Log.i("order_pag","CompleteOrder");
-                    break;
-                case ShopMallOrder: //商城订单暂时不写
-                    holder1.oderType.setText(categoryBean.getNameOfCommodity());
-                    holder1.itemPrice.setText(categoryBean.getItemPrice());
-                    Log.i("order_pag","ShopMallOrder");
-                    break;
-                case SweepCode:  //扫码订单
-                    holder1.oderType.setText(categoryBean.getItemPrice());
-                    Log.i("MySweepCode","SweepCode");
-                    if(!"0.0".equals(categoryBean.getAddpriceAmount()))
-                    {
-                        holder1.itemPrice.setText(categoryBean.getAddpriceAmount());
-                        holder1.mMoreDetail.setVisibility(View.VISIBLE);
-                        dao=new CategoryBeanDAO(new DBHelper(mContext));
-
-
-                        //给加价购提供点击事件
-                        ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Log.i("MySweepCode","我是加价购");
-                                if (mOnItemClickListener != null) {
-                                    mOnItemClickListener.OnItemClick(v, pos, mCategoryBeen.get(pos));
-                                    Log.i("MySweepCode","我是加价购"+pos+","+position);
-                                    String addPriceName=dao.queryById(mCategoryBeen.get(pos).get_id());//因为数据库中的id是从1开始的
-                                    Log.i("path","我是加价购"+pos+","+position);
-                                    String[] allPriceName=addPriceName.split("-");
-
-                                    Log.i("mytest_", mCategoryBeen.get(pos).getOrderNumber()+";"+ mCategoryBeen.get(pos).get_id());
-                                    //弹出加价购的详细信息
-                                    DetailMsg(allPriceName);
-                                    mCategoryBeen.get(pos).getOrderNumber();
-
-                                }
-                            }
-                        });
-                    }else
-                    {
-                        holder1.itemPrice.setText("无");
-                    }
-
-                    break;
-                case DetailCommission:
-                    holder1.oderType.setText(categoryBean.getOderType());
-                    holder1.itemPrice.setText(categoryBean.getItemPrice());
-                case DailyOrder:
-                    holder1.playTime.setVisibility(View.GONE);
-                    break;
-                case UnpayOrder:
-                    holder1.oderType.setText(categoryBean.getOderType());
-                    holder1.itemPrice.setText(categoryBean.getItemPrice());
-                default:
-                    break;
-
-            }
+            holder1.oderType.setText(categoryBean.getNameOfCommodity());
+            holder1.itemPrice.setText(categoryBean.getItemPrice());
+            Log.i("order_pag","ShopMallOrder");
 
 
 
@@ -254,7 +183,7 @@ Log.i("viewType", viewType+"");
             else
                 holder1.playTime.setVisibility(View.GONE);*/
 
-           //这一行可以不需要：这是为所有的Item添加点击事件
+            //这一行可以不需要：这是为所有的Item添加点击事件
            /* ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -267,10 +196,8 @@ Log.i("viewType", viewType+"");
 
     }
 
-    void  SwitchPage(ViewHolder holder1)
-    {
 
-    }
+
 
 
     /* 加价购细节对话框*/
@@ -326,12 +253,12 @@ Log.i("viewType", viewType+"");
 
 
 
-   //动态决定视图中显示的item个数
+    //动态决定视图中显示的item个数
     @Override
     public int getItemCount() {
         //if(mCategoryBeen.size()>17)
         return mHeaderView == null ? mCategoryBeen.size() + 1 : mCategoryBeen.size() + 2;
-       // return  mCategoryBeen.size() ;
+        // return  mCategoryBeen.size() ;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -372,9 +299,9 @@ Log.i("viewType", viewType+"");
     }
 
 
-    private OnItemClickListener mOnItemClickListener;
+    private MallinfoAdapter.OnItemClickListener mOnItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(MallinfoAdapter.OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
 
     }

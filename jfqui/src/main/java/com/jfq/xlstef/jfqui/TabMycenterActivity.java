@@ -1,6 +1,7 @@
 package com.jfq.xlstef.jfqui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,7 @@ public class TabMycenterActivity extends AppCompatActivity {
 		layout_top_text.setText(R.string.tab_mycenter_title_text);
 		initButton();
 	}
-
+	Dialog	dialog;
 	private void initButton()
 	{
 		LinearLayout quitButton = (LinearLayout)findViewById(R.id.withdraw_1);
@@ -37,7 +38,7 @@ public class TabMycenterActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				Log.i("mygetuitest","注销");
 
-				// 创建退出对话框
+				/*// 创建退出对话框
 				AlertDialog isExit = new AlertDialog.Builder(getApplicationContext()).create();
 				// 设置对话框标题
 				isExit.setTitle("系统提示");
@@ -48,7 +49,14 @@ public class TabMycenterActivity extends AppCompatActivity {
 				isExit.setButton2("取消", listener);
 
 				// 显示对话框
-				isExit.show();
+				isExit.show();*/
+				//此处直接new一个Dialog对象出来，在实例化的时候传入主题
+				dialog = new Dialog(TabMycenterActivity.this, R.style.addNoteType_error_Dialog);
+
+				//设置它的ContentView
+				dialog.setContentView(R.layout.quitdilog);
+				dialog.show();
+
 
 			}
 		});
@@ -60,6 +68,20 @@ public class TabMycenterActivity extends AppCompatActivity {
 			}
 		});
 	}
+
+	public void  SystemTip(View view)
+	{
+		switch (view.getId())
+		{
+			case R.id.btn_quit:
+				ActivityBack();
+				break;
+			case  R.id.btn_cancle:
+				dialog.cancel();
+
+		}
+	}
+
 
 	/**监听对话框里面的button点击事件*/
 	DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()
@@ -94,17 +116,16 @@ public class TabMycenterActivity extends AppCompatActivity {
 	//注销账号返回到主界面
 	private  void  ActivityBack()
 	{
-
 		/* 新建一个Intent对象 */
 		Intent intent = new Intent();
 
 		SharedPreferencesUtils sharedPreferencesUtils=new SharedPreferencesUtils(getApplication(),"cookies");
 		sharedPreferencesUtils.clear();
 
-		intent.setClass(getApplication(), Login_Activity.class);
+		intent.setClass(getApplicationContext(), Login_Activity.class);
 		/* 启动一个新的Activity */
-		getApplication().startActivity(intent);
+		 this.startActivity(intent);
 		/* 关闭当前的Activity */
-		 finish();
+		// finish();
 	}
 }

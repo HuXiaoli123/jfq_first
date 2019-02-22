@@ -60,7 +60,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-            kqwSpeechCompound=new KqwSpeechCompound(this);
+            kqwSpeechCompound=new KqwSpeechCompound(getApplicationContext());
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
@@ -80,6 +80,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                         Log.e("msg_1",msg.obj.toString());
                         Toast.makeText(Login_Activity.this,msg.obj.toString(),Toast.LENGTH_LONG).show();
                     }
+
                 }
             };
 

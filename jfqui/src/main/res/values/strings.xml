@@ -53,5 +53,6 @@
     <color name="c_gray_6">#8a8a8a</color>
     <color name="c_black_1">#8a8a8a</color>
     <color name="line">#706d6d</color>
+    <color name="black">#180303</color>
 
 </resources>

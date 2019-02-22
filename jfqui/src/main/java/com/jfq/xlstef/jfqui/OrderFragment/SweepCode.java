@@ -24,7 +24,7 @@ public class SweepCode  extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mCategoryAdapter=new CategoryAdapter(true,false);
+
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
