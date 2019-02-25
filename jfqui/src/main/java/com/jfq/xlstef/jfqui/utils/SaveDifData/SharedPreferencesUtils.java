@@ -93,11 +93,18 @@ public class SharedPreferencesUtils {
         sharedPreferences.edit().clear().commit();
     }
 
-    public  void clearall()
+    public  void clearkey(String key)
     {
-      /*  SharedPreferences.Editor editor = userSettings.edit();
-        editor.clear();
-        editor.commit();*/
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.remove(key);
+        editor.commit();
     }
+
+    /*public  void clearall()
+    {
+        SharedPreferences.Editor editor = userSettings.edit();
+        editor.clear();
+        editor.commit();
+    }*/
 
 }

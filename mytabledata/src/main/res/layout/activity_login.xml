@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context="com.jfq.xl_stef.jfq_android_store.LoginActivity">
+	<include layout="@layout/login_titlebar"></include>
+	<ImageView
+			android:id="@+id/logo"
+			android:layout_width="70dp"
+			android:layout_height="70dp"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="90dp"
+			android:src="@mipmap/logo"
+	/>
+	<EditText
+			android:id="@+id/username"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="请输入商户账号名"
+			android:layout_marginTop="175dp"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+	/>
+	<EditText
+			android:id="@+id/password"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/username"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:hint="请输入商户密码"
+			android:layout_marginTop="5dp"
+	/>
+	<Button
+			android:id="@+id/userInfo_submit"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/password"
+			android:layout_marginLeft="20dp"
+			android:layout_marginRight="20dp"
+			android:layout_marginTop="5dp"
+			android:text="确定"
+			android:textSize="20sp"
+			android:background="#f27e20"
+	/>
+	<CheckBox
+			android:id="@+id/autologin_checkbox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/userInfo_submit"
+			android:layout_marginLeft="20dp"
+			android:layout_marginTop="5dp"
+			android:textSize="18sp"
+			android:text="自动登录"/>
+	<CheckBox
+			android:id="@+id/saveinfo_checkbox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="保存账号密码"
+			android:layout_alignBaseline="@id/autologin_checkbox"
+			android:layout_alignBottom="@id/autologin_checkbox"
+			android:layout_alignEnd="@id/userInfo_submit"
+			android:textSize="18sp"
+	/>
+
+
+</RelativeLayout>

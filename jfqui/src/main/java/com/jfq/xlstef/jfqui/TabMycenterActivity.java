@@ -83,7 +83,7 @@ public class TabMycenterActivity extends AppCompatActivity {
 	}
 
 
-	/**监听对话框里面的button点击事件*/
+	/**监听对话框里面的button点击事件*//*
 	DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()
 	{
 		public void onClick(DialogInterface dialog, int which)
@@ -99,7 +99,7 @@ public class TabMycenterActivity extends AppCompatActivity {
 					break;
 			}
 		}
-	};
+	};*/
 
 	private  void TransformToMsg()
 	{
@@ -118,10 +118,20 @@ public class TabMycenterActivity extends AppCompatActivity {
 	{
 		/* 新建一个Intent对象 */
 		Intent intent = new Intent();
+		/*SharedPreferencesUtils sharedPreferencesUtils=new SharedPreferencesUtils(getApplication(),"cookies");
 
-		SharedPreferencesUtils sharedPreferencesUtils=new SharedPreferencesUtils(getApplication(),"cookies");
-		sharedPreferencesUtils.clear();
+		sharedPreferencesUtils.clear();*/
 
+        SharedPreferencesUtils  Utils_set=new SharedPreferencesUtils(getApplication(),"settings");
+
+        if(Utils_set.getBoolean("isAutoLogin",false))
+		{
+			Utils_set.clear();
+		} else if(!Utils_set.getBoolean("isRemeberUser",false))
+		{
+			Utils_set.clear();
+		}
+		Log.i("test",Utils_set.getBoolean("isRemeberUser",false)+"");
 		intent.setClass(getApplicationContext(), Login_Activity.class);
 		/* 启动一个新的Activity */
 		 this.startActivity(intent);

@@ -24,6 +24,7 @@ import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
 import com.jfq.xlstef.jfqui.MainActivity;
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.utils.ParserJsonUtils;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
 import org.json.JSONObject;
 
@@ -56,11 +57,11 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
         private boolean isAutoLogin;
         private boolean isRemeberUser;
 
-        KqwSpeechCompound kqwSpeechCompound;
+      // KqwSpeechCompound kqwSpeechCompound;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-            kqwSpeechCompound=new KqwSpeechCompound(getApplicationContext());
+        // kqwSpeechCompound=new KqwSpeechCompound(getApplicationContext());
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
@@ -80,7 +81,6 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                         Log.e("msg_1",msg.obj.toString());
                         Toast.makeText(Login_Activity.this,msg.obj.toString(),Toast.LENGTH_LONG).show();
                     }
-
                 }
             };
 
@@ -91,20 +91,18 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
         //是否自动登录
         int HasHistoryRemeber()
         {
-            boolean isautoLogin = getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isAutoLogin", false);
+            boolean isautoLogin =getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isAutoLogin", false);
             boolean isRemerber=getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isRemeberUser", false);
 
-            Log.e("my_test",""+isautoLogin);
+            Log.e("my_test",""+isautoLogin+","+isRemerber);
 
-            //自动登录
+           /* //自动登录
             if(isautoLogin)
             {
                 String  username = getSharedPreferences("settings", Context.MODE_PRIVATE).getString("UserName", "");
                 String password=getSharedPreferences("settings", Context.MODE_PRIVATE).getString("Password", "");
                 SetUserPassword(username,password);
                 postNetWork(username,password);
-
-
                 return 1;
             }
             //记住密码
@@ -113,7 +111,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                 String password=getSharedPreferences("settings", Context.MODE_PRIVATE).getString("Password", "");
                 SetUserPassword(username,password);
                 return 2;
-            }
+            }*/
 
             return 0;
         }
@@ -128,7 +126,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
             iv_see_password=findViewById(R.id.iv_see_password);
             iv_see_password.setOnClickListener((View.OnClickListener) this);
 
-            switch (HasHistoryRemeber()){
+           /* switch (HasHistoryRemeber()){
                 case 1:
                     DisableAllView();
                     Toast.makeText(Login_Activity.this,"您已经是老用户，直接登录",Toast.LENGTH_LONG).show();
@@ -139,64 +137,75 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                 default:
                     LoginAction();
                     break;
+            }*/
+            SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "settings");
+            String  username = helper.getString("UserName");
+            String password=helper.getString("Password");
+            LoginAction();
+            if(autoLogin())
+            {
+
+                SetUserPassword(username,password,true,true);
+                postNetWork(username,password);
+                DisableAllView();
+                Toast.makeText(Login_Activity.this,"您已经是老用户，直接登录",Toast.LENGTH_LONG).show();
+            }else if(remenberPassword())
+            {
+                SetUserPassword(username,password,false,true);
             }
         }
 
+    void LoginAction()
+    {
+        //自动登录
+        autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
 
-
-
-
-        void LoginAction()
-        {
-            //自动登录
-            autoLogin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-
-                //自动登录按钮是否被点击
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // TODO Auto-generated method stub
-                    if(isChecked)
-                    {
-                        isAutoLogin=true;
-                        Log.e("check","autoLogin"+isChecked);
-                        remeberUser.setEnabled(false);
-                        remeberUser.setChecked(true);
-                    }
-                    else{
-                        isAutoLogin=false;
-                        Log.e("check","autoLogin"+isChecked);
-                        remeberUser.setEnabled(true);
-                        remeberUser.setChecked(false);
-                    }
+            //自动登录按钮是否被点击
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO Auto-generated method stub
+                if(isChecked)
+                {
+                    isAutoLogin=true;
+                    Log.e("check-y","autoLogin"+isChecked);
+                    remeberUser.setEnabled(false);
+                    remeberUser.setChecked(true);
                 }
-            });
-            //记录用户名是否被点击
-            remeberUser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // TODO Auto-generated method stub
-                    if(isChecked)
-                    {
-                        if(usernameTXT.getText()==null||passwordTXT.getText()==null)
-                        {
-                            Toast.makeText(Login_Activity.this,"用户名和密码不能为空",Toast.LENGTH_SHORT).show();
-                        }
-                        isRemeberUser=true;
-                        Log.e("check","remeberUser"+isChecked);
-                    }
-                    else{
-                        isRemeberUser=false;
-                        Log.e("check","remeberUser"+isChecked);
-                    }
+                else{
+                    isAutoLogin=false;
+                    Log.e("check-n","autoLogin"+isChecked);
+                    remeberUser.setEnabled(true);
+                    remeberUser.setChecked(false);
                 }
-            });
-            //登录事件
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String UserName=usernameTXT.getText().toString();
-                    String Password=passwordTXT.getText().toString();
-                    boolean post_result=  postNetWork(UserName,Password);
-                    Log.i("btn1",postResult+","+post_result);
+            }
+        });
+        //记录用户名是否被点击
+        remeberUser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO Auto-generated method stub
+                if(isChecked)
+                {
+                    if(usernameTXT.getText()==null||passwordTXT.getText()==null)
+                    {
+                        Toast.makeText(Login_Activity.this,"用户名和密码不能为空",Toast.LENGTH_SHORT).show();
+                    }
+                    isRemeberUser=true;
+                    Log.e("check","remeberUser"+isChecked);
+                }
+                else{
+                    isRemeberUser=false;
+                    Log.e("check","remeberUser"+isChecked);
+                }
+            }
+        });
+        //登录事件
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String UserName=usernameTXT.getText().toString();
+                String Password=passwordTXT.getText().toString();
+                boolean post_result=  postNetWork(UserName,Password);
+                Log.i("btn1",postResult+","+post_result);
                     /*if(postResult)
                     {
                         if(isAutoLogin&&isRemeberUser)
@@ -212,20 +221,25 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                     }*/
 
 
-                    Log.i("btn_",isAutoLogin+","+isRemeberUser+UserName+Password);
+                Log.i("btn_",isAutoLogin+","+isRemeberUser+UserName+Password);
 
-                    Log.i("btn",""+getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isAutoLogin", false));
-                }
-            });
-        }
+                Log.i("btn",""+getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isAutoLogin", false));
+            }
+        });
+    }
 
+
+
+
+
+
+        //设置密码显示和隐藏
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.iv_see_password:
                     setPasswordVisibility();    //改变图片并设置输入框的文本可见或不可见
                     break;
-
             }
         }
 
@@ -238,7 +252,6 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                 iv_see_password.setImageResource(R.drawable.icon_nosee_pass);
                 //密码不可见
                 passwordTXT.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
             } else {
                 iv_see_password.setSelected(true);
                 iv_see_password.setImageResource(R.drawable.icon_see_pass);
@@ -248,12 +261,11 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
         }
 
-        void SetUserPassword(String userName,String Password)
+        void SetUserPassword(String userName,String Password,boolean isautoLogin,boolean isRemerber)
         {
         /*在activity中可以用setChecked(true);来设置为选中状态。
          ;语句为判断是否选中，返回一个boolean值。*/
-            boolean isautoLogin = getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isAutoLogin", false);
-            boolean isRemerber=getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("isRemeberUser", false);
+
             usernameTXT.setText(userName);
             passwordTXT.setText(Password);
             autoLogin.setChecked(isautoLogin);
@@ -293,7 +305,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                     2. 设置http请求头中‘Authorization’,值为“Basic”+base64("webapp":"webapp")*/
                         //设置URL
                         // URL url=new URL("https://store.tuihs.com/oauth/token?");
-                        //  URL url=new URL("http://192.168.0.109:8085/BJXT/PhoneServlet?");
+                        //  URL url=new URL("http://192.168.0.109:8085/BJXT/PhoneServlet?")
                         URL url=new URL(getString(R.string.post_url));
                         //使用HttpURLConnection进行HTTP连接
                         connection= (HttpURLConnection) url.openConnection();
@@ -384,39 +396,49 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                             getNetWork();
 
                             Log.i("btn_1",""+isAutoLogin+","+isRemeberUser+UserName+Password+"remeberUser.isChecked()"+remeberUser.isChecked());
+
+                            //保存用户名和密码
+
                             if(isAutoLogin)
                             {
                                 //保存用户名和密码（至xml）
-                                SetData("UserName",UserName);
-                                SetData("Password",Password);
+                                loadUser();
                                 //保存自动登录和记住密码是否被点击过
-                            /*SetData("isAutoLogin",isAutoLogin);
-                            SetData("isRemeberUser",isRemeberUser);*/
+                                 /*SetData("isAutoLogin",isAutoLogin);
+                                 SetData("isRemeberUser",isRemeberUser);
                                 SetData("isAutoLogin",autoLogin.isChecked());
-                                SetData("isRemeberUser",remeberUser.isChecked());
-                                Log.i("btn_1",""+isAutoLogin+","+isRemeberUser+UserName+Password+"remeberUser.isChecked()"+remeberUser.isChecked());
+                                SetData("isRemeberUser",remeberUser.isChecked());*/
+                               SaveLoadhistory(autoLogin.isChecked(),remeberUser.isChecked());
+
+                                Log.i("btn_1","自动登录"+isAutoLogin+","+isRemeberUser+UserName+Password+"remeberUser.isChecked()"+remeberUser.isChecked());
                             }
                             else if(isRemeberUser)
                             {
-                                //保存用户名和密码（至xml）
+                               /* //保存用户名和密码（至xml）
                                 SetData("UserName",UserName);
                                 SetData("Password",Password);
                                 //保存自动登录和记住密码是否被点击过
                                 SetData("isAutoLogin",autoLogin.isChecked());
-                                SetData("isRemeberUser",remeberUser.isChecked());
-                                Log.i("btn_1",""+isAutoLogin+","+isRemeberUser+UserName+Password);
+                                SetData("isRemeberUser",remeberUser.isChecked());*/
+                                Log.i("btn_1","记住密码"+isAutoLogin+","+isRemeberUser+UserName+Password);
+                                loadUser();
+                                SaveLoadhistory(autoLogin.isChecked(),remeberUser.isChecked());
                             }else
                             {
-                                //保存用户名和密码（至xml）
+                                /*//保存用户名和密码（至xml）
                                 SetData("UserName","");
                                 SetData("Password","");
                                 //保存自动登录和记住密码是否被点击过
                                 SetData("isAutoLogin",false);
-                                SetData("isRemeberUser",false);
+                                SetData("isRemeberUser",false);*/
+
+                                SaveLoadhistory(autoLogin.isChecked(),remeberUser.isChecked());
+                                Log.i("btn_1","未保存数据"+isAutoLogin+","+isRemeberUser+UserName+Password);
                             }
 
+                            SharedPreferencesUtils helper = new SharedPreferencesUtils(getApplicationContext(), "settings");
 
-
+                            Log.i("btn","我的记录"+helper.getString("UserName")+helper.getString("Password") +helper.getBoolean("isAutoLogin",false)+helper.getBoolean("isRemeberUser",false));
                             Log.i("btn",postResult+"postResult");
 
                         }else
@@ -668,50 +690,59 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
             Log.e("MysetCookies","cookieStr:"+value);
             editor.commit();
         }
-
-
-        /* *//**
+        /* *
          * 1.判断是否自动登录
-         *//*
+         */
     private boolean autoLogin() {
         //获取SharedPreferences对象，使用自定义类的方法来获取对象
-        SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "setting");
-        boolean autoLogin = helper.getBoolean("isRemeberUser", false);
+        SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "settings");
+        boolean autoLogin = helper.getBoolean("isAutoLogin", false);
         return autoLogin;
     }
 
-    *//**
+   /**
          * 2.判断是否记住密码
-         *//*
+         */
     private boolean remenberPassword() {
         //获取SharedPreferences对象，使用自定义类的方法来获取对象
-        SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "setting");
-        boolean remenberPassword = helper.getBoolean("remenberPassword", false);
+        SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "settings");
+        boolean remenberPassword = helper.getBoolean("isRemeberUser", false);
+
         return remenberPassword;
     }
 
-    *//**
+    /**
          * 3.保存用户账号和密码
-         *//*
+         */
     public void loadUser() {
         if (!getAccount().equals("")&& !getPassword().equals("")) {
-            SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "setting");
-            helper.putValues(new SharedPreferencesUtils.ContentValue("name", getAccount()),new SharedPreferencesUtils.ContentValue("name",getPassword()));
+            SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "settings");
+            helper.putValues(new SharedPreferencesUtils.ContentValue("UserName", getAccount()),new SharedPreferencesUtils.ContentValue("Password",getPassword()));
         }
 
     }
 
-    *//**
+    public  void SaveLoadhistory(boolean isAutoLogin,boolean isRemeberUser)
+    {
+        SharedPreferencesUtils helper = new SharedPreferencesUtils(this, "settings");
+        helper.putValues(new SharedPreferencesUtils.ContentValue("isAutoLogin", isAutoLogin),new SharedPreferencesUtils.ContentValue("isRemeberUser",isRemeberUser));
+
+
+    }
+
+  /**
          * 获取账号
-         *//*
+         */
     public String getAccount() {
         return usernameTXT.getText().toString().trim();//去掉空格
     }
 
-    *//**
+    /**
          * 获取密码
-         *//*
+         */
     public String getPassword() {
         return passwordTXT.getText().toString().trim();//去掉空格
-    }*/
+    }
+
+
 }

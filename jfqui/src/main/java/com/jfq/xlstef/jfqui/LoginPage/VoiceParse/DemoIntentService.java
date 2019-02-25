@@ -38,7 +38,7 @@ public class DemoIntentService extends GTIntentService {
     public void onCreate() {
         super.onCreate();
         Log.e("MyIntent","onCreate");
-        dbHelper=new DBHelper(getApplicationContext());
+        dbHelper=new DBHelper(this);
     }
 
 
@@ -110,8 +110,8 @@ public class DemoIntentService extends GTIntentService {
 
     //构造函数
     public DemoIntentService() {
-        kqwSpeechCompound=new KqwSpeechCompound(this);
-        Log.e(TAG, "DemoIntentService");
+
+        Log.e(TAG, "DemoIntentService---------------------------------");
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DemoIntentService extends GTIntentService {
     private  int dataCount;
     @Override
     public void onReceiveMessageData(Context context, GTTransmitMessage msg) {
-
+        kqwSpeechCompound=new KqwSpeechCompound(getApplicationContext());
         Log.e(TAG, "MyIntent onReceiveMessageData-test");
 
         String appid = msg.getAppid();

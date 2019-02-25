@@ -38,17 +38,14 @@ public class MainPayinfoFragment extends BaseFragment {
 		CategoryAdapter.mOrdername=CategoryAdapter.OrderName.SweepCode;
 	}*/
 
-	@Override
-	public View initpage() {
-		View v=  View.inflate(getActivity(),R.layout.sweep_code_layout3, null);
-		CategoryAdapter.mOrdername=CategoryAdapter.OrderName.SweepCode;
-		return v;
-	}
+
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		Log.i("path--","onCreateView3");
-		return super.onCreateView(inflater, container, savedInstanceState);
+		View view=View.inflate(getActivity(),R.layout.sweep_code_layout3, null);
+		CategoryAdapter.mOrdername=CategoryAdapter.OrderName.SweepCode;
+		super.initial(view);
+		return view;
 	}
 
 
