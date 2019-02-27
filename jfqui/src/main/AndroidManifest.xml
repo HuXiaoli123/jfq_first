@@ -73,7 +73,8 @@
 
         <activity android:name=".MainActivity" />
         <activity android:name=".Message.Mycenter_MsgActivity" />
-        <activity android:name=".LoginPage.VoiceParse.TestActivity"></activity>
+        <activity android:name=".LoginPage.VoiceParse.TestActivity" />
+        <activity android:name=".fragments.SerachActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
-package com.jfq.xlstef.jfqui.OrderFragment.Enum_Order;
+package com.jfq.xlstef.jfqui.OrderFragment.Adapter;
 
-public   enum OrderName
-{
+public enum  OrderName {
 
     CompleteOrder("CompleteOrder"),
     ShopMallOrder("2"),

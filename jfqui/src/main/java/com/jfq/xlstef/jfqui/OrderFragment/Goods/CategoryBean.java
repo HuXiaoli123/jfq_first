@@ -1,9 +1,11 @@
 package com.jfq.xlstef.jfqui.OrderFragment.Goods;
 
+import java.io.Serializable;
+
 /**
  * Created by renren on 2016/9/20.
  */
-public  class CategoryBean extends  BasicOrder{
+public  class CategoryBean extends  BasicOrder implements Serializable {
 
 
     private  int _id;
@@ -35,6 +37,10 @@ public  class CategoryBean extends  BasicOrder{
         this.addpriceName = addpriceName;
         this.nameOfCommodity = nameOfCommodity;
         this.payStatus = payStatus;
+    }
+
+    public CategoryBean(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
 

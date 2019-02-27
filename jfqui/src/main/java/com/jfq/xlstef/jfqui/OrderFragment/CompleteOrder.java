@@ -37,33 +37,13 @@ public class CompleteOrder  extends BaseFragment {
         return view;
     }
     //---------------------------
-    @Override
-    public void onAttach(Context context) {
-        //由于 onCreate 是在 onAttach 后执行，故此时 mTitle 为空
-        Log.i(TAG, "Fragment id = "+ " is onAttach.");
-        super.onAttach(context);
-    }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, " is onActivityCreated.");
-        super.onActivityCreated(savedInstanceState);
-        //测试 onCreate() 是 Activity 的 UI 是否初始化完成
 
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, " is onStart.");
-    }
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.i("messageFrament",hidden+"");
-        if(!hidden){}
-           // QueryData(dbHelper);
 
-    }
+
+
+
+    //------------------
 
     @Override
     public void initRecyclerView() {

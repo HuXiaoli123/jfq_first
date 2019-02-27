@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.provider.Settings.System.DATE_FORMAT;
+
 public class CategoryBeanDAO {
     DBHelper dbHelper=null;
     public CategoryBeanDAO(DBHelper dbHelper){
@@ -253,6 +255,41 @@ public class CategoryBeanDAO {
         }
         Log.d("name", "msg pid:"+addpriceName);
         return addpriceName;
+    }
+
+    public ArrayList queryByTimer(String table,String StartTimer,String endTimer){
+
+        String  addpriceName="";
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase();
+
+      /*  Cursor cursor=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "DATEDIFF(day,"+Data.COLUMN_playTime+","+endTimer+")"+"<=?",
+                new String[]{StartTimer,"0"},null,null,null);*/
+        Cursor cursor=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "strftime('%Y-%m-%d',"+Data.COLUMN_playTime+")"+"<=?",
+                new String[]{StartTimer,endTimer},null,null,null);
+
+
+
+
+        return GetAllInfoData(cursor);
+    }
+    private  ArrayList GetAllInfoData(Cursor results)
+    {
+        ArrayList<CategoryBean>arrayList=new ArrayList<>();
+        for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
+            CategoryBean listInfo=new CategoryBean();
+            listInfo.set_id(results.getInt(0));
+            listInfo.setOrderNumber(results.getString(1));
+            listInfo.setOderType(results.getString(2));
+            listInfo.setItemPrice(results.getString(3));
+            listInfo.setPlatformDeduction(results.getString(4));
+            listInfo.setUserPlay(results.getString(5));
+            listInfo.setStoreEntry(results.getString(6));
+            listInfo.setPlayTime(results.getString(7));
+            // Log.i("myadapter",results.getString(10));
+            arrayList.add(listInfo);
+        }
+        results.close();
+        return arrayList;
     }
 
 

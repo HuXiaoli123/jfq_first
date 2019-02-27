@@ -4,6 +4,7 @@ package com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CommissionDetailOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 
@@ -94,5 +95,6 @@ public class ValuesTransform {
         detailOrder.setEntryValue(cursor.getString(cursor.getColumnIndex(Data.entryValue)));
         return  detailOrder;
     }
+
 
 }

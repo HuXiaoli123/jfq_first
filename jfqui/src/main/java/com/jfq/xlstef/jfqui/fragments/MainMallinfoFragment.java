@@ -1,5 +1,6 @@
 package com.jfq.xlstef.jfqui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,12 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.DailyOrderAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.MallinfoAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.BaseFragment;
+import com.jfq.xlstef.jfqui.OrderFragment.Enum_Order.OrderName;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.BasicOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
@@ -30,6 +33,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DownLoadAsyncTask;
 import com.jfq.xlstef.jfqui.OrderFragment.WrapContentLinearLayoutManager;
 import com.jfq.xlstef.jfqui.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,11 +96,23 @@ public class MainMallinfoFragment extends  Fragment  {
         manager = new LinearLayoutManager(getActivity());
 
         LoadRecycleViewclass();
+
         //initRecyclerView();
     }
 
 
+    public  void myresearch()
+    {
+        Log.i("AAA_","MallresearchFragment");
 
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), SerachActivity.class);
+        intent.putExtra("orderName", 1);
+
+        intent.putExtra("lstBean", (Serializable) mCategoryBean);
+
+        startActivity(intent);
+    }
 
     boolean isLoading;
     boolean isFreshing;
@@ -331,6 +347,11 @@ public class MainMallinfoFragment extends  Fragment  {
                 (RecyclerView.ViewHolder)mRecyclerView
                         .getChildViewHolder(mRecyclerView.getChildAt(position));
 
+    }
+
+    public  void research(View v)
+    {
+        Log.i("v","mallinfo");
     }
 
 }

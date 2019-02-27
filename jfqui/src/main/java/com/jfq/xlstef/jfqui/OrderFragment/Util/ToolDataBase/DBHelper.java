@@ -70,6 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //创建所有订单视图
         String CreateView_all=" create view "+Data.VIEW_ALL_ORDER+" as select "+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.orderNumber+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemPrice+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+

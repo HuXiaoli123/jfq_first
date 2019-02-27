@@ -31,11 +31,13 @@
 				android:textSize="20sp"
 		/>
 		<ImageView
+			android:id="@+id/research"
 				android:layout_width="59dp"
 				android:layout_height="match_parent"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentBottom="true"
 				android:layout_marginBottom="0dp"
-				android:src="@drawable/duoyun"/>
+				android:src="@drawable/serach"
+			android:onClick="research"/>
 	</RelativeLayout>
 </LinearLayout>

@@ -250,4 +250,7 @@
     <dimen name="comissionentry_dp">85dp</dimen>
     <dimen name="entryvalue_dp">85dp</dimen>
 
+    <dimen name="picker_view_height">160dp</dimen>
+    <dimen name="date_unit_text_size">18sp</dimen>
+
 </resources>

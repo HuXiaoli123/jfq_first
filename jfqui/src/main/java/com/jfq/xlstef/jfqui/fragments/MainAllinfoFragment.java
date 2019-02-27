@@ -1,6 +1,7 @@
 package com.jfq.xlstef.jfqui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.BaseFragment;
+import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.R;
+
+import java.io.Serializable;
+import java.util.List;
 
 
 public class MainAllinfoFragment extends BaseFragment {
@@ -32,6 +38,18 @@ public class MainAllinfoFragment extends BaseFragment {
 		return inflater.inflate(R.layout.fragment_main_allinfo, container, false);
 	}*/
     String TAG="path";
+    public  void myresearch()
+    {
+        Log.i("AAA_","MainAllinfoFragment");
+
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), SerachActivity.class);
+        intent.putExtra("orderName", 0);
+
+        intent.putExtra("lstBean", (Serializable) mCategoryBean);
+
+        startActivity(intent);
+    }
     //初始化特有数据
     public  MainAllinfoFragment()
     {
@@ -52,6 +70,7 @@ public class MainAllinfoFragment extends BaseFragment {
 
         View view=View.inflate(getActivity(),R.layout.completeorder1_main, null);
         CategoryAdapter.mOrdername=CategoryAdapter.OrderName.CompleteOrder;
+
         super.initial(view);
         return view;
     }

@@ -2,20 +2,24 @@ package com.jfq.xlstef.jfqui;
 
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.jfq.xlstef.jfqui.OrderFragment.CompleteOrder;
 import com.jfq.xlstef.jfqui.fragments.*;
 import com.jfq.xlstef.jfqui.utils.MoveBg;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabMainActivity extends AppCompatActivity {
+public class TabMainActivity extends AppCompatActivity  {
 	RelativeLayout titlebar_Layout;
 	TextView titlebar_front;
 
@@ -30,6 +34,27 @@ public class TabMainActivity extends AppCompatActivity {
 	TabFragmentPagerAdapter tabFragAdapter;
 	//一个title栏text的长度
 	int title_width = 0;
+
+	public enum  OrderName {
+
+		CompleteOrder("CompleteOrder"),
+		ShopMallOrder("2"),
+		SweepCode("3"),
+		DetailCommission("4"),
+		DailyOrder("5"),
+		UnpayOrder("6");
+
+		private String type;
+
+		OrderName(String type) {
+			this.type = type;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+	}
 	private View.OnClickListener onClickListener=new View.OnClickListener() {
 		int startX;
 		@Override
@@ -41,12 +66,14 @@ public class TabMainActivity extends AppCompatActivity {
 					MoveBg.moveFrontBg(titlebar_front,startX,0,0,0);
 					startX=0;
 					titlebar_front.setText(R.string.title_main_allinfo);
+					mcurrentName=OrderName.CompleteOrder;
 					break;
 				case R.id.titlebar_main_mallinfo:
 					layout_body.setCurrentItem(1);
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width,0,0);
 					startX=title_width;
 					titlebar_front.setText(R.string.title_main_mallinfo);
+					mcurrentName=OrderName.ShopMallOrder;
 					break;
 				case R.id.titlebar_main_payinfo:
 					layout_body.setCurrentItem(2);
@@ -101,8 +128,12 @@ public class TabMainActivity extends AppCompatActivity {
 			layout_body.addOnPageChangeListener(new MyPagerChangeListener());
 			//设置viewpage
 			list=new ArrayList<>();
-			list.add(new MainAllinfoFragment());
-			list.add(new MainMallinfoFragment());
+
+			mainAllinfoFragment=new MainAllinfoFragment();
+			mallinfoFragment=new MainMallinfoFragment();
+
+			list.add(mainAllinfoFragment);
+			list.add(mallinfoFragment);
 			list.add(new MainPayinfoFragment());
 			list.add(new MainCommissioninfoFragment());
 			list.add(new MainSummaryinfoFragment());
@@ -120,7 +151,12 @@ public class TabMainActivity extends AppCompatActivity {
 			params.addRule(RelativeLayout.CENTER_VERTICAL,RelativeLayout.TRUE);
 			titlebar_Layout.addView(titlebar_front,params);
 
+		mcurrentName=OrderName.CompleteOrder;
+
+
+
 	}
+	OrderName mcurrentName;
 	/**
 	 * 设置一个ViewPager的侦听事件，当左右滑动ViewPager时菜单栏被选中状态跟着改变
 	 *
@@ -170,6 +206,28 @@ public class TabMainActivity extends AppCompatActivity {
 		public void onPageScrollStateChanged(int state) {
 
 		}
+	}
+
+	MainAllinfoFragment mainAllinfoFragment;
+	MainMallinfoFragment mallinfoFragment;
+	public void research(View v)
+	{
+		  switch (mcurrentName)
+		  {
+			  case CompleteOrder:
+				  if(null != mainAllinfoFragment){
+					  mainAllinfoFragment.myresearch();
+				  }
+
+			  	break;
+			  case ShopMallOrder:
+				  if(null != mallinfoFragment){
+					  mallinfoFragment.myresearch();
+				  }
+
+				  break;
+		  }
+		  Log.i("AAA",mcurrentName+","+mainAllinfoFragment);
 	}
 
 }
