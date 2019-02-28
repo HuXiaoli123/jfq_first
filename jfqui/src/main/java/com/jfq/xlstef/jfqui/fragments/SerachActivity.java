@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,20 +63,29 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         lstBean= (List<CategoryBean>) intentGet.getSerializableExtra("lstBean");
         Log.i("mydata","lstBean"+lstBean.size());
         initView();
-
+        adpter=new MyAdpater(lstBean);
         switch (mOrderName)
         {
             case 0:
                 table=Data.VIEW_ALL_ORDER;
+                setHeader(R.layout.all_head);
                 break;
             case 1:
                 table=Data.VIEW_COMODITYORDER;
+                setHeader(R.layout.mall_head);
                 break;
         }
-        adpter=new MyAdpater(lstBean);
         mRcSearch.setAdapter(adpter);
 
 
+    }
+
+    //头部添加
+    private void setHeader(int headLayout) {
+        View header = LayoutInflater.from(this).inflate(headLayout, null);
+        adpter.setHeadView(header);
+
+        // 这里可以获得的头部布局具体控件，并进行操作
     }
 
     private CustomDatePicker mDatePicker, mTimerPicker;

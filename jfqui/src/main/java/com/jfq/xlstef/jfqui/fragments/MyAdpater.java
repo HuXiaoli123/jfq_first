@@ -29,10 +29,20 @@ public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> implem
 
     TestFilter myFilter;
 
+
+
     /**
      * 需要改变颜色的text
      */
     private String text;
+
+    /**
+     * View  布局分配
+     */
+    View headView=null;
+    //定义  判断要传入的布局标记
+    static final int TYPE_HODE = 0;
+    static final int TYPE_NOMAL = 1;
 
 
     public MyAdpater(List<CategoryBean> number) {
@@ -42,18 +52,35 @@ public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> implem
     }
 
 
+    // 生成为每个Item inflater出一个View，  法返回的是一个ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, null);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        //ViewHolder viewHolder = new ViewHolder(view);
+
+        if (headView != null && viewType == TYPE_HODE) {
+            return new ViewHolder(headView);}
+        else {
+            View holder = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, parent, false);
+            return new ViewHolder(holder);}
+
+       // return viewHolder;
+    }
+
+    //该方法主要是对item 下标进行判断，当添加有头，position - 1 ，在以后调用就不用考虑position所在位置
+    public int getRealPosition(RecyclerView.ViewHolder holder) {
+        int position = holder.getLayoutPosition();
+        return headView == null ? position : position - 1;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-
-        CategoryBean categoryBean = number.get(position);
+        if (getItemViewType(position) == TYPE_HODE) {
+            return;
+        }
+        final int pos = getRealPosition(holder);
+        CategoryBean categoryBean = number.get(pos);
 
 
         /*//设置span
@@ -97,7 +124,15 @@ public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> implem
 
     @Override
     public int getItemCount() {
-        return number.size();
+       // return number.size();
+        return headView == null ? number.size() : number.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (headView == null) return TYPE_NOMAL;
+        if (position == 0) return TYPE_HODE;
+        return TYPE_NOMAL;
     }
 
     @Override
@@ -125,6 +160,7 @@ public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> implem
 
         public ViewHolder(View itemView) {
             super(itemView);
+            if (itemView == headView) return;
             orderNumber = (TextView) itemView.findViewById(R.id.orderNumber);
             oderType= (TextView) itemView.findViewById(R.id.oderType);
             itemPrice= (TextView) itemView.findViewById(R.id.itemPrice);
@@ -139,6 +175,11 @@ public class MyAdpater extends RecyclerView.Adapter<MyAdpater.ViewHolder> implem
         }
     }
 
+
+    public void setHeadView(View headView) {
+        this.headView = headView;
+        notifyItemInserted(0);//在position位置插入数据的时候更新
+    }
 
 
     /**
