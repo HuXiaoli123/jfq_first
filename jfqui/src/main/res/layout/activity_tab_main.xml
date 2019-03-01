@@ -8,7 +8,7 @@
     tools:context=".TabMainActivity">
     <include
         android:id="@+id/tablayout_main_title"
-        layout="@layout/layout_tab_top"
+        layout="@layout/layout_tab_top_can_serach"
         />
 
     <RelativeLayout

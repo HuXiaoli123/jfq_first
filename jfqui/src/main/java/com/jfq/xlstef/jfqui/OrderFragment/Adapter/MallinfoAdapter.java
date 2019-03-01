@@ -156,90 +156,17 @@ public class MallinfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
             //支付时间
             holder1.playTime.setText(categoryBean.getPlayTime());
-
-
-
             holder1.platformDeduction.setText(categoryBean.getPlatformDeduction());
             holder1.userPlay.setText(categoryBean.getUserPlay());
             holder1.storeEntry.setText(categoryBean.getStoreEntry());
-
-
-          /*  if(isMall)
-            {
-                holder1.oderType.setText(categoryBean.getNameOfCommodity());
-                holder1.itemPrice.setText(categoryBean.getItemPrice());
-                Log.i("order_pag","ShopMallOrder");
-                return;
-            }*/
 
             holder1.oderType.setText(categoryBean.getNameOfCommodity());
             holder1.itemPrice.setText(categoryBean.getItemPrice());
             Log.i("order_pag","ShopMallOrder");
 
-
-
-           /* if(!mDailyOrder)
-            holder1.playTime.setText(categoryBean.getPlayTime());
-            else
-                holder1.playTime.setVisibility(View.GONE);*/
-
-            //这一行可以不需要：这是为所有的Item添加点击事件
-           /* ((ViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mOnItemClickListener != null) {
-                        mOnItemClickListener.OnItemClick(view, pos, mCategoryBeen.get(pos));
-                    }
-                }
-            });*/
         }
 
     }
-
-
-
-
-
-    /* 加价购细节对话框*/
-    public  void DetailMsg( String []allPriceName)
-    {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
-        View view = LayoutInflater.from(mContext).inflate(R.layout.addcountpage, null);
-// 设置我们自己定义的布局文件作为弹出框的Content
-        builder.setView(view);
-//这个位置十分重要，只有位于这个位置逻辑才是正确的
-        final AlertDialog dialog = builder.show();
-        final TextView et_Threshold = view.findViewById(R.id.edThreshold);
-
-        Log.i("path",allPriceName.length+"");
-        StringBuilder s=new StringBuilder();
-        if(allPriceName!=null)
-        {
-            for(int i=0;i<allPriceName.length;i++)
-            {
-                Log.i("path",allPriceName[i]);
-                s.append(allPriceName[i]).append("\n");
-            }
-        }
-
-        et_Threshold.setText(s.toString());
-
-        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //确认
-
-                //写相关的服务代码
-
-                //关闭对话框
-                dialog.dismiss();
-            }
-        });
-
-
-    }
-
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -256,9 +183,9 @@ public class MallinfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     //动态决定视图中显示的item个数
     @Override
     public int getItemCount() {
-        //if(mCategoryBeen.size()>17)
+
         return mHeaderView == null ? mCategoryBeen.size() + 1 : mCategoryBeen.size() + 2;
-        // return  mCategoryBeen.size() ;
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

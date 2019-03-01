@@ -1,5 +1,7 @@
 package com.jfq.xlstef.jfqui.fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -15,8 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.R;
 
 import java.util.ArrayList;
@@ -24,8 +27,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Filterable {
-    List <CategoryBean>number;
+public class MyAdpater_mall extends  BaseAdpater<MyAdpater_mall.ViewHolder> implements Filterable {
+   // List <CategoryBean>number;
     List<CategoryBean>temp_number;
 
     TestFilter myFilter;
@@ -35,28 +38,20 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
      */
     private String text;
 
-    /**
-     * View  布局分配
-     */
-    View headView=null;
-    //定义  判断要传入的布局标记
-    static final int TYPE_HODE = 0;
-    static final int TYPE_NOMAL = 1;
-   // ProgressView progress_loading_main; // 加载数据时显示的进度圆圈
-
-
-    public MyAdpater(List<CategoryBean> number) {
+    public MyAdpater_mall(List<CategoryBean> number ) {
 
         this.number=number;
         temp_number = number;
     }
 
 
-    // 生成为每个Item inflater出一个View，  法返回的是一个ViewHolder
+     // 生成为每个Item inflater出一个View，  法返回的是一个ViewHolder
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public  ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, null);
         //ViewHolder viewHolder = new ViewHolder(view);
+
+
 
         if (headView != null && viewType == TYPE_HODE) {
             return new ViewHolder(headView);}
@@ -67,12 +62,8 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
        // return viewHolder;
     }
 
-    //该方法主要是对item 下标进行判断，当添加有头，position - 1 ，在以后调用就不用考虑position所在位置
-    public int getRealPosition(RecyclerView.ViewHolder holder) {
-        int position = holder.getLayoutPosition();
-        return headView == null ? position : position - 1;
-    }
 
+    CategoryBeanDAO dao;
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -94,44 +85,27 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
            holder.platformDeduction.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getPlatformDeduction(), text));
            holder.userPlay.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getUserPlay(), text));
            holder.storeEntry.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getStoreEntry(), text));
-           holder.oderType.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getOderType(), text));
+           holder.oderType.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getNameOfCommodity(), text));
            holder.itemPrice.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getItemPrice(), text));
        }else
        {
-            holder.orderNumber.setText(categoryBean.getOrderNumber() );
+           holder.orderNumber.setText(categoryBean.getOrderNumber() );
         //支付时间
         holder.playTime.setText(categoryBean.getPlayTime());
 
         holder.platformDeduction.setText(categoryBean.getPlatformDeduction());
         holder.userPlay.setText(categoryBean.getUserPlay());
         holder.storeEntry.setText(categoryBean.getStoreEntry());
-        holder.oderType.setText(categoryBean.getOderType());
+        holder.oderType.setText(categoryBean.getNameOfCommodity());
         holder.itemPrice.setText(categoryBean.getItemPrice());
+
+
+
        }
-       /* holder.orderNumber.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getOrderNumber(), text));
-        //支付时间
-        holder.playTime.setText(categoryBean.getPlayTime());
 
-        holder.platformDeduction.setText(categoryBean.getPlatformDeduction());
-        holder.userPlay.setText(categoryBean.getUserPlay());
-        holder.storeEntry.setText(categoryBean.getStoreEntry());
-        holder.oderType.setText(categoryBean.getOderType());
-        holder.itemPrice.setText(categoryBean.getItemPrice());*/
 
     }
 
-    @Override
-    public int getItemCount() {
-       // return number.size();
-        return headView == null ? number.size() : number.size() + 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (headView == null) return TYPE_NOMAL;
-        if (position == 0) return TYPE_HODE;
-        return TYPE_NOMAL;
-    }
 
     @Override
     public Filter getFilter() {
@@ -173,13 +147,6 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
         }
     }
 
-
-    public void setHeadView(View headView) {
-        this.headView = headView;
-        notifyItemInserted(0);//在position位置插入数据的时候更新
-    }
-
-
     /**
      * 正则匹配 返回值是一个SpannableString 即经过变色处理的数据
      */
@@ -211,7 +178,7 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
             if (constraint != null && constraint.toString().trim().length() > 0) {
                 for (int i = 0; i < temp_number.size(); i++) {
 
-                    if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getOderType().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)
+                    if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getNameOfCommodity().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)
                             ||temp_number.get(i).getStoreEntry().contains(constraint)||temp_number.get(i).getUserPlay().contains(constraint)
                             ||temp_number.get(i).getPlatformDeduction().contains(constraint)||temp_number.get(i).getPlayTime().contains(constraint))
                     {
@@ -248,6 +215,5 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
 
         }
     }
-
 
 }

@@ -258,7 +258,7 @@ import java.util.List;
                 }
             });
 
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+          /*  mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
@@ -273,7 +273,7 @@ import java.util.List;
                         Log.i(" Sroller","到定了"+lastVisiableItemPosition+":"+mCategoryAdapter.getItemCount());
 
                        // if(mCategoryBean.size()>17)
-                         setHeader(mRecyclerView);  //上拉刷新数据
+                        setHeader(mRecyclerView);  //上拉刷新数据
                         if (!isFreshing){
                             isFreshing = true;
                             handler.postDelayed(new Runnable() {
@@ -305,7 +305,7 @@ import java.util.List;
                         }
                     }
                 }
-            });
+            });*/
 
 
         }

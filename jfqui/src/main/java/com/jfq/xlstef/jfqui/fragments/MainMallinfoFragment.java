@@ -107,8 +107,7 @@ public class MainMallinfoFragment extends  Fragment  {
 
         Intent intent = new Intent();
         intent.setClass(getActivity(), SerachActivity.class);
-        intent.putExtra("orderName", 1);
-
+        intent.putExtra("orderName", 2);
         intent.putExtra("lstBean", (Serializable) mCategoryBean);
 
         startActivity(intent);
@@ -170,15 +169,7 @@ public class MainMallinfoFragment extends  Fragment  {
         return  false;
     }
 
-    public  void   InserDatabase()
-    {
-          /*
-       异步加载网页数据
-        */
-        /*new DownLoadAsyncTask(getActivity(),mCategoryBean).execute(path);
-        QueryData(new DBHelper(getActivity()));*/
 
-    }
     //查询数据
     public ArrayList QueryData(DBHelper dbHelper,String status) {
         CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
@@ -197,24 +188,6 @@ public class MainMallinfoFragment extends  Fragment  {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // mCategoryBean=QueryData(new DBHelper(getActivity()));
-
-
-        Log.i("sleep","waiting+my"+mCategoryBean.size());
-
-        //下方注释的代码用来解决headerview和footerview加载到头一个或者最后一个item  而不是占据一行的bug
-        /*final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-
-        // gridLayoutManager  布局管理器
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                //如果是第一个(添加HeaderView)   还有就是最后一个(FooterView)
-                return position == mCategoryBean.size() + 1 || position == 0 ? gridLayoutManager.getSpanCount() : 1;
-            }
-        });*/
-
 
         /*
         控制第一次刷新的条数
@@ -246,7 +219,7 @@ public class MainMallinfoFragment extends  Fragment  {
             }
         });
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      /*  mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -293,7 +266,7 @@ public class MainMallinfoFragment extends  Fragment  {
                     }
                 }
             }
-        });
+        });*/
 
 
     }

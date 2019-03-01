@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.CompleteOrder;
+import com.jfq.xlstef.jfqui.OrderFragment.Enum_Order.OrderName;
 import com.jfq.xlstef.jfqui.fragments.*;
 import com.jfq.xlstef.jfqui.utils.MoveBg;
 
@@ -35,26 +36,7 @@ public class TabMainActivity extends AppCompatActivity  {
 	//一个title栏text的长度
 	int title_width = 0;
 
-	public enum  OrderName {
 
-		CompleteOrder("CompleteOrder"),
-		ShopMallOrder("2"),
-		SweepCode("3"),
-		DetailCommission("4"),
-		DailyOrder("5"),
-		UnpayOrder("6");
-
-		private String type;
-
-		OrderName(String type) {
-			this.type = type;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-	}
 	private View.OnClickListener onClickListener=new View.OnClickListener() {
 		int startX;
 		@Override
@@ -80,18 +62,21 @@ public class TabMainActivity extends AppCompatActivity  {
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*2,0,0);
 					startX=title_width*2;
 					titlebar_front.setText(R.string.title_main_payinfo);
+					mcurrentName=OrderName.SweepCode;
 					break;
 				case R.id.titlebar_main_commissioninfo:
 					layout_body.setCurrentItem(3);
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*3,0,0);
 					startX=title_width*3;
 					titlebar_front.setText(R.string.title_main_commissioninfo);
+					mcurrentName=OrderName.DetailCommission;
 					break;
 				case R.id.titlebar_main_summaryinfo:
 					layout_body.setCurrentItem(4);
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*4,0,0);
 					startX=title_width*4;
 					titlebar_front.setText(R.string.title_main_summaryinfo);
+					mcurrentName=OrderName.DailyOrder;
 					break;
 				default:
 						break;
@@ -131,10 +116,11 @@ public class TabMainActivity extends AppCompatActivity  {
 
 			mainAllinfoFragment=new MainAllinfoFragment();
 			mallinfoFragment=new MainMallinfoFragment();
+			mainPayinfoFragment=new MainPayinfoFragment();
 
 			list.add(mainAllinfoFragment);
 			list.add(mallinfoFragment);
-			list.add(new MainPayinfoFragment());
+			list.add(mainPayinfoFragment);
 			list.add(new MainCommissioninfoFragment());
 			list.add(new MainSummaryinfoFragment());
 			tabFragAdapter=new TabFragmentPagerAdapter(getSupportFragmentManager(),list);
@@ -176,26 +162,31 @@ public class TabMainActivity extends AppCompatActivity  {
 					MoveBg.moveFrontBg(titlebar_front,startX,0,0,0);
 					startX=0;
 					titlebar_front.setText(R.string.title_main_allinfo);
+					mcurrentName=OrderName.CompleteOrder;
 					break;
 				case 1:
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width,0,0);
 					startX=title_width;
 					titlebar_front.setText(R.string.title_main_mallinfo);
+					mcurrentName=OrderName.ShopMallOrder;
 					break;
 				case 2:
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*2,0,0);
 					startX=title_width*2;
 					titlebar_front.setText(R.string.title_main_payinfo);
+					mcurrentName=OrderName.SweepCode;
 					break;
 				case 3:
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*3,0,0);
 					startX=title_width*3;
 					titlebar_front.setText(R.string.title_main_commissioninfo);
+					mcurrentName=OrderName.DetailCommission;
 					break;
 				case 4:
 					MoveBg.moveFrontBg(titlebar_front,startX,title_width*4,0,0);
 					startX=title_width*4;
 					titlebar_front.setText(R.string.title_main_summaryinfo);
+					mcurrentName=OrderName.DailyOrder;
 					break;
 				default:
 					break;
@@ -210,6 +201,7 @@ public class TabMainActivity extends AppCompatActivity  {
 
 	MainAllinfoFragment mainAllinfoFragment;
 	MainMallinfoFragment mallinfoFragment;
+	MainPayinfoFragment mainPayinfoFragment;
 	public void research(View v)
 	{
 		  switch (mcurrentName)
@@ -224,7 +216,11 @@ public class TabMainActivity extends AppCompatActivity  {
 				  if(null != mallinfoFragment){
 					  mallinfoFragment.myresearch();
 				  }
-
+				  break;
+			  case SweepCode:
+				  if(null != mainPayinfoFragment){
+					  mainPayinfoFragment.myresearch();
+				  }
 				  break;
 		  }
 		  Log.i("AAA",mcurrentName+","+mainAllinfoFragment);

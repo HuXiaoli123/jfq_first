@@ -1,5 +1,7 @@
 package com.jfq.xlstef.jfqui.fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -17,6 +19,8 @@ import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.R;
 
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Filterable {
+public class MyAdpater_pay extends  BaseAdpater<MyAdpater_pay.ViewHolder> implements Filterable {
     List <CategoryBean>number;
     List<CategoryBean>temp_number;
 
@@ -42,19 +46,22 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
     //定义  判断要传入的布局标记
     static final int TYPE_HODE = 0;
     static final int TYPE_NOMAL = 1;
+
+    Context mContext;
    // ProgressView progress_loading_main; // 加载数据时显示的进度圆圈
 
 
-    public MyAdpater(List<CategoryBean> number) {
+    public MyAdpater_pay(List<CategoryBean> number,Context context) {
 
         this.number=number;
+        this.mContext=context;
         temp_number = number;
     }
 
 
-    // 生成为每个Item inflater出一个View，  法返回的是一个ViewHolder
+     // 生成为每个Item inflater出一个View，  法返回的是一个ViewHolder
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public  ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item_layout, null);
         //ViewHolder viewHolder = new ViewHolder(view);
 
@@ -72,7 +79,7 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
         int position = holder.getLayoutPosition();
         return headView == null ? position : position - 1;
     }
-
+    CategoryBeanDAO dao;
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -80,7 +87,7 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
             return;
         }
         final int pos = getRealPosition(holder);
-        CategoryBean categoryBean = number.get(pos);
+        CategoryBean categoryBean = number.get(pos); 
         /*//设置span
         SpannableString string = matcherSearchText(Color.rgb(255, 0, 0), list.get(position), text);
         holder.mTvText.setText(string);*/
@@ -105,8 +112,40 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
         holder.platformDeduction.setText(categoryBean.getPlatformDeduction());
         holder.userPlay.setText(categoryBean.getUserPlay());
         holder.storeEntry.setText(categoryBean.getStoreEntry());
-        holder.oderType.setText(categoryBean.getOderType());
-        holder.itemPrice.setText(categoryBean.getItemPrice());
+           holder.oderType.setText(categoryBean.getItemPrice());
+           Log.i("MySweepCode","SweepCode");
+           if(!"0.0".equals(categoryBean.getAddpriceAmount()))
+           {
+               holder.itemPrice.setText(categoryBean.getAddpriceAmount());
+               holder.mMoreDetail.setVisibility(View.VISIBLE);
+               dao=new CategoryBeanDAO(new DBHelper(mContext));
+
+
+               //给加价购提供点击事件
+               ((MyAdpater_pay.ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+
+                       Log.i("MySweepCode","我是加价购");
+                       if (mOnItemClickListener != null) {
+                           mOnItemClickListener.OnItemClick(v, pos, number.get(pos));
+                           String addPriceName=dao.queryById(number.get(pos).get_id());//因为数据库中的id是从1开始的
+                           Log.i("path","我是加价购"+pos+","+number);
+                           String[] allPriceName=addPriceName.split("-");
+
+                           Log.i("mytest_", number.get(pos).getOrderNumber()+";"+ number.get(pos).get_id());
+                           //弹出加价购的详细信息
+                           DetailMsg(allPriceName);
+                           number.get(pos).getOrderNumber();
+
+                       }
+                   }
+               });
+           }else
+           {
+               holder.itemPrice.setText("无");
+           }
+
        }
        /* holder.orderNumber.setText(matcherSearchText(Color.rgb(255, 0, 0), categoryBean.getOrderNumber(), text));
         //支付时间
@@ -117,6 +156,46 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
         holder.storeEntry.setText(categoryBean.getStoreEntry());
         holder.oderType.setText(categoryBean.getOderType());
         holder.itemPrice.setText(categoryBean.getItemPrice());*/
+
+    }
+
+    /* 加价购细节对话框*/
+    public  void DetailMsg( String []allPriceName)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
+        View view = LayoutInflater.from(mContext).inflate(R.layout.addcountpage, null);
+// 设置我们自己定义的布局文件作为弹出框的Content
+        builder.setView(view);
+//这个位置十分重要，只有位于这个位置逻辑才是正确的
+        final AlertDialog dialog = builder.show();
+        final TextView et_Threshold = view.findViewById(R.id.edThreshold);
+
+        Log.i("path",allPriceName.length+"");
+        StringBuilder s=new StringBuilder();
+        if(allPriceName!=null)
+        {
+            for(int i=0;i<allPriceName.length;i++)
+            {
+                Log.i("path",allPriceName[i]);
+                s.append(allPriceName[i]).append("\n");
+            }
+        }
+
+        et_Threshold.setText(s.toString());
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //确认
+
+                //写相关的服务代码
+
+                //关闭对话框
+                dialog.dismiss();
+            }
+        });
+
 
     }
 
@@ -211,7 +290,7 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
             if (constraint != null && constraint.toString().trim().length() > 0) {
                 for (int i = 0; i < temp_number.size(); i++) {
 
-                    if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getOderType().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)
+                    if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)||temp_number.get(i).getAddpriceAmount().contains(constraint)
                             ||temp_number.get(i).getStoreEntry().contains(constraint)||temp_number.get(i).getUserPlay().contains(constraint)
                             ||temp_number.get(i).getPlatformDeduction().contains(constraint)||temp_number.get(i).getPlayTime().contains(constraint))
                     {
@@ -248,6 +327,5 @@ public class MyAdpater  extends BaseAdpater<MyAdpater.ViewHolder> implements Fil
 
         }
     }
-
 
 }

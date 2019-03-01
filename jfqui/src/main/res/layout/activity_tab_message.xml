@@ -9,6 +9,7 @@
 	<include
 			android:id="@+id/tablayout_message_title"
 			layout="@layout/layout_tab_top"
+
 	/>
 	<TextView
 			android:layout_below="@id/tablayout_message_title"

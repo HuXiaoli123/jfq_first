@@ -56,7 +56,7 @@ public class MainAllinfoFragment extends BaseFragment {
 
         Intent intent = new Intent();
         intent.setClass(getActivity(), SerachActivity.class);
-        intent.putExtra("orderName", 0);
+        intent.putExtra("orderName", 1);
 
         intent.putExtra("lstBean", (Serializable) mCategoryBean);
 

@@ -168,13 +168,9 @@ Log.i("viewType", viewType+"");
             holder1.orderNumber.setText(categoryBean.getOrderNumber());
           //支付时间
             holder1.playTime.setText(categoryBean.getPlayTime());
-
-
-
             holder1.platformDeduction.setText(categoryBean.getPlatformDeduction());
             holder1.userPlay.setText(categoryBean.getUserPlay());
             holder1.storeEntry.setText(categoryBean.getStoreEntry());
-
 
           /*  if(isMall)
             {
@@ -204,8 +200,6 @@ Log.i("viewType", viewType+"");
                         holder1.itemPrice.setText(categoryBean.getAddpriceAmount());
                         holder1.mMoreDetail.setVisibility(View.VISIBLE);
                         dao=new CategoryBeanDAO(new DBHelper(mContext));
-
-
                         //给加价购提供点击事件
                         ((ViewHolder) holder).addCountpage.setOnClickListener(new View.OnClickListener() {
                             @Override

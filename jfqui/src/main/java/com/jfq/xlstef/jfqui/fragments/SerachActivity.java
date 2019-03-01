@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jfq.xlstef.jfqui.OrderFragment.Enum_Order.OrderName;
+import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.CustomDatePicker;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.DateFormatUtils;
@@ -22,12 +22,14 @@ import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.R;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class SerachActivity extends AppCompatActivity implements SearchView.OnQueryTextListener ,View.OnClickListener {
 
     SearchView searchView;
-    MyAdpater    adpter;
+    BaseAdpater    adpter;
     ImageView   timerPick;
 
     /**
@@ -49,6 +51,9 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
     int mOrderName=0;
     String table;
+    TextView unFoundData;
+
+
     /**
      * 此list用来保存符合我们规则的数据
      */
@@ -63,16 +68,35 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         lstBean= (List<CategoryBean>) intentGet.getSerializableExtra("lstBean");
         Log.i("mydata","lstBean"+lstBean.size());
         initView();
+
         adpter=new MyAdpater(lstBean);
         switch (mOrderName)
         {
-            case 0:
-                table=Data.VIEW_ALL_ORDER;
-                setHeader(R.layout.all_head);
-                break;
             case 1:
+                table=Data.VIEW_ALL_ORDER;
+                setHeader(R.layout.head_all);
+                break;
+            case 2:
                 table=Data.VIEW_COMODITYORDER;
-                setHeader(R.layout.mall_head);
+                adpter=new MyAdpater_mall(lstBean);
+                setHeader(R.layout.head_mall);
+                break;
+            case 3:
+                table=Data.VIEW_SWEEPCODE;
+                adpter=new MyAdpater_pay(lstBean,SerachActivity.this);
+                setHeader(R.layout.head_sweep);
+                 /*
+            点击判断是哪一列  :
+             */
+                adpter.setOnItemClickListener(new BaseAdpater.OnItemClickListener() {
+                    @Override
+                    public void OnItemClick(View view, int position, CategoryBean categoryBean) {
+                        //  Toast.makeText(getContext(), "我是第" + position + "项", Toast.LENGTH_SHORT).show();
+                        posindex=position;
+
+                    }
+                });
+                setHeader(R.layout.head_sweep);
                 break;
         }
         mRcSearch.setAdapter(adpter);
@@ -97,6 +121,8 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         //Recyclerview的配置
         mRcSearch.setLayoutManager(new LinearLayoutManager(this));
         searchView=(SearchView)findViewById(R.id.search_view);
+        unFoundData=(TextView)findViewById(R.id.unfond);
+
 
         pickertext=(TextView) findViewById(R.id.pickertext);
         timerPick=(ImageView) findViewById(R.id.timerPicker);
@@ -107,8 +133,9 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
         initDatePicker();
         initTimerPicker();
-    }
 
+    }
+    int  posindex;
     //当完成输入的内容点击搜索按钮后该方法会回调,
     // 参数String query返回当前文本框可见的文字
     @Override
@@ -132,6 +159,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public void onClick(View v) {
 
+        searchView.setQuery("",false);
         mDatePicker.show("12");
 
 
@@ -161,6 +189,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     protected void onDestroy() {
         super.onDestroy();
         mDatePicker.onDestroy();
+        unFoundData.setVisibility(View.GONE);
     }
 
     private void initDatePicker() {
@@ -201,8 +230,16 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getApplicationContext()));
        List<CategoryBean>quearydata=  dao.queryByTimer(table,startTimer,endTimer);
         Log.i("teswt",  "test"+"-----"+quearydata.size());
+        if(quearydata.size()<=0)
+            unFoundData.setVisibility(View.VISIBLE);
+        else
+        {
+            unFoundData.setVisibility(View.GONE);
+        }
         adpter=new MyAdpater(quearydata);
         mRcSearch.setAdapter(adpter);
+
+
 
     }
 

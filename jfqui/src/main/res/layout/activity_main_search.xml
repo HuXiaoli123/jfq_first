@@ -82,4 +82,15 @@
            android:layout_width="match_parent"
            android:layout_height="match_parent"/>
    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/unfond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="230dp"
+        android:text="未查询到相关的数据"
+        android:textColor="@color/blue"
+        android:visibility="gone"
+        />
 </LinearLayout>
