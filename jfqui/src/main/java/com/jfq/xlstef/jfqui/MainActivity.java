@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
 import com.jfq.xlstef.jfqui.utils.MoveBg;
+import com.jfq.xlstef.jfqui.widget.BadgeView;
 
 public class MainActivity extends TabActivity {
 	TabHost tabHost;
@@ -68,6 +69,12 @@ public class MainActivity extends TabActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		/*BadgeView badgeView = new BadgeView(this);
+		badgeView.setTargetView(findViewById(R.id.radio_main));
+		badgeView.setBadgeCount(3);
+*/
+
 		tabInit();
 
 	}

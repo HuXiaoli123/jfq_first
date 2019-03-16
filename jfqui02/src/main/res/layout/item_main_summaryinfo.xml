@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_list_whilte"
+    app:cardElevation="3dp"
+    android:layout_margin="5dp"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/item_top"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        >
+
+        <com.jfq.xlstef.jfqui.custom_ui.CircleImageView
+            android:id="@+id/item_icon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:src="@mipmap/jfq_head_logo"  />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/item_icon"
+            android:layout_marginLeft="5dp"
+            android:text="账号"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/item_baseinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="280dp"
+            android:gravity="center_vertical"
+            android:text="每日订单"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorBomttom" />
+
+    <RelativeLayout
+        android:id="@+id/moredetail"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <TextView
+            android:id="@+id/item_info_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="总额"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_time"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/item_info_amount"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="2018-02-09  20:00:00" />
+
+        <!-- <TextView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:textSize="23sp"
+            android:text=">" />-->
+
+        <TextView
+            android:id="@+id/item_sweepcodepay"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_info_amount"
+            android:layout_alignLeft="@id/item_info_amount"
+            android:layout_marginTop="3dp"
+            android:text="扫码支付： 23.5 元"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/item_addcount"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_sweepcodepay"
+            android:layout_alignLeft="@id/item_info_amount"
+            android:layout_marginTop="3dp"
+            android:text="加价购订单： 0.25 元"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/item_comdity"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_addcount"
+            android:layout_alignLeft="@id/item_addcount"
+            android:layout_marginTop="3dp"
+            android:text="商城订单： 0.25 元"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/item_commission"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_comdity"
+            android:layout_alignLeft="@id/item_info_amount"
+            android:layout_marginTop="3dp"
+            android:text="佣金入账： 0.25 元"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/colorBomttom"
+        />
+</LinearLayout>
+</android.support.v7.widget.CardView>

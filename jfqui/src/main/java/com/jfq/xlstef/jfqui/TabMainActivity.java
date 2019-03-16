@@ -37,6 +37,8 @@ public class TabMainActivity extends AppCompatActivity  {
 	int title_width = 0;
 
 
+
+
 	private View.OnClickListener onClickListener=new View.OnClickListener() {
 		int startX;
 		@Override
@@ -93,6 +95,7 @@ public class TabMainActivity extends AppCompatActivity  {
 		初始化各个控件
 	 */
 	private void initViews(){
+
 			//获取控件
 			titlebar_Layout=(RelativeLayout) findViewById(R.id.layout_titlebar);
 			layout_body=(ViewPager)findViewById(R.id.layout_body);
@@ -117,12 +120,13 @@ public class TabMainActivity extends AppCompatActivity  {
 			mainAllinfoFragment=new MainAllinfoFragment();
 			mallinfoFragment=new MainMallinfoFragment();
 			mainPayinfoFragment=new MainPayinfoFragment();
+			mainSummaryinfoFragment=new MainSummaryinfoFragment();
 
 			list.add(mainAllinfoFragment);
 			list.add(mallinfoFragment);
 			list.add(mainPayinfoFragment);
 			list.add(new MainCommissioninfoFragment());
-			list.add(new MainSummaryinfoFragment());
+			list.add(mainSummaryinfoFragment);
 			tabFragAdapter=new TabFragmentPagerAdapter(getSupportFragmentManager(),list);
 			layout_body.setAdapter(tabFragAdapter);
 			layout_body.setCurrentItem(0);
@@ -202,6 +206,7 @@ public class TabMainActivity extends AppCompatActivity  {
 	MainAllinfoFragment mainAllinfoFragment;
 	MainMallinfoFragment mallinfoFragment;
 	MainPayinfoFragment mainPayinfoFragment;
+	MainSummaryinfoFragment mainSummaryinfoFragment;
 	public void research(View v)
 	{
 		  switch (mcurrentName)
@@ -222,8 +227,13 @@ public class TabMainActivity extends AppCompatActivity  {
 					  mainPayinfoFragment.myresearch();
 				  }
 				  break;
+			  case DailyOrder:
+			  	if(null!=mainSummaryinfoFragment)
+				{
+					mainSummaryinfoFragment.myresearch();
+				}
 		  }
-		  Log.i("AAA",mcurrentName+","+mainAllinfoFragment);
+		  Log.i("AAA",mcurrentName+"," );
 	}
 
 }

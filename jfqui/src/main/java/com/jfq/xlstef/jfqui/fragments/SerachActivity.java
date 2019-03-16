@@ -11,19 +11,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Adapter.CategoryAdapter;
+import com.jfq.xlstef.jfqui.OrderFragment.Goods.BasicOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
+import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.CustomDatePicker;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.DateFormatUtils;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DailyOrderDao;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.R;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SerachActivity extends AppCompatActivity implements SearchView.OnQueryTextListener ,View.OnClickListener {
@@ -31,6 +36,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     SearchView searchView;
     BaseAdpater    adpter;
     ImageView   timerPick;
+    ImageView  monthPick;
 
     /**
      * 搜索框
@@ -47,7 +53,8 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     /**
      * 所有数据 可以是从上个activity中传来的，也可以是数据库中的
      */
-    List<CategoryBean> lstBean;
+    List<CategoryBean> lstBean=new ArrayList<>();
+    List<DailyOrder> dailysBean=new ArrayList<>();
 
     int mOrderName=0;
     String table;
@@ -65,23 +72,35 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         Log.i("mydata","test");
         Intent intentGet = getIntent();
         mOrderName=(int)intentGet.getExtras().getInt("orderName");
-        lstBean= (List<CategoryBean>) intentGet.getSerializableExtra("lstBean");
-        Log.i("mydata","lstBean"+lstBean.size());
+
+        if(mOrderName==5)
+        {
+            dailysBean= (List<DailyOrder>) intentGet.getSerializableExtra("lstBean");
+            Log.i("mydata",dailysBean.size()+"");
+        }else
+        {
+            lstBean= (List<CategoryBean>) intentGet.getSerializableExtra("lstBean");
+        }
+
+
         initView();
 
         adpter=new MyAdpater(lstBean);
         switch (mOrderName)
         {
             case 1:
+                SetGone();
                 table=Data.VIEW_ALL_ORDER;
                 setHeader(R.layout.head_all);
                 break;
             case 2:
+                SetGone();
                 table=Data.VIEW_COMODITYORDER;
                 adpter=new MyAdpater_mall(lstBean);
                 setHeader(R.layout.head_mall);
                 break;
             case 3:
+                SetGone();
                 table=Data.VIEW_SWEEPCODE;
                 adpter=new MyAdpater_pay(lstBean,SerachActivity.this);
                 setHeader(R.layout.head_sweep);
@@ -98,10 +117,29 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 });
                 setHeader(R.layout.head_sweep);
                 break;
+            case 5:
+                SetVisible();
+                table=Data.ORDERDAILY_TABLE_NAME;
+                adpter=new MyAdpater_daily(dailysBean,getApplicationContext());
+                setHeader(R.layout.head_day);
+                break;
         }
         mRcSearch.setAdapter(adpter);
 
 
+    }
+   /* void Listtest(List<? extends CategoryBean> t){
+
+    }*/
+    void SetGone()
+    {
+        if(monthLayout.getVisibility()==View.VISIBLE)
+            monthLayout.setVisibility(View.GONE);
+    }
+    void SetVisible()
+    {
+        if(monthLayout.getVisibility()==View.GONE)
+            monthLayout.setVisibility(View.VISIBLE);
     }
 
     //头部添加
@@ -112,9 +150,15 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         // 这里可以获得的头部布局具体控件，并进行操作
     }
 
-    private CustomDatePicker mDatePicker, mTimerPicker;
+    private CustomDatePicker mDatePicker,mDayPicker, mTimerPicker;
     private TextView pickertext;
+
+    //按月查询
+    RelativeLayout monthLayout;
     private void initView() {
+
+        monthLayout=findViewById(R.id.month);
+
       //  mEdtSearch = (EditText) findViewById(R.id.edt_search);
         mImgvDelete = (ImageView) findViewById(R.id.imgv_delete);
         mRcSearch = (RecyclerView) findViewById(R.id.rc_search);
@@ -126,12 +170,15 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
         pickertext=(TextView) findViewById(R.id.pickertext);
         timerPick=(ImageView) findViewById(R.id.timerPicker);
+        monthPick=(ImageView) findViewById(R.id.img_month);
 
 
         searchView.setOnQueryTextListener(this);
         timerPick.setOnClickListener(this);
+        monthPick.setOnClickListener(this);
 
         initDatePicker();
+        initMonthPicker();
         initTimerPicker();
 
     }
@@ -151,49 +198,34 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
         return false;
     }
-
-
-
     boolean isDay=true;//是否为日查询
     //时间选择器进行时间查询
     @Override
     public void onClick(View v) {
 
-        searchView.setQuery("",false);
-        mDatePicker.show("12");
-
-
-       /* if(isDay)
+        switch (v.getId())
         {
-            pickertext.setText("按月");
-            // 日期格式为yyyy-MM-dd
-            mDatePicker.show("12");
-        }else
-        {
-            pickertext.setText("按日");
-           mTimerPicker.show("13");
-        }*/
-      /*  switch (v.getId()) {
             case R.id.timerPicker:
-
+                searchView.setQuery("",false);
+                mDatePicker.show("12");
                 break;
-
-            case R.id.ll_time:
-                // 日期格式为yyyy-MM-dd HH:mm
-                mTimerPicker.show(mTvSelectedTime.getText().toString());
+            case R.id.img_month:
+                Log.i("dateStr","img_month");
+                searchView.setQuery("",false);
+                mDayPicker.show("12");
                 break;
-        }*/
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mDatePicker.onDestroy();
+        mDayPicker.onDestroy();
         unFoundData.setVisibility(View.GONE);
     }
-
     private void initDatePicker() {
-        long beginTimestamp = DateFormatUtils.str2Long("2009-05-01", false);
+        long beginTimestamp = DateFormatUtils.str2Long(getResources().getString(R.string.original_time), false);
         long endTimestamp = System.currentTimeMillis();
 
        // mTvStartDate.setText("12");
@@ -221,6 +253,40 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         mDatePicker.setCanShowAnim(false);
     }
 
+    /**
+     * 初始化日选择按钮
+     */
+    private void initMonthPicker() {
+        long beginTimestamp = DateFormatUtils.str2Long(getResources().getString(R.string.original_time_unday));
+        long endTimestamp = System.currentTimeMillis();
+
+        // mTvStartDate.setText("12");
+
+        // 通过时间戳初始化日期，毫秒级别
+        mDayPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
+            @Override
+            /*public void onTimeSelected(long timestamp) {
+               // mTvStartDate.setText(DateFormatUtils.long2Str(timestamp, false));
+                Log.i("timestamp",DateFormatUtils.long2Str(timestamp, false));
+            }*/
+            public void onTimeSelected(String timer) {
+                // mTvStartDate.setText(DateFormatUtils.long2Str(timestamp, false));
+                SearchDailyOrder(timer);
+
+            }
+        }, beginTimestamp, endTimestamp);
+        // 不允许点击屏幕或物理返回键关闭
+        mDayPicker.setCancelable(false);
+        // 不显示时和分
+        mDayPicker.setCanShowPreciseTime(false);
+        //不显示日
+        mDayPicker.setCanShowDaily(false);
+        // 不允许循环滚动
+        mDayPicker.setScrollLoop(false);
+        // 不允许滚动动画
+        mDayPicker.setCanShowAnim(false);
+    }
+
     public void ResearchByT(String timer)
     {
         Log.i("teswt",  "test"+"-----");
@@ -235,12 +301,30 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         else
         {
             unFoundData.setVisibility(View.GONE);
-        }
+        } unFoundData.setVisibility(View.VISIBLE);
         adpter=new MyAdpater(quearydata);
         mRcSearch.setAdapter(adpter);
 
+    }
 
+    //按照月份查询
+    void SearchDailyOrder(String timer)
+    {
 
+        String[]timers=timer.split("#");
+        String sTimer=timers[0];
+        String eTimer=timers[1];
+        DailyOrderDao dao = new DailyOrderDao(getApplicationContext());
+        List<DailyOrder>quearydata=dao.querByMonth(sTimer,eTimer);
+        if(quearydata.size()<=0)
+            unFoundData.setVisibility(View.VISIBLE);
+        else
+        {
+            unFoundData.setVisibility(View.GONE);
+        }
+        setHeader(R.layout.head_day);
+        adpter=new MyAdpater_daily(quearydata,getApplicationContext());
+        mRcSearch.setAdapter(adpter);
     }
 
     private void initTimerPicker() {
@@ -254,7 +338,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
             @Override
             public void onTimeSelected(String timestamp) {
                 //mTvSelectedTime.setText(DateFormatUtils.long2Str(timestamp, true));
-               /* Log.i("timestamp",DateFormatUtils.long2Str(timestamp, true));*/
+                Log.i("timestamp",timestamp);
             }
         }, beginTime, endTime);
         // 允许点击屏幕或物理返回键关闭

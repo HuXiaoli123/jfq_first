@@ -36,19 +36,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class MainAllinfoFragment extends BaseFragment {
 	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
-	/*@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_main_allinfo, container, false);
-	}*/
     String TAG="path";
     public  void myresearch()
     {

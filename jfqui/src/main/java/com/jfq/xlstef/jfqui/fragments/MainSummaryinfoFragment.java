@@ -1,5 +1,6 @@
 package com.jfq.xlstef.jfqui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.OrderFragment.WrapContentLinearLayoutManager;
 import com.jfq.xlstef.jfqui.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -267,6 +269,19 @@ public class MainSummaryinfoFragment extends Fragment {
 				(RecyclerView.ViewHolder)mRecyclerView
 						.getChildViewHolder(mRecyclerView.getChildAt(position));
 
+	}
+
+	public  void myresearch()
+	{
+		Log.i("AAA_","MainSummaryinfoFragment");
+
+		Intent intent = new Intent();
+		intent.setClass(getActivity(), SerachActivity.class);
+		intent.putExtra("orderName", 5);
+
+		intent.putExtra("lstBean", (Serializable) mCategoryBean);
+
+		startActivity(intent);
 	}
 
 

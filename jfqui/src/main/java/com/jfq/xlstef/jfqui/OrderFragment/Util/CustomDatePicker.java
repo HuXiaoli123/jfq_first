@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iflytek.cloud.resource.Resource;
 import com.jfq.xlstef.jfqui.R;
@@ -20,10 +21,10 @@ import java.util.List;
 
 /**
  * 说明：自定义时间选择器
- * 作者：liuwan1992
- * 添加时间：2016/9/28
- * 修改人：liuwan1992
- * 修改时间：2018/12/21
+ * 作者：hxl
+ * 添加时间：2018/2/28
+ * 修改人：hxl
+ * 修改时间：2018/3/8
  */
 public class CustomDatePicker implements View.OnClickListener, PickerView.OnSelectListener {
 
@@ -36,6 +37,9 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
     private PickerView mDpvYear, mDpvMonth, mDpvDay, mDpvHour, mDpvMinute;
     private TextView mTvHourUnit, mTvMinuteUnit;
 
+    private  TextView mTvDayUnit;
+    private  TextView tvError;
+
     private int mBeginYear, mBeginMonth, mBeginDay, mBeginHour, mBeginMinute,
             mEndYear, mEndMonth, mEndDay, mEndHour, mEndMinute;
     private List<String> mYearUnits = new ArrayList<>(), mMonthUnits = new ArrayList<>(), mDayUnits = new ArrayList<>(),
@@ -43,6 +47,7 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
     private DecimalFormat mDecimalFormat = new DecimalFormat("00");
 
     private boolean mCanShowPreciseTime;
+    private boolean mCanShowDay;
     private int mScrollUnits = SCROLL_UNIT_HOUR + SCROLL_UNIT_MINUTE;
 
     /**
@@ -115,7 +120,6 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
         mPickerDialog = new Dialog(mContext, R.style.date_picker_dialog);
         mPickerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mPickerDialog.setContentView(R.layout.dialog_date_picker);
-
         Window window = mPickerDialog.getWindow();
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
@@ -125,9 +129,12 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
             window.setAttributes(lp);
         }
 
+        tvError=(TextView) mPickerDialog.findViewById(R.id.serachError);
+
         mPickerDialog.findViewById(R.id.tv_cancel).setOnClickListener(this);
         mPickerDialog.findViewById(R.id.tv_confirm).setOnClickListener(this);
         mTvHourUnit = mPickerDialog.findViewById(R.id.tv_hour_unit);
+        mTvDayUnit=mPickerDialog.findViewById(R.id.tv_day_unit);
         mTvMinuteUnit = mPickerDialog.findViewById(R.id.tv_minute_unit);
 
         mDpvYear = mPickerDialog.findViewById(R.id.dpv_year);
@@ -163,15 +170,26 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
                 break;
 
             case R.id.tv_confirm:
-                if (mCallback != null) {
-                   // mCallback.onTimeSelected(mSelectedTime.getTimeInMillis());
-                    //修改成前后时间差值
-                   if(!mContext.getResources().getString(R.string.endTimerTip).equals(mTvEndDate.getText().toString()))
-                    mCallback.onTimeSelected(mTvStartDate.getText().toString()+"#"+mTvEndDate.getText().toString());
-                   else
-                       mCallback.onTimeSelected(mTvStartDate.getText().toString()+"#"+mTvStartDate.getText().toString());
+                String startTimer=mTvStartDate.getText().toString();
+                String endTimer=mTvEndDate.getText().toString();
+                if (mContext.getResources().getString(R.string.endTimerTip).equals(endTimer))
+                    endTimer=startTimer;
+
+                if(startTimer.compareTo(endTimer)<=0) {
+                    if (mCallback != null) {
+                        // mCallback.onTimeSelected(mSelectedTime.getTimeInMillis());
+                        //修改成前后时间差值
+                            mCallback.onTimeSelected(startTimer + "#" + endTimer);
+                    }
+                    isQuit = true;
+                }else
+                {
+                    isQuit=false;
+                    Toast.makeText(mContext,"查询日期不正确",Toast.LENGTH_SHORT).show();
                 }
-                isQuit=true;
+
+
+                Log.i("tip",mTvStartDate.getText().toString().compareTo(mTvStartDate.getText().toString())+","+isQuit);
                 break;
             case  R.id.tv_start_time:
                 if(!isStartTimer){
@@ -192,7 +210,7 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
 
        if(isQuit)
            if (mPickerDialog != null && mPickerDialog.isShowing()) {
-               mPickerDialog.dismiss();
+             mPickerDialog.dismiss();
                isQuit=false;
            }
     }
@@ -238,10 +256,26 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
         }
 
         if(isStartTimer)
-        mTvStartDate.setText(DateFormatUtils.long2Str(mSelectedTime.getTimeInMillis(), false));
+            setDateText(mTvStartDate);
         else
-            mTvEndDate.setText(DateFormatUtils.long2Str(mSelectedTime.getTimeInMillis(), false));
+            setDateText(mTvEndDate);
+        String startTimer=mTvStartDate.getText().toString();
+        String endTimer=mTvEndDate.getText().toString();
+        if(startTimer.compareTo(endTimer)>0)
+            tvError.setVisibility(View.VISIBLE);
+        else
+            tvError.setVisibility(View.INVISIBLE);
 
+
+
+    }
+
+    private  void setDateText(TextView tv)
+    {
+        if(mCanShowDay)
+            tv.setText(DateFormatUtils.long2Str(mSelectedTime.getTimeInMillis(),false));
+        else
+            tv.setText(DateFormatUtils.long2Str(mSelectedTime.getTimeInMillis()));
     }
 
     private void initData() {
@@ -532,6 +566,7 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
      * @param dateStr 日期字符串，格式为 yyyy-MM-dd 或 yyyy-MM-dd HH:mm
      */
     public void show(String dateStr) {
+
         if (!canShow() || TextUtils.isEmpty(dateStr)) return;
 
         // 弹窗时，考虑用户体验，不展示滚动动画
@@ -625,6 +660,23 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
             mTvMinuteUnit.setVisibility(View.GONE);
         }
         mCanShowPreciseTime = canShowPreciseTime;
+    }
+
+    /**
+     * 设置日期控件是否显示日
+     */
+    public void setCanShowDaily(boolean canShowDay) {
+        if (!canShow()) return;
+        mTvStartDate.setText(R.string.original_time_unday);
+
+        if (canShowDay) {
+            mDpvDay.setVisibility(View.VISIBLE);
+            mTvDayUnit.setVisibility(View.VISIBLE);
+        } else {
+            mDpvDay.setVisibility(View.GONE);
+            mTvDayUnit.setVisibility(View.GONE);
+        }
+        mCanShowDay = canShowDay;
     }
 
     private void initScrollUnit(Integer... units) {

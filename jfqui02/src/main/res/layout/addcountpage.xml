@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:baselineAligned="false">
+
+    <TextView
+        android:text="加价购商品"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:background="#f9ae0b"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textSize="20dp"
+        android:id="@+id/edThreshold"
+        android:layout_marginTop="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="数据·加价购" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_height="3px"
+        android:background="@color/line"></View>
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--<Button
+            android:id="@+id/btn_openNow"
+            android:text="立即触发"
+            android:textSize="15dp"
+            android:textColor="#FFEE1D66"
+            android:background="@android:color/transparent"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />-->
+
+       <!-- <Button
+            android:id="@+id/btn_cancle"
+            android:text="取消"
+            android:textSize="15dp"
+            android:textColor="#FFEE1D66"
+            android:background="@android:color/transparent"
+            android:layout_toLeftOf ="@+id/btn_confirm"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content" />-->
+        <Button
+            android:id="@+id/btn_confirm"
+            android:text="确定"
+            android:textSize="15dp"
+            android:layout_alignParentRight="true"
+            android:textColor="#FFEE1D66"
+            android:background="@android:color/transparent"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</LinearLayout>

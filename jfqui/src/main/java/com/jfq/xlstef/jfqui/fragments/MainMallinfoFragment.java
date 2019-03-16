@@ -39,21 +39,6 @@ import java.util.List;
 
 //商城订单
 public class MainMallinfoFragment extends  Fragment  {
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	/*@Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_mallinfo, container, false);
-    }*/
-//初始化特有数据
-
 
 
     //公共属性
@@ -70,9 +55,6 @@ public class MainMallinfoFragment extends  Fragment  {
     protected  String path="";
 
     int  posindex;
-
-
-
     public  View  onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(),R.layout.shopmalloder2, null);
 
@@ -219,7 +201,9 @@ public class MainMallinfoFragment extends  Fragment  {
             }
         });
 
-      /*  mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -266,7 +250,7 @@ public class MainMallinfoFragment extends  Fragment  {
                     }
                 }
             }
-        });*/
+        });
 
 
     }

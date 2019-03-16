@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="foot_text_select">#990000</color>
+    <color name="foot_text_unselect">#000000</color>
+    <color name="top_title_default">#990000</color>
+    <color name="top_state_default">#000000</color>
+    <color name="colorBomttom">#d4d3d3</color>
+
+</resources>

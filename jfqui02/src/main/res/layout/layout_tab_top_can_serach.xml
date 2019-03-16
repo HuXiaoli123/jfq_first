@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+				android:orientation="vertical"
+>
+	<RelativeLayout
+			android:id="@+id/layout_top"
+			android:layout_width="match_parent"
+			android:layout_height="40dip"
+			android:background="@color/top_title_background" >
+
+		<ImageView
+				android:id="@+id/img_jfq_top"
+				android:layout_width="95dp"
+				android:layout_height="36dp"
+				android:layout_centerVertical="true"
+				android:layout_marginLeft="5dip"
+				android:src="@drawable/netease_top"
+		/>
+		<TextView
+				android:id="@+id/layout_top_text"
+				android:layout_width="wrap_content"
+				android:layout_height="24dp"
+				android:layout_alignBottom="@id/img_jfq_top"
+				android:layout_marginLeft="10dp"
+				android:layout_marginBottom="4dp"
+				android:layout_toRightOf="@id/img_jfq_top"
+				android:contentDescription="@null"
+				android:textColor="@android:color/white"
+				android:textSize="20sp"
+		/>
+		<ImageView
+			android:id="@+id/research"
+				android:layout_width="59dp"
+				android:layout_height="match_parent"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="0dp"
+				android:src="@drawable/serach"
+			android:onClick="research"/>
+	</RelativeLayout>
+</LinearLayout>

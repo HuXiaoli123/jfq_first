@@ -26,6 +26,7 @@ import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.utils.ParserJsonUtils;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -33,11 +34,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import static android.os.Build.HOST;
 
 public class Login_Activity extends AppCompatActivity   implements View.OnClickListener {
         boolean postResult=false;
@@ -394,6 +398,8 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                             postResult=true;
                             // ActivityChange(access_token);
                             getNetWork();
+                            getMember();
+
 
                             Log.i("btn_1",""+isAutoLogin+","+isRemeberUser+UserName+Password+"remeberUser.isChecked()"+remeberUser.isChecked());
 
@@ -598,6 +604,116 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                 }
             }).start();
         }
+
+    void getMember(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //HttpURLConnection是专门用来创建web连接的
+                //HttpClient  android6.0----->不建议用了，过时了
+                HttpURLConnection connection=null;
+                InputStream input=null;
+                InputStreamReader inputreader=null;
+                BufferedReader buffer=null;
+
+                clientid=getSharedPreferences("settings", Context.MODE_PRIVATE).getString("clientid", "");// 从SharedPreferences中获取整个Cookie串
+
+                Log.e("my_clientid","---------getmeber");
+
+
+                //设置请求参数
+                String data="appId="+appid+"&clientId="+clientid;
+                //创建连接
+                try {
+                    Log.e("my_test",access_token+","+data);
+                    //  String path="http://store.tuihs.com/oauth/signin/app?"+"appId="+appid+"&clientId="+clientid;
+                    //设置URL
+                    //URL url=new URL("http://store.tuihs.com/oauth/signin/app?"+data);
+                    //URL url=new URL("http://192.168.0.109:8085/BJXT/PhoneServlet?"+data);
+                    URL url=new URL(getString(R.string.get_meber_url));
+                    //使用HttpURLConnection进行HTTP连接
+                    connection= (HttpURLConnection) url.openConnection();
+                    //设置请求方法为get类型
+                    connection.setRequestMethod("GET");
+                    //设置连接时间和读取时间
+                    //connection.setConnectTimeout(10000);
+                    //connection.setReadTimeout(5000);
+                    //设置字符集
+                    connection.setRequestProperty("Charset", "UTF-8");
+                    //设置文件类型
+                    connection.setRequestProperty("Content-Type", "text/html; charset=UTF-8");
+                    //设置Cookie请求参数，可以通过Servlet中getHeader()获取
+                    // connection.setRequestProperty("Cookie", "AppName="+ URLEncoder.encode("你好", "UTF-8"));
+                    connection.setRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+ access_token);
+                    //connection.setRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+ access_token);
+                    if(connection.getResponseCode()==200){//网络请求状态码200表示正常
+                        input=connection.getInputStream();
+                        inputreader=new InputStreamReader(input,"UTF-8");
+                        buffer=new BufferedReader(inputreader);
+                        String line="";
+                        String result = "";
+                        while((line=buffer.readLine())!=null){
+                            result+=line;
+                        }
+                        Log.e("my_test",access_token+","+connection.getResponseCode()+"result:"+result);
+                        //使用handler将子线程中网络中读取的数据传到主线程中显示
+                        Message msg= myhander.obtainMessage();
+                        msg.what=1;
+                        msg.obj=result;
+                        myhander.sendMessage(msg);
+
+                        Log.e("my_test",access_token+","+connection.getResponseCode()+"result:"+result);
+
+                        try {
+                            JSONObject jsonObject=new JSONObject(result);
+                            JSONObject jsonData=jsonObject.getJSONObject("principal");
+                            String member=jsonData.getString("username");
+
+                            boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),member,clientid);
+
+                            Log.e("my_test",member+","+isBins+","+clientid );
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //  ActivityChange(access_token);
+
+                    }else
+                    {
+                        Log.e("my_test_Err",access_token+","+connection.getResponseCode());
+
+                        messageHandle(0,"请求无效，错误码"+connection.getResponseCode()+"请联系管理员");
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    //关闭流
+                    try {
+                        if(buffer!=null){
+                            buffer.close();}
+                        if(inputreader!=null){
+                            inputreader.close();
+                        }
+                        if(input!=null){
+                            input.close();
+                        }
+                        if(connection!=null){
+                            connection.disconnect();
+                        }
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+    }
 
         //activity界面跳转
         private  void  ActivityChange(String intentValue)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MainAllinfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/allinfo_item_emptymessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="没有数据"
+        android:visibility="gone"
+        android:textSize="16sp"/>
+    <com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout
+        android:id="@+id/main_allinfo_swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/allinfo_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout>
+
+</FrameLayout>

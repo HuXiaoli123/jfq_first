@@ -1,0 +1,103 @@
+<application>
+  <component name="ActionsCollector">
+    <counts>
+      <entry action="$Copy" count="56" />
+      <entry action="$Delete" count="91" />
+      <entry action="$Paste" count="98" />
+      <entry action="$SelectAll" count="3" />
+      <entry action="$Undo" count="194" />
+      <entry action="About" count="2" />
+      <entry action="Android.CreateResourceDirectory" count="9" />
+      <entry action="Android.RunAndroidAvdManager" count="2" />
+      <entry action="CleanGradleProject" count="3" />
+      <entry action="CommentByBlockComment" count="15" />
+      <entry action="CompareClipboardWithSelection" count="1" />
+      <entry action="ConsoleView.ClearAll" count="2" />
+      <entry action="DialogOkAction Enter" count="2" />
+      <entry action="EditorBackSpace" count="1660" />
+      <entry action="EditorChooseLookupItem" count="205" />
+      <entry action="EditorCopy" count="220" />
+      <entry action="EditorCut" count="27" />
+      <entry action="EditorDelete" count="18" />
+      <entry action="EditorDeleteLine" count="6" />
+      <entry action="EditorDown" count="620" />
+      <entry action="EditorEnter" count="194" />
+      <entry action="EditorEscape" count="11" />
+      <entry action="EditorIndentSelection" count="1" />
+      <entry action="EditorLeft" count="72" />
+      <entry action="EditorLeftWithSelection" count="22" />
+      <entry action="EditorPaste" count="376" />
+      <entry action="EditorRight" count="183" />
+      <entry action="EditorRightWithSelection" count="56" />
+      <entry action="EditorStartNewLine" count="2" />
+      <entry action="EditorTab" count="59" />
+      <entry action="EditorUp" count="109" />
+      <entry action="FileChooser.GotoProject" count="1" />
+      <entry action="Find" count="13" />
+      <entry action="Generate" count="2" />
+      <entry action="GotoDeclaration" count="66" />
+      <entry action="GotoNextError" count="2" />
+      <entry action="HideAllWindows" count="4" />
+      <entry action="Images.Editor.ActualSize" count="1" />
+      <entry action="Images.Editor.ZoomIn" count="5" />
+      <entry action="ImportModule" count="17" />
+      <entry action="ImportProject" count="2" />
+      <entry action="InvalidateCaches" count="1" />
+      <entry action="LoadUnloadModules" count="5" />
+      <entry action="MakeGradleModule" count="31" />
+      <entry action="MakeGradleProject" count="15" />
+      <entry action="NewClass" count="17" />
+      <entry action="NewDir" count="5" />
+      <entry action="NewFile" count="1" />
+      <entry action="NewModule" count="7" />
+      <entry action="NewModuleInGroup" count="5" />
+      <entry action="NewProject" count="3" />
+      <entry action="OpenFile" count="19" />
+      <entry action="OpenModuleSettings" count="24" />
+      <entry action="Progress Resumed" count="1" />
+      <entry action="QuickDocCopy" count="1" />
+      <entry action="RebuildGradleProject" count="2" />
+      <entry action="RenameElement" count="14" />
+      <entry action="Replace" count="13" />
+      <entry action="RevealIn" count="15" />
+      <entry action="Run" count="127" />
+      <entry action="SaveAll" count="201" />
+      <entry action="SearchEverywhere" count="2" />
+      <entry action="ShowErrorDescription" count="1" />
+      <entry action="ShowIntentionActions" count="138" />
+      <entry action="ShowSettings" count="57" />
+      <entry action="Stop" count="1" />
+      <entry action="TemplateProjectStructure" count="7" />
+      <entry action="ToggleLineBreakpoint" count="1" />
+      <entry action="Tool_External Tools_javah" count="9" />
+      <entry action="Tool_External Tools_ndk-build" count="16" />
+      <entry action="template.create.ActivityEmpty Activity" count="2" />
+      <entry action="template.create.FolderJNI Folder" count="2" />
+      <entry action="template.create.FolderJava Resources Folder" count="1" />
+      <entry action="template.create.FolderXML Resources Folder" count="1" />
+      <entry action="template.create.FragmentFragment (Blank)" count="1" />
+      <entry action="template.create.XMLLayout XML File" count="1" />
+      <entry action="template.create.XMLValues XML File" count="2" />
+    </counts>
+  </component>
+  <component name="FeatureUsageStatistics" first-run="1489028020717" have-been-shown="false" show-in-other="true" show-in-compilation="true">
+    <feature id="refactoring.moveTopLevel" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.introduceTypedef" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.rename" count="36" last-shown="0" last-used="1549193722161" shown-count="0" />
+    <feature id="refactoring.pushDown" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.inlineMacro" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.changeSignature" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickFix" count="683" last-shown="0" last-used="1549117007140" shown-count="0" />
+    <feature id="codeassists.altInsert" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.complete.statement" count="2" last-shown="0" last-used="1541381306033" shown-count="0" />
+    <feature id="refactoring.inlineTypedef" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.goto.inspection" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.introduceConstant" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.pullUp" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.class" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.overrideimplement" count="155" last-shown="0" last-used="1548932179586" shown-count="0" />
+    <feature id="codeassists.parameterInfo" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.inlineParameter" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickdefinition" count="0" last-shown="1549198133995" last-used="0" shown-count="60" />
+    <feature id="editing.completion.basic" count="6557" last-shown="0" last-used="1549252554158" shown-count="0" />
+    <feature id="refactoring.inlineConst" count="0" l

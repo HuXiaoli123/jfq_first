@@ -1,0 +1,13 @@
+package com.jfq.xl_stef.jfq_android_store;
+
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+public class TabMycenterActivity extends AppCompatActivity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_tab_mycenter);
+	}
+}

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <!--<android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>-->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/table_v_divider"
+                android:orientation="vertical"
+                android:showDividers="middle|beginning|end">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/table_h_divider"
+                    android:orientation="horizontal"
+                    android:showDividers="middle|beginning|end">
+
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:gravity="left|center_horizontal|center_vertical"
+                        android:paddingLeft="3dp"
+                        android:layout_width="match_parent"
+                        android:height="25dp"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_title"
+                        android:text="全部订单" />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:divider="@drawable/table_h_divider"
+                    android:orientation="horizontal"
+                    android:showDividers="middle|beginning|end">
+
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/orderNumber_dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:text="订单编号"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_title" />
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:paddingLeft="3dp"
+                        android:layout_width="@dimen/orderType_dp"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="订单类型"
+                        android:textSize="@dimen/text_title" />
+
+                    <TextView
+                        android:id="@+id/tv_table_name"
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/itemPrice_dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:textStyle="bold"
+                        android:text="商品原价"
+                        android:textSize="@dimen/text_title" />
+
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/platformDeduction_dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:textStyle="bold"
+                        android:text="平台抵扣"
+                        android:textSize="@dimen/text_title" />
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/userPlay_dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:textStyle="bold"
+                        android:text="用户支付"
+                        android:textSize="@dimen/text_title" />
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/storeEntry_dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="3dp"
+                        android:textStyle="bold"
+                        android:text="门店入账"
+                        android:textSize="@dimen/text_title" />
+
+                    <TextView
+                        style="@style/style_table_gray6_18_130_text"
+                        android:layout_width="@dimen/playTime_dp"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="支付时间"
+                        android:textSize="@dimen/text_title" />
+
+                </TableRow>
+            </TableLayout>
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+
+
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
+
+    <!--helloChart折线-->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff" >
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="10dp"
+            android:background="#0affffff" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

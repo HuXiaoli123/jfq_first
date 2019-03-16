@@ -266,10 +266,6 @@ public class CategoryBeanDAO {
                 new String[]{StartTimer,"0"},null,null,null);*/
         Cursor cursor=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "strftime('%Y-%m-%d',"+Data.COLUMN_playTime+")"+"<=?",
                 new String[]{StartTimer,endTimer},null,null,null);
-
-
-
-
         return GetAllInfoData(cursor);
     }
     private  ArrayList GetAllInfoData(Cursor results)
