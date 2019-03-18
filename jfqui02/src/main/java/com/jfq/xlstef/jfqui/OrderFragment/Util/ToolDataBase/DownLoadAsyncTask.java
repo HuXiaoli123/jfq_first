@@ -10,6 +10,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Goods.CommissionDetailOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.SweepCodeOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.Tooljson;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -26,6 +27,7 @@ import java.util.Random;
 public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
     private Context mContext;
+    private String ACCESS_TOKEN;
     private  List<CategoryBean> mCompeleteOrder=new ArrayList<>();
     private List<SweepCodeOrder> mSweepCodeOrder= new ArrayList<>();
 
@@ -37,6 +39,9 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
     public DownLoadAsyncTask(Context mContext  ){
         this.mContext=mContext;
+        SharedPreferencesUtils helper = new SharedPreferencesUtils(mContext, "cookies");
+        ACCESS_TOKEN = helper.getString("cookie");
+
     }
 
 
@@ -55,7 +60,9 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
             //设置文件类型
             connection.setRequestProperty("Content-Type", "text/html; charset=UTF-8");
             /*不同用户需要要修改的Cookie值*/
-            connection.addRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+"fa9f6b8c-0927-40f4-9e56-f33f4d7d3a87");
+           /* connection.addRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+"fa9f6b8c-0927-40f4-9e56-f33f4d7d3a87");*/
+            connection.addRequestProperty("Cookie", "JFCS_ACCESS_TOKEN="+ACCESS_TOKEN);
+            Log.i("cookies",ACCESS_TOKEN);
             int code=connection.getResponseCode();//响应码
             if(code==200){
                 InputStream inputStream=connection.getInputStream();//通过字节流的形式得到对象转换成流的操作
@@ -66,7 +73,8 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
                 }
             } else
             {
-                Log.i("codeErro","codeErro"+code);
+                Log.i("codeErro1","codeErro"+code);
+                Log.i("cookies",ACCESS_TOKEN);
             }
 
         }catch (Exception e){
@@ -83,11 +91,12 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
         if(!"".equals(s)&&s!=null)
          {
-             Log.i("mypathtest1","112");
+
              InsertToDetailTable(mContext);
             // s=parseData(s);
             // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
              mCompeleteOrder=Tooljson.getjfqdata("content",s,true);
+
              //mCompeleteOrder=testData();
              int newDownData=mCompeleteOrder.size();  //新下载的网络数据
              //如果数据数量没有变化，不需要插入数据
@@ -102,13 +111,24 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
              int index=(int)(newDownData-dataBaseData-1);
              Log.i("mypath",index+":"+newDownData);
+
+
+
+             //插入数据到数据库中
              for(int i=index;i>=0;i--)
              {
-                 Log.i("mypath",index +"第几个："+i+"");
+                 Log.i("mypathtest",index +"第几个："+i+","+mCompeleteOrder.get(i).getOderType()+mCompeleteOrder.get(i).getPlayTime()+"----"
+                         +mCompeleteOrder.get(i).getOderType()+mCompeleteOrder.get(i).getPlayTime()
+                 );
                  InsertData(mContext,mCompeleteOrder.get(i),Data.COMPELETE_ORDER_TABLE_NAME);
+
              }
 
+             Log.i("my-----------","s:"+dao.findByOrderType("商城订单") .size());
+
+             //处理日常订单
              List<DailyOrder>myDailyOrder=dao.DailySales();//    ----------------------test
+             Log.i("my-----------","s:"+myDailyOrder.size());
              DailyOrderDao orderDao=new DailyOrderDao(mContext);
              for(int i=0;i<myDailyOrder.size();i++)
              {
@@ -190,7 +210,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         detailDao.insert(detailOrder);
     }
 
-  public static String DownLoadData(final String orderUrl)
+ /* public static String DownLoadData(final String orderUrl)
     {
 
 
@@ -265,5 +285,5 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
             }
         }).start();
         return "";
-    }
+    }*/
 }

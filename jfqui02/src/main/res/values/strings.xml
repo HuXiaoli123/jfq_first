@@ -7,6 +7,8 @@
     <string name="get_meber_url">http://store.tuihs.com/oauth/user</string>
     <string name="load_url">http://store.tuihs.com/index</string>
 
+    <string name="all_order">http://store.tuihs.com/store/orders?page=0&amp;size=10</string>
+
     <!--<string name="post_url">http://192.168.0.109:8085/BJXT/PhoneServlet?</string>
     <string name="get_url">http://192.168.0.109:8085/BJXT/PhoneServlet?</string>
     <string name="load_url">http://192.168.0.109:8085/BJXT/index.jsp</string>-->
@@ -37,6 +39,8 @@
     <string name="tab_search_title_text">查询</string>
     <!-- 跟帖 -->
     <string name="tab_mycenter_title_text">个人中心</string>
+    <!--登录 -->
+    <string name="tab_login_title_text">登录</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment1">全部订单1</string>

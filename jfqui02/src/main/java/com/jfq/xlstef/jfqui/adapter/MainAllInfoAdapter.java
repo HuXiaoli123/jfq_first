@@ -87,7 +87,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 public void onClick(View v) {
                     if (mOnItemClickListener != null)
                         mOnItemClickListener.OnItemClick(position);
-                    Log.i("mydata",mDataSet.get(position).get_id()+";"+mDataSet.get(position).getOrderNumber());
+                    Log.i("mydata",mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay());
 
                     Intent intent = new Intent();
                     intent.setClass(mContext, MoreDeail_Activity.class);

@@ -269,7 +269,7 @@ public class MainAllinfoFragment extends Fragment {
                 long exitTime=System.currentTimeMillis();
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
-
+//---------------------------------
                /* 判断数据库是否有数据*/
                 if(isFirstTime) {
                     isFirstTime=false;
@@ -278,8 +278,10 @@ public class MainAllinfoFragment extends Fragment {
                 {
 
                 }
+//---------------------------------
                 //当数据库中数据<新加载的数据
                 Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
+
                 while(dao.allCaseNum()<=0|| dao.allCaseNum()<myAsyTask.getCompeleteOrder().size())
                 {
                     Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
@@ -288,7 +290,8 @@ public class MainAllinfoFragment extends Fragment {
                 }
                 //  mCategoryBean=myAsyTask.getCompeleteOrder();
                 //从数据库中获取
-               mDataList=QueryData(new DBHelper(getActivity()),"paid");
+                mDataList=QueryData(new DBHelper(getActivity()),"paid");
+                Log.i("Mydatabases",mDataList.size()+","+mDataList.get(0).getPlayTime());
                 handler.sendEmptyMessage(0);
 
 
@@ -296,16 +299,11 @@ public class MainAllinfoFragment extends Fragment {
             }
         }).start();
 
-
-
     }
-
-
-
     //查询数据
     public ArrayList QueryData(DBHelper dbHelper,String status) {
         CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-        return  dao.findOrderByName(Data.COMPELETE_ORDER_TABLE_NAME,status);
+        return  dao.findOrderByComdity(Data.VIEW_ALL_ORDER,status);
     }
 
     /**

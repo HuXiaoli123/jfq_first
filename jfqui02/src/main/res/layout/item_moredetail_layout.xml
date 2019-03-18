@@ -87,7 +87,7 @@
            android:layout_width="match_parent"
            android:layout_height="1dp"
            android:background="@color/colorBomttom" />
-      <LinearLayout
+      <RelativeLayout
           android:id="@+id/layout_addCount"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -108,14 +108,14 @@
               style="@style/style_table_gray6_18_130_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-               android:layout_marginLeft="260dp"
+               android:layout_marginLeft="350dp"
               android:layout_marginTop="10dp"
               android:paddingLeft="3dp"
               android:text=">"
               android:textSize="@dimen/text_title"
-              android:visibility="gone"
+              android:visibility="invisible"
               android:textStyle="bold" />
-      </LinearLayout>
+      </RelativeLayout>
        <TextView
            android:layout_width="match_parent"
            android:layout_height="1dp"

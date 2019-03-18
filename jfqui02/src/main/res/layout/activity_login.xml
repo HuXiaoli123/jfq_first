@@ -7,6 +7,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <include
+        android:id="@+id/tablayout_main_title"
+        layout="@layout/layout_tab_top"
+        />
 
     <ImageView
         android:paddingTop="70dp"

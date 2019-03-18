@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
@@ -64,6 +65,8 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
       // KqwSpeechCompound kqwSpeechCompound;
 
+    public static final int LENGTH_LONG = 4000;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
         // kqwSpeechCompound=new KqwSpeechCompound(getApplicationContext());
@@ -81,11 +84,16 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                     if(msg.what==1){
                    /* usernameTXT.setText("登录成功！欢迎您");
                     passwordTXT.setText(msg.obj.toString());*/
-                    }else
+                    }else if(msg.what==4)
+                    {
+                        Toast.makeText(Login_Activity.this,msg.obj.toString(),Toast.LENGTH_LONG).show();
+                    }
+                    else
                     {
                         Log.e("msg_1",msg.obj.toString());
                         Toast.makeText(Login_Activity.this,msg.obj.toString(),Toast.LENGTH_LONG).show();
                     }
+
                 }
             };
 
@@ -136,6 +144,8 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
         private void  initView()
         {
+            TextView layout_top_text=(TextView)findViewById(R.id.layout_top_text);
+            layout_top_text.setText(R.string.tab_login_title_text);
             usernameTXT= (EditText) findViewById(R.id.username);
             passwordTXT= (EditText) findViewById(R.id.password);
             autoLogin=findViewById(R.id.auto_login);
@@ -690,7 +700,9 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
                             boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),member,clientid);
 
-                            Log.e("my_test",member+","+isBins+","+clientid );
+                            messageHandle(4,"绑定成功?"+ isBins+"   meber:"+member+"\n cid: "+clientid);
+
+                            Log.e("my_test----",member+","+isBins+","+clientid );
 
 
                         } catch (JSONException e) {
@@ -710,6 +722,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+
                 }finally {
                     //关闭流
                     try {

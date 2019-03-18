@@ -92,7 +92,7 @@ public class MainMallinfoFragment  extends Fragment {
     }
     void initParentThread()
     {
-
+        Log.i("Mall","initParentThread");
         if(mDataList.size()>0)
         {
             emptymessage.setVisibility(View.GONE);
@@ -257,7 +257,7 @@ public class MainMallinfoFragment  extends Fragment {
         mFirstCount=getActivity().getResources().getInteger(R.integer.first_load_count);
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath_",":"+dao.allCaseNum()+" test");
-        final DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
+
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
         new Thread(new Runnable() {
             @Override

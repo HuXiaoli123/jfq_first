@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         /*String CREATE_DailyOrder="create table "+ Data.ORDERDAILY_TABLE_NAME +" as select SUM(storeEntry) "+
                 Data.sweepPay +" from "+Data.VIEW_SWEEPCODE +" GROUP BY date(playTime) ";*/
 
-        //创建所有订单视图
+        //创建所有订单视图 只含已支付订单
         String CreateView_all=" create view "+Data.VIEW_ALL_ORDER+" as select "+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.orderNumber+","+
@@ -97,8 +97,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql="drop table if exists "+DATABASE_NAME;
-        db.execSQL(sql);
+        String sql1="drop table if exists "+DATABASE_NAME;
+        db.execSQL(sql1);
         this.onCreate(db);
     }
 

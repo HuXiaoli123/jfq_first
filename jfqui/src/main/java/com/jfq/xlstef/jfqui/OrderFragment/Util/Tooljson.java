@@ -145,6 +145,8 @@ public class Tooljson {
                 Double addpriceAmount=0.0;
                 Double totalBargain=0.0;
 
+
+
                 JSONArray addPricejsonArray = jsonObject2.getJSONArray("items");
                 for(int j=0 ,len=addPricejsonArray.length();j<len;j++)
                 {
@@ -156,15 +158,13 @@ public class Tooljson {
                         //将每个加价购的砍价的价格相加起来
                         totalBargain= add(totalBargain, jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain"));//商家最后获取的价格-加价购商品
 
-                    }else
-                    {
-                        Log.i("ordertypr",    "元");
                     }
 
                     if(j!=0)
                     builder.append("-").append(addPriceObject.getString("name"));
                     else builder.append(addPriceObject.getString("name"));
-                    addpriceAmount= add(addpriceAmount,addPriceObject.getJSONObject("offerPrice").getDouble("price"));
+                    addpriceAmount= add(addpriceAmount,(addPriceObject.getJSONObject("offerPrice").getDouble("price"))
+                            *addPriceObject.getDouble("quantity"));
                     /*addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");*/
                     Log.i("addpriceName",","+addPriceObject.getJSONObject("offerPrice").getDouble("price")+"len:"+len);
 

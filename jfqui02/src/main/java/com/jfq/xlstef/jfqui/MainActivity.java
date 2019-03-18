@@ -107,8 +107,11 @@ float exitTime=0;
 					return  false;
 				} else {
 					// 关闭应用程序
-					this.finish();
-					// 返回桌面操作
+					Intent home = new Intent(Intent.ACTION_MAIN);
+					home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					home.addCategory(Intent.CATEGORY_HOME);
+					startActivity(home);
+					return true;
 					// Intent home = new Intent(Intent.ACTION_MAIN);
 					// home.addCategory(Intent.CATEGORY_HOME);
 					// startActivity(home);

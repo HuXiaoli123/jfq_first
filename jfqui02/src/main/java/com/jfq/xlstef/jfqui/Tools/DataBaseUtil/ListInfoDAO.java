@@ -53,6 +53,7 @@ public class ListInfoDAO {
     /*
         查询
      */
+    public   final String ORDER_BY="_id desc";
     public ArrayList queryDB(){
         Log.i("My_queryDB","My_queryDB");
         ArrayList<ListInfo> arrayList=new ArrayList<>();

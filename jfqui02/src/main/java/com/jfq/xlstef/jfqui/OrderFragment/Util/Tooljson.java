@@ -112,6 +112,13 @@ public class Tooljson {
         return list;
     }
 
+    /**
+     * 解析数据库---------------------------------yes
+     * @param key
+     * @param jsonString
+     * @param is
+     * @return
+     */
 
     public static List<CategoryBean> getjfqdata(String key, String jsonString,boolean is) {
         List list = new ArrayList();
@@ -119,33 +126,86 @@ public class Tooljson {
             JSONObject jsonObject = new JSONObject(jsonString);
             // 返回json的数组   1.获取json对象数组
             JSONArray jsonArray = jsonObject.getJSONArray(key);
+
+            //--------------test
+            CategoryBean myCategoryBean4=new CategoryBean("1234567","商城订单","29","2.6",
+                    "26.4","29","2019-03-18 13:05:39","12",
+                    "桃子","香蕉","paid");
+            CategoryBean myCategoryBean3=new CategoryBean("1234567","商城订单","29","2.6",
+                    "26.4","29","2019-03-18 15:29:39","12",
+                    "桃子","香蕉","paid");
+            CategoryBean myCategoryBean=new CategoryBean("1234567","商城订单","29","2.6",
+                    "26.4","29","2019-03-18 12:29:39","12",
+                    "桃子","香蕉","paid");
+            CategoryBean myCategoryBean2=new CategoryBean("1234567","商城订单","29","2.6",
+                    "26.4","29","2019-03-16 12:29:39","12",
+                    "桃子","香蕉","paid");
+            list.add(myCategoryBean);
+            list.add(myCategoryBean2);
+            list.add(myCategoryBean3);
+            list.add(myCategoryBean4);
+            //--------------test
             for (int i = 0; i < jsonArray.length(); i++) {
-
-
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                 CategoryBean orderGood = new CategoryBean();
                 String  orderNumber=jsonObject2.getString("code");
+
                 orderGood.setOrderNumber(orderNumber); //订单编号orderType
-                orderGood.setOderType(EngToChinese(jsonObject2.getString("orderType")) ); //订单类型
+                orderGood.setOderType(EngToChinese(jsonObject2.getString("orderType")) ); //订单类型----
 
-                 Double allitemprice=jsonObject2.getDouble("totalFee");//总商品原价
+                Double allitemprice=jsonObject2.getDouble("totalFee");//总商品原价
 
-                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee"))); //商品原价  ----下面需要修改 因为它包括了原商品价格+加价购商品价格
+                orderGood.setItemPrice(String.valueOf(jsonObject2.getDouble("totalFee"))); //商品原价 ----0316暂时更改为门店入账    ----下面需要修改 因为它包括了原商品价格+加价购商品价格
 
                 orderGood.setPlatformDeduction(String.valueOf(jsonObject2.getJSONObject("loyaltyPromotions")
-                        .getDouble("totalReduction")));//平台抵扣
-                orderGood.setUserPlay(String.valueOf(jsonObject2.getDouble("salesAmount")));//用户实际支付金额
-                orderGood.setStoreEntry(String.valueOf(jsonObject2.getDouble("totalFee")));//门店入账
+                        .getDouble("totalReduction")));//平台抵扣--------
+                orderGood.setUserPlay(String.valueOf(jsonObject2.getDouble("salesAmount")));//用户实际支付金额----------
+
+                orderGood.setStoreEntry(String.valueOf(jsonObject2.getDouble("totalFee")));//门店入账-----
 
                 String date = orderNumber.subSequence(3, orderNumber.length()-7).toString();
+                orderGood.setPlayTime( StringToDate(date));//支付时间入账------------
 
-                orderGood.setPlayTime( StringToDate(date));//支付时间入账
+                Log.i("timers--",EngToChinese(jsonObject2.getString("orderType"))+","+StringToDate(date)+","+jsonObject2.getJSONObject("status").getString("code"));
+
                 String addpriceName="";
                 StringBuilder builder = new StringBuilder();
                 Double addpriceAmount=0.0;
                 Double totalBargain=0.0;
 
+                Double seepCode=0.0;
+
+                Double sumItem=0.0;
+
+
                 JSONArray addPricejsonArray = jsonObject2.getJSONArray("items");
+
+                //求得扫码支付订单
+               /* for(int j=0 ,len=addPricejsonArray.length();j<len;j++)
+                {
+                    JSONObject jsonObject3=addPricejsonArray.getJSONObject(j);
+                    JSONObject addPriceObject =jsonObject3 .getJSONObject("sku");
+                    if(jsonObject3.optJSONObject("listPrice")!=null) {
+
+                        //将每个offerPrice*quantity
+                        sumItem=add(sumItem, (jsonObject3.optJSONObject("offer").optDouble("price"))*(jsonObject3.optDouble("quantity")));
+                       // totalBargain= add(totalBargain, jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain"));//商家最后获取的价格-加价购商品
+
+                    }else
+                    {
+                        Log.i("ordertypr",    "元");
+                    }
+
+                    if(j!=0)
+                        builder.append("-").append(addPriceObject.getString("name"));
+                    else builder.append(addPriceObject.getString("name"));
+                    addpriceAmount= add(addpriceAmount,addPriceObject.getJSONObject("offerPrice").getDouble("price"));
+                    *//*addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");*//*
+                    Log.i("addpriceName",","+addPriceObject.getJSONObject("offerPrice").getDouble("price")+"len:"+len);
+
+                }*/
+
+
                 for(int j=0 ,len=addPricejsonArray.length();j<len;j++)
                 {
                     JSONObject jsonObject3=addPricejsonArray.getJSONObject(j);
@@ -156,46 +216,55 @@ public class Tooljson {
                         //将每个加价购的砍价的价格相加起来
                         totalBargain= add(totalBargain, jsonObject3.optJSONObject("bargainActivity").optDouble("totalBargain"));//商家最后获取的价格-加价购商品
 
-                    }else
-                    {
-                        Log.i("ordertypr",    "元");
                     }
-
                     if(j!=0)
                     builder.append("-").append(addPriceObject.getString("name"));
                     else builder.append(addPriceObject.getString("name"));
-                    addpriceAmount= add(addpriceAmount,addPriceObject.getJSONObject("offerPrice").getDouble("price"));
-                    /*addpriceAmount+=addPriceObject.getJSONObject("offerPrice").getDouble("price");*/
-                    Log.i("addpriceName",","+addPriceObject.getJSONObject("offerPrice").getDouble("price")+"len:"+len);
+
+
+
+
+                    if((jsonObject2.getString("orderType").equals("commodity"))) //判断是否为商城订单
+                    {
+
+                    }else if((jsonObject2.getString("orderType").equals("combined"))||(jsonObject2.getString("orderType").equals("pay"))) //为加价购
+                    {
+                        Double myoffice = 0.0;
+                        myoffice=(addPriceObject.getJSONObject("offerPrice").getDouble("price")) *jsonObject3.getDouble("quantity");
+                        addpriceAmount= add(addpriceAmount,myoffice);
+                        Log.i("Mytest--------",addpriceAmount+"");
+
+                    }
 
                 }
+
                 if((jsonObject2.getString("orderType").equals("commodity"))) //判断是否为商城订单
                 {
                     orderGood.setNameOfCommodity(builder.toString());
-                }else  //为加价购
+                }else   //为加价购
                 {
                     orderGood.setAddpriceName(builder.toString());
                     orderGood.setAddpriceAmount(String.valueOf(addpriceAmount));
                 }
 
+                //加价购+扫码支付=门店
 
-                Double temp=sub(jsonObject2.getDouble("totalFee"),addpriceAmount);////商家最后获取的价格-加价购商品 （未去掉bargin的价格）
-                orderGood.setItemPrice(String.valueOf(add(temp,totalBargain)));
+
+                if(!(jsonObject2.getString("orderType").equals("commodity"))) //判断是否为商城订单
+                {
+                    orderGood.setSweepPay( String.valueOf(sub(allitemprice,addpriceAmount) ));
+                    Log.i("Mytesttt",allitemprice+","+addpriceAmount+","+String.valueOf( allitemprice -addpriceAmount));
+                    orderGood.setItemPrice(String.valueOf(sub(allitemprice,addpriceAmount) ));
+
+                }
+
+
+               // Double temp=sub(jsonObject2.getDouble("totalFee"),addpriceAmount);////商家最后获取的价格-加价购商品 （未去掉bargin的价格）
+               // orderGood.setItemPrice(String.valueOf(add(temp,totalBargain)));
 
                 orderGood.setPayStatus(jsonObject2.getJSONObject("status").getString("code")); //支付状态
-                Log.i("mysleepy",jsonObject2.getJSONObject("status").getString("code"));
 
-                 /*
-                    判断是否为已经支付
-                 */
-               /* if(jsonObject2.getJSONObject("status").getString("code").equals("paid"))
-                {
-                    continue;
-                }*/
-
-                    list.add(orderGood);
-
-
+                list.add(orderGood);
 
             }
         } catch (Exception e) {
@@ -203,6 +272,9 @@ public class Tooljson {
             Log.i("my_test",e.toString());
             Log.i("my_test","handle exception");
         }
+
+
+
         return list;
     }
 
@@ -292,6 +364,12 @@ public class Tooljson {
         BigDecimal b2=new BigDecimal(v2.toString());
         return  b1.add(b2).doubleValue();
     }
+
+
+
+
+
+
 
     public  static  Double addthree(String v1,String v2 )
     {

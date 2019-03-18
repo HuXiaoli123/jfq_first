@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.MainActivity;
@@ -34,7 +36,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
     private TextView payTimer;
 
     private  TextView seepcodedetail;
-    private LinearLayout layout_addcount;
+    private RelativeLayout layout_addcount;
    private   Class<?> lastCls;
    private int mSelectFrag;
 
@@ -60,7 +62,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
         storeEntry=(TextView)findViewById(R.id.storeEntry);
         payTimer=(TextView)findViewById(R.id.payTimer);
         seepcodedetail=(TextView)findViewById(R.id.txt_arrow);
-        layout_addcount=(LinearLayout)findViewById(R.id.layout_addCount);
+        layout_addcount=(RelativeLayout) findViewById(R.id.layout_addCount);
     }
 
     private void initData(final CategoryBean mCategoryBaen ,int selectfrag)
@@ -70,7 +72,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
        {
            case 1:
                oderType.setText("订单类型："+mCategoryBaen.getOderType());
-               itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice());
+               itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice()+"元");
                platformDeduction.setText("平台抵扣： "+mCategoryBaen.getPlatformDeduction()+"元");
                userPlay.setText("用户支付："+mCategoryBaen.getUserPlay()+"元");
                storeEntry.setText("门店入账： "+mCategoryBaen.getStoreEntry()+"元");
@@ -79,6 +81,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
                if(mCategoryBaen.getOderType().equals("加价购订单"))
                {
                    seepcodedetail.setVisibility(View.VISIBLE);
+                   Log.i("seepcodedetail",seepcodedetail.getVisibility()+";;;");
                    layout_addcount.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
@@ -98,7 +101,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
                break;
            case 2:
                oderType.setText("产品名称："+mCategoryBaen.getNameOfCommodity() );
-               itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice());
+               itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice()+"元");
                platformDeduction.setText("平台抵扣： "+mCategoryBaen.getPlatformDeduction()+"元");
                userPlay.setText("用户支付："+mCategoryBaen.getUserPlay()+"元");
                storeEntry.setText("门店入账： "+mCategoryBaen.getStoreEntry()+"元");
@@ -112,20 +115,25 @@ public class MoreDeail_Activity extends AppCompatActivity {
                userPlay.setText("用户支付："+mCategoryBaen.getUserPlay()+"元");
                storeEntry.setText("门店入账： "+mCategoryBaen.getStoreEntry()+"元");
                payTimer.setText("支付时间： "+mCategoryBaen.getPlayTime());
-               seepcodedetail.setVisibility(View.VISIBLE);
-               layout_addcount.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                        CategoryBeanDAO  dao=new CategoryBeanDAO(new DBHelper(getApplicationContext()));
-                       String addPriceName=dao.queryById(mCategoryBaen.get_id());//因为数据库中的id是从1开始的
 
-                       String[] allPriceName=addPriceName.split("-");
+               if(!mCategoryBaen.getAddpriceAmount().equals("0.0")&&mCategoryBaen.getAddpriceAmount()!=null)
+               {
+                   seepcodedetail.setVisibility(View.VISIBLE);
+                   layout_addcount.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           CategoryBeanDAO  dao=new CategoryBeanDAO(new DBHelper(getApplicationContext()));
+                           String addPriceName=dao.queryById(mCategoryBaen.get_id());//因为数据库中的id是从1开始的
+
+                           String[] allPriceName=addPriceName.split("-");
 
 
-                       //弹出加价购的详细信息
-                       DetailMsg(allPriceName);
-                   }
-               });
+                           //弹出加价购的详细信息
+                           DetailMsg(allPriceName);
+                       }
+                   });
+               }
+
                lastCls=MainPayinfoFragment.class;
 
                break;
