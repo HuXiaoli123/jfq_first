@@ -41,6 +41,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 //每日汇总
 public class MainSummaryinfoFragment extends Fragment {
     private RecyclerView allinfo_list;
@@ -64,6 +66,7 @@ public class MainSummaryinfoFragment extends Fragment {
     int selectfragment; //当前处于哪个fragment
     private List<DailyOrder>mDataTemp=new ArrayList<>();
     boolean isfinish=false;//是否完成所有加载内容
+    private  ProgressBar mProgressBar;
 
     //处理子线层传过来的信息
     protected Handler handler =null;
@@ -91,16 +94,27 @@ public class MainSummaryinfoFragment extends Fragment {
         {
             @Override
             public void handleMessage(Message msg) {
-                initParentThread();
+                switch (msg.what)
+                {
+                    case 0:
+                        mProgressBar.setVisibility(View.GONE);
+                        emptymessage.setVisibility(View.VISIBLE);
+                        Log.i("mProgressBar1",emptymessage.getVisibility()+"all");
+                        break;
+                    default:
+                        mProgressBar.setVisibility(View.GONE);
+                        Log.i("mProgressBar",mProgressBar.getVisibility()+"all");
+                        emptymessage.setVisibility(View.GONE);
+                        initParentThread();
+                        break;
+                }
             }
         };
     }
 
     void initParentThread()
     {
-        if(mDataList.size()>0)
-        {
-            emptymessage.setVisibility(View.GONE);
+
 
               /*
         控制第一次刷新的条数
@@ -127,12 +141,12 @@ public class MainSummaryinfoFragment extends Fragment {
                 }
             });
             mainSummaryInfoAdapter.notifyDataSetChanged();
-        }else
-            emptymessage.setVisibility(View.VISIBLE);
+
     }
     void initView() {
         activity = getActivity();
         emptymessage=activity.findViewById(R.id.summaryinfo_item_emptymessage);
+        mProgressBar=activity.findViewById(R.id.mySummaryprogressbar);
         allinfo_list = activity.findViewById(R.id.summaryinfo_list);//RecyclerView
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
         allinfo_list.setLayoutManager(linearLayoutManager);
@@ -274,18 +288,25 @@ public class MainSummaryinfoFragment extends Fragment {
 				//进行数据库查询
 				DailyOrderDao dao = new DailyOrderDao(getActivity());
 
+
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
 				/*判断数据库是否有数据*/
 				while(dao.queryAll().size()<=0)
 				{
 					//超时了还没有数据显示
-					if(OverTime(3,exitTime)) break;
+                    if ((System.currentTimeMillis() - exitTime) > 1000)
+                    {   break;
+                    }
 				}
+                Log.i("mycursor1",":"+dao.queryAll().size()+" test");
 				mDataList=dao.queryAll();
 
-				handler.sendEmptyMessage(0);
-
-
-
+				handler.sendEmptyMessage(mDataList.size());
             }
         }).start();
 

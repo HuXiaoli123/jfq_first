@@ -144,8 +144,6 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
         private void  initView()
         {
-            TextView layout_top_text=(TextView)findViewById(R.id.layout_top_text);
-            layout_top_text.setText(R.string.tab_login_title_text);
             usernameTXT= (EditText) findViewById(R.id.username);
             passwordTXT= (EditText) findViewById(R.id.password);
             autoLogin=findViewById(R.id.auto_login);

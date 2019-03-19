@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Thread.sleep;
+
 public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
     private Context mContext;
@@ -31,11 +33,18 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
     private  List<CategoryBean> mCompeleteOrder=new ArrayList<>();
     private List<SweepCodeOrder> mSweepCodeOrder= new ArrayList<>();
 
+    public static int getmCompeleteOrderList() {
+        return mCompeleteOrderList;
+    }
+
+    public static int mCompeleteOrderList;
+    public  static boolean mFinishLoad=false;
+
+
+
     public List<CategoryBean> getCompeleteOrder() {
         return mCompeleteOrder;
     }
-
-
 
     public DownLoadAsyncTask(Context mContext  ){
         this.mContext=mContext;
@@ -95,24 +104,30 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              InsertToDetailTable(mContext);
             // s=parseData(s);
             // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
-             mCompeleteOrder=Tooljson.getjfqdata("content",s,true);
-
+             CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
+             long dataBaseData=dao.allCaseNum();  //数据库中总长度
+             String lastTimer =dao.LastCateanTimer();
+             mCompeleteOrder=Tooljson.getjfqdata("content",s,lastTimer);
+             mCompeleteOrderList=mCompeleteOrder.size();
+             Log.i("mypathtest-----",mCompeleteOrderList+":");
              //mCompeleteOrder=testData();
              int newDownData=mCompeleteOrder.size();  //新下载的网络数据
              //如果数据数量没有变化，不需要插入数据
-             CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
-             long dataBaseData=dao.allCaseNum();  //数据库中总长度
 
              Log.i("mypathtest",dataBaseData+":"+newDownData);
             // dao.DailySales();//    ----------------------test
 
 
-             if(dataBaseData>=newDownData)return;
+             if(dataBaseData>=newDownData){
+                 mFinishLoad=true;
+                 return;
+             }
 
              int index=(int)(newDownData-dataBaseData-1);
              Log.i("mypath",index+":"+newDownData);
 
 
+             boolean isInserToFinish=false;
 
              //插入数据到数据库中
              for(int i=index;i>=0;i--)
@@ -124,7 +139,12 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
              }
 
-             Log.i("my-----------","s:"+dao.findByOrderType("商城订单") .size());
+             try {
+                 sleep(1000);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+
 
              //处理日常订单
              List<DailyOrder>myDailyOrder=dao.DailySales();//    ----------------------test
@@ -134,6 +154,9 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              {
                  orderDao.insert(myDailyOrder.get(i));
              }
+
+             mFinishLoad=true;
+             Log.i("mypathtest-----",mFinishLoad+":");
 
 
          }

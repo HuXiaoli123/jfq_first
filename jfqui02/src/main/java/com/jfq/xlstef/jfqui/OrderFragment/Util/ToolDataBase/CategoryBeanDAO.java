@@ -151,6 +151,7 @@ public class CategoryBeanDAO {
      */
     public static final String COLUMN_DATE="playTime";
     public static final String ORDER_BY="date("+COLUMN_DATE+") desc";
+    public static final String ORDER_BY_ID="_id desc";
     /*
     查询商城订单并且不是未支付的订单
      */
@@ -178,6 +179,69 @@ public class CategoryBeanDAO {
         }
 
 
+        Log.i("myadapter","findByOrderType"+cursor.getCount());
+        return GetData(cursor);
+    }
+
+    public  ArrayList findByOrderComdity()
+    {
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
+
+
+        /* 将数据库中数据倒序的取出*/
+        Cursor results= readDB.query(Data.VIEW_COMODITYORDER,
+                    new String[]{}, null, null,
+                    null, null, ORDER_BY_ID);
+        for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
+            CategoryBean listInfo=new CategoryBean();
+            listInfo.set_id(results.getInt(0));
+            listInfo.setOrderNumber(results.getString(1));
+            listInfo.setOderType(results.getString(2));
+            listInfo.setItemPrice(results.getString(3));
+            listInfo.setPlatformDeduction(results.getString(4));
+            listInfo.setUserPlay(results.getString(5));
+            listInfo.setStoreEntry(results.getString(6));
+            listInfo.setPlayTime(results.getString(7));
+            /*listInfo.setAddpriceAmount(results.getString(8));
+            listInfo.setAddpriceName(results.getString(9));
+            listInfo.setNameOfCommodity(results.getString(10));*/
+            // Log.i("myadapter",results.getString(10));
+            arrayList.add(listInfo);
+        }
+        results.close();
+        return arrayList;
+    }
+
+    public  ArrayList findByOrderAll(String orderType)
+    {
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
+       /* Cursor cursor = readDB.query(DBHelper.COMPELETE_ORDER_TABLE_NAME,
+                null, "oderType" + "='" + ""+"'", null, null, null, null);*/
+
+        /*Cursor cursor = rdb.query("user", new String[]{"name","phone"}, "name=?", new String[]{"zhangsan"}, null, null, "_id desc");*/
+
+        /* 将数据库中数据倒序的取出*/
+        Cursor cursor;
+        if(orderType.equals("扫码订单"))
+        {
+            cursor=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"加价购订单","paid"},
+                    null, null, ORDER_BY);
+        }
+        else {
+            cursor = readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                    new String[]{}, "oderType=? and  payStatus=? ", new String[]{orderType, "paid"},
+                    null, null, ORDER_BY);
+        }
+
+        if (cursor != null) {
+
+        }else
+        {
+
+        }
         Log.i("myadapter","findByOrderType"+cursor.getCount());
         return GetData(cursor);
     }
@@ -239,15 +303,38 @@ public class CategoryBeanDAO {
         return arrayList;
     }
 
-    public ArrayList findOrderByComdity( String tableName,String payStatus) {
+    public ArrayList findOrderByAll( String tableName ) {
         ArrayList<CategoryBean> arrayList=new ArrayList<>();
         SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
         Cursor results = readDB.query(tableName, null,
-                null, null, null, null, ORDER_BY);
+                null, null, null, null, ORDER_BY_ID);
         /*if (cursor != null) {
             result = cursor.getCount();
             cursor.close();
         }*/
+        for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
+            CategoryBean listInfo=new CategoryBean();
+            listInfo.set_id(results.getInt(0));
+            listInfo.setOrderNumber(results.getString(1));
+            listInfo.setOderType(results.getString(2));
+            listInfo.setItemPrice(results.getString(3));
+            listInfo.setPlatformDeduction(results.getString(4));
+            listInfo.setUserPlay(results.getString(5));
+            listInfo.setStoreEntry(results.getString(6));
+            listInfo.setPlayTime(results.getString(7));
+            arrayList.add(listInfo);
+        }
+        results.close();
+        return arrayList;
+
+    }
+
+    public ArrayList findOrderByComdity( String tableName ) {
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
+        Cursor results = readDB.query(tableName, null,
+                null, null, null, null, ORDER_BY);
+
         for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
             CategoryBean listInfo=new CategoryBean();
             listInfo.set_id(results.getInt(0));
@@ -348,6 +435,33 @@ public class CategoryBeanDAO {
      */
     public long allCaseNum(){
         String sql = "select count(*)from "+Data.COMPELETE_ORDER_TABLE_NAME;
+        SQLiteDatabase db=dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        long count = cursor.getLong(0);
+        cursor.close();
+        return count;
+    }
+
+    public String LastCateanTimer()
+    {
+        String sql = "select playTime from " +Data.COMPELETE_ORDER_TABLE_NAME+" order by _id desc LIMIT 1" ;
+        SQLiteDatabase db=dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+        Log.i("lllllll",cursor.getString(0)+"");
+       return cursor.getString(0);
+
+    }
+
+
+    /**
+     * 查询数据库中的总条数.
+     * @return
+     */
+    public long allCaseNumView(String View){
+        String sql = "select count(*)from "+View;
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
@@ -469,22 +583,30 @@ public class CategoryBeanDAO {
                 "date(playTime)",null,null);
         return cursor;
     }
+
+
+    /**Data.playTime+" < "+"date('now')"
+     * selection:
+     * @param readDB
+     * @param table
+     * @return
+     */
     public  Cursor resultCursor(SQLiteDatabase readDB,String table)
     {
-        Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },Data.playTime+" < "+"date('now')",null,
+        Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },null,null,
                 "date(playTime)",null,null);
         return cursor;
     }
 
     /*
-    获取最后的总结结果
+    获取最后的总结结果    selection :Data.playTime+" < "+"date('now')"  之前设置统计前天
      */
     public  Cursor resultEndCursor(SQLiteDatabase readDB,String table)
     {
         Cursor cursor=readDB.query(table,new String[]{ "date("+Data.playTime+")","SUM("+Data.sweepPay+")", "SUM("+Data.addpriceAmount+")",
                         "SUM("+Data.comdityOrder+")","SUM("+Data.comissionOrder+")",
-                       "SUM(sweepPay)+SUM(addpriceAmount)+SUM(comdityOrder)+SUM(comissionOrder)" },Data.playTime+" < "+"date('now')",null,
-                "date(playTime)",null,null);
+                       "SUM(sweepPay)+SUM(addpriceAmount)+SUM(comdityOrder)+SUM(comissionOrder)" },null,null,
+                "date(playTime)",null,Data.ORDER_BY_TIME);
         return cursor;
     }
 

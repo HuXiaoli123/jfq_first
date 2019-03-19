@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="没有数据"
+        android:visibility="gone"
         android:textSize="16sp"/>
     <com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout
         android:id="@+id/main_payinfo_swiperefresh"
@@ -22,5 +23,14 @@
             android:layout_height="match_parent"
             />
     </com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/myPayprogressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/circle_bg"
+        android:visibility="visible"
+        />
 
 </FrameLayout>

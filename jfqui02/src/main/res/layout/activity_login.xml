@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/tablayout_main_title"
-        layout="@layout/layout_tab_top"
+        layout="@layout/login_titlebar"
         />
 
     <ImageView

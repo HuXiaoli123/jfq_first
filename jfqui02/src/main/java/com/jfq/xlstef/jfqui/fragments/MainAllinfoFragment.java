@@ -58,6 +58,7 @@ public class MainAllinfoFragment extends Fragment {
 
     TextView  emptymessage;
     private  int mFirstCount;
+    private  ProgressBar mProgressBar;
 
     //处理子线层传过来的信息
     protected Handler handler =null;
@@ -86,7 +87,22 @@ public class MainAllinfoFragment extends Fragment {
         {
             @Override
             public void handleMessage(Message msg) {
-                initParentThread();
+
+                switch (msg.what)
+                {
+                    case 0:
+                        mProgressBar.setVisibility(View.GONE);
+                        emptymessage.setVisibility(View.VISIBLE);
+                        Log.i("mProgressBar1",emptymessage.getVisibility()+"all");
+                        break;
+                    default:
+                        mProgressBar.setVisibility(View.GONE);
+                        Log.i("mProgressBar",mProgressBar.getVisibility()+"all");
+                        emptymessage.setVisibility(View.GONE);
+                        initParentThread();
+                        break;
+                }
+
             }
         };
 
@@ -94,11 +110,7 @@ public class MainAllinfoFragment extends Fragment {
 
     void initParentThread()
     {
-        if(mDataList.size()>0)
-        {
-            emptymessage.setVisibility(View.GONE);
-
-              /*
+          /*
         控制第一次刷新的条数
          */
 
@@ -124,11 +136,12 @@ public class MainAllinfoFragment extends Fragment {
                 }
             });
             mainAllInfoAdapter.notifyDataSetChanged();
-        }else
-            emptymessage.setVisibility(View.VISIBLE);
+
+
     }
     void initView() {
         activity = getActivity();
+        mProgressBar=activity.findViewById(R.id.myAllprogressbar);
         emptymessage=activity.findViewById(R.id.allinfo_item_emptymessage);
         allinfo_list = activity.findViewById(R.id.allinfo_list);//RecyclerView
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
@@ -192,7 +205,6 @@ public class MainAllinfoFragment extends Fragment {
                     }
                 }, 3000);
             }
-
             @Override
             public void onPushDistance(int distance) {
 
@@ -262,49 +274,57 @@ public class MainAllinfoFragment extends Fragment {
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath_",":"+dao.allCaseNum()+" test");
         final DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
+
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
         new Thread(new Runnable() {
             @Override
             public void run() {
-                long exitTime=System.currentTimeMillis();
+
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
 //---------------------------------
                /* 判断数据库是否有数据*/
                 if(isFirstTime) {
                     isFirstTime=false;
-                    myAsyTask.execute(path);
+                 myAsyTask.execute(path);
                 }else
                 {
 
                 }
 //---------------------------------
                 //当数据库中数据<新加载的数据
-                Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
 
-                while(dao.allCaseNum()<=0|| dao.allCaseNum()<myAsyTask.getCompeleteOrder().size())
+                 long lastTime=System.currentTimeMillis();
+                while(dao.allCaseNum()<=0|| dao.allCaseNum()<DownLoadAsyncTask.mCompeleteOrderList||!DownLoadAsyncTask.mFinishLoad)
                 {
-                    Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
+                    Log.i("mypathtest1112",dao.allCaseNum()+"，"+myAsyTask.mCompeleteOrderList+";"+DownLoadAsyncTask.mFinishLoad);
+
+
                     //超时了还没有数据显示
-                    if(OverTime(4,exitTime)) break;
+
+                    if ((System.currentTimeMillis() - lastTime) > 1000)
+                    {
+                        Log.i("mypathtest1112",System.currentTimeMillis()+"OverTime11"+"，"+(System.currentTimeMillis() - lastTime)+","+lastTime);
+                        break;
+                    }
+                   /* if(OverTime(500,exitTime))
+                    {
+
+                    }*/
                 }
+
                 //  mCategoryBean=myAsyTask.getCompeleteOrder();
                 //从数据库中获取
-                mDataList=QueryData(new DBHelper(getActivity()),"paid");
-                Log.i("Mydatabases",mDataList.size()+","+mDataList.get(0).getPlayTime());
-                handler.sendEmptyMessage(0);
+                mDataList=dao.findOrderByAll(Data.VIEW_ALL_ORDER);;
 
 
+                handler.sendEmptyMessage(mDataList.size());
 
             }
         }).start();
 
     }
-    //查询数据
-    public ArrayList QueryData(DBHelper dbHelper,String status) {
-        CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-        return  dao.findOrderByComdity(Data.VIEW_ALL_ORDER,status);
-    }
+
 
     /**
      * 超时
@@ -313,7 +333,11 @@ public class MainAllinfoFragment extends Fragment {
      */
     private  boolean  OverTime(float time ,float lastTime)
     {
-        if ((System.currentTimeMillis() - lastTime) > 3000)   return  true;
+        Log.i("mypathtest1112",System.currentTimeMillis()+"OverTime11"+"，"+(System.currentTimeMillis() - lastTime)+","+lastTime);
+        if ((System.currentTimeMillis() - lastTime) > time) {
+
+            return true;
+        }
         return  false;
     }
 
@@ -365,7 +389,7 @@ public class MainAllinfoFragment extends Fragment {
 
         } else if (freshType.equals("refresh")) {
             Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
-
+            initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();
         }
     }

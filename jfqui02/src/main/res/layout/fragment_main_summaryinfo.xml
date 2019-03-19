@@ -24,5 +24,13 @@
             android:layout_height="match_parent"
             />
     </com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout>
+    <ProgressBar
+        android:id="@+id/mySummaryprogressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/circle_bg"
+        android:visibility="visible"
+        />
 
 </FrameLayout>

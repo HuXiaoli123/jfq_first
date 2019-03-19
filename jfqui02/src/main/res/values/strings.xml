@@ -22,6 +22,7 @@
     <string name="loading">加载中...</string>
     <string name="toping">已经加载到第一条</string>
     <integer name="first_load_count">3</integer>
+    <integer name="wait_time">3000</integer>
 
 
     <!-- 信息一览 -->
@@ -46,7 +47,7 @@
     <string name="hello_blank_fragment1">全部订单1</string>
     <string name="hello_blank_fragment2">商城订单2</string>
     <string name="hello_blank_fragment3">扫码加价3</string>
-    <string name="hello_blank_fragment4">佣金明细4</string>
+    <string name="hello_blank_fragment4">佣金明细---没有数据</string>
     <string name="hello_blank_fragment5">每日汇总5</string>
 
     <string name="title_activity_login">LoginActivity</string>
@@ -79,6 +80,7 @@
     <string name="select_time">选择时间</string>
     <string name="current_time">当前时间</string>
     <string name="endTimerTip">结束日期</string>
+    <string name="login_titlebar">积分圈商户版登录</string>
 
 
 </resources>

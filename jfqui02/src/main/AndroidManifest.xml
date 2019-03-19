@@ -75,7 +75,11 @@
         <activity android:name=".Message.Mycenter_MsgActivity" />
         <activity android:name=".LoginPage.VoiceParse.TestActivity" />
         <activity android:name=".SerachDetail.SerachActivity" />
-        <activity android:name=".SerachDetail.MoreDeail_Activity"></activity>
+        <activity android:name=".SerachDetail.MoreDeail_Activity" />
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/circle_bg" />
     </application>
 
 </manifest>

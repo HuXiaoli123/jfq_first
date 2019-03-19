@@ -153,7 +153,8 @@ public class TabMainActivity extends AppCompatActivity  {
 		titlebar_front=new ImageView(this);
 
 			/*titlebar_front=new TextView(this);*/
-			titlebar_front.setBackgroundResource(R.drawable.slidebar);
+			/*titlebar_front.setBackgroundResource(R.drawable.slidebar);*/
+		titlebar_front.setImageResource(R.drawable.slidebar);
 			/*titlebar_front.setTextColor(Color.WHITE);
 			titlebar_front.setText(R.string.title_main_allinfo);
 			titlebar_front.setGravity(Gravity.CENTER);*/

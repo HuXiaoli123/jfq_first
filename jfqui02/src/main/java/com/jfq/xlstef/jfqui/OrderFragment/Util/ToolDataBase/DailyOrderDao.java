@@ -90,7 +90,7 @@ public class DailyOrderDao implements DAO<DailyOrder> {
         List<DailyOrder> list = new ArrayList<>();
         try {
             sqLiteDatabase = dbHelper.getReadableDatabase();
-            cursor = sqLiteDatabase.query(Data.ORDERDAILY_TABLE_NAME, null, selection, selectionArgs, null, null, Data.ORDER_BY);
+            cursor = sqLiteDatabase.query(Data.ORDERDAILY_TABLE_NAME, null, selection, selectionArgs, null, null, Data.ORDER_BY_TIME);
             list=new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
                 do {

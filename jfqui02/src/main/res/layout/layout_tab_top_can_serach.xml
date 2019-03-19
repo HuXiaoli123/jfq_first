@@ -10,14 +10,18 @@
 			android:layout_height="40dip"
 			android:background="@color/top_title_background" >
 
-		<ImageView
-				android:id="@+id/img_jfq_top"
-				android:layout_width="95dp"
-				android:layout_height="36dp"
-				android:layout_centerVertical="true"
-				android:layout_marginLeft="5dip"
-				android:src="@drawable/netease_top"
-		/>
+		<TextView
+			android:id="@+id/img_jfq_top"
+			android:gravity="center"
+			android:layout_width="90dp"
+			android:layout_height="36dp"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="5dip"
+			android:textSize="26sp"
+			android:typeface="monospace"
+			android:textColor="@color/head_text_fontcolor"
+			android:text="积分圈"
+			/>
 		<TextView
 				android:id="@+id/layout_top_text"
 				android:layout_width="wrap_content"

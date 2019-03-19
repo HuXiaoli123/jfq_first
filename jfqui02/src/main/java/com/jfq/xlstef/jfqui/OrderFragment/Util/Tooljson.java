@@ -120,7 +120,7 @@ public class Tooljson {
      * @return
      */
 
-    public static List<CategoryBean> getjfqdata(String key, String jsonString,boolean is) {
+    public static List<CategoryBean> getjfqdata(String key, String jsonString,String  timer) {
         List list = new ArrayList();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -128,22 +128,7 @@ public class Tooljson {
             JSONArray jsonArray = jsonObject.getJSONArray(key);
 
             //--------------test
-            CategoryBean myCategoryBean4=new CategoryBean("1234567","商城订单","29","2.6",
-                    "26.4","29","2019-03-18 13:05:39","12",
-                    "桃子","香蕉","paid");
-            CategoryBean myCategoryBean3=new CategoryBean("1234567","商城订单","29","2.6",
-                    "26.4","29","2019-03-18 15:29:39","12",
-                    "桃子","香蕉","paid");
-            CategoryBean myCategoryBean=new CategoryBean("1234567","商城订单","29","2.6",
-                    "26.4","29","2019-03-18 12:29:39","12",
-                    "桃子","香蕉","paid");
-            CategoryBean myCategoryBean2=new CategoryBean("1234567","商城订单","29","2.6",
-                    "26.4","29","2019-03-16 12:29:39","12",
-                    "桃子","香蕉","paid");
-            list.add(myCategoryBean);
-            list.add(myCategoryBean2);
-            list.add(myCategoryBean3);
-            list.add(myCategoryBean4);
+
             //--------------test
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);

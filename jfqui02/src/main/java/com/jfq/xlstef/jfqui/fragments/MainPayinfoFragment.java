@@ -38,6 +38,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 //扫码加价购
 public class MainPayinfoFragment   extends Fragment {
 	private RecyclerView allinfo_list;
@@ -61,6 +63,7 @@ public class MainPayinfoFragment   extends Fragment {
 	int selectfragment; //当前处于哪个fragment
 	private List<CategoryBean>mDataTemp=new ArrayList<>();
 	boolean isfinish=false;//是否完成所有加载内容
+	private  ProgressBar mProgressBar;
 
 	//处理子线层传过来的信息
 	protected Handler handler =null;
@@ -88,16 +91,27 @@ public class MainPayinfoFragment   extends Fragment {
 		{
 			@Override
 			public void handleMessage(Message msg) {
-				initParentThread();
+				switch (msg.what)
+				{
+					case 0:
+						mProgressBar.setVisibility(View.GONE);
+						emptymessage.setVisibility(View.VISIBLE);
+						Log.i("mProgressBar1",emptymessage.getVisibility()+"all");
+						break;
+					default:
+						mProgressBar.setVisibility(View.GONE);
+						Log.i("mProgressBar",mProgressBar.getVisibility()+"all");
+						emptymessage.setVisibility(View.GONE);
+						initParentThread();
+						break;
+				}
 			}
 		};
 	}
 
 	void initParentThread()
 	{
-		if(mDataList.size()>0)
-		{
-			emptymessage.setVisibility(View.GONE);
+
 
               /*
         控制第一次刷新的条数
@@ -125,14 +139,14 @@ public class MainPayinfoFragment   extends Fragment {
 				}
 			});
 			mainAllInfoAdapter.notifyDataSetChanged();
-		}else
-			emptymessage.setVisibility(View.VISIBLE);
+
 	}
 
 
 	void initView() {
 		activity = getActivity();
 		selectfragment=3;
+		mProgressBar=activity.findViewById(R.id.myPayprogressbar);
 		emptymessage=activity.findViewById(R.id.payinfo_item_emptymessage);
 		allinfo_list = activity.findViewById(R.id.payinfo_list);//RecyclerView
 		linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
@@ -270,20 +284,30 @@ public class MainPayinfoFragment   extends Fragment {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				long exitTime=System.currentTimeMillis();
+
 				//进行数据库查询
 				CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
 
 
 				//当数据库中数据<新加载的数据
 				Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
+
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				long exitTime=System.currentTimeMillis();
 				while(dao.allCaseNum()<=0)
 				{
-					//超时了还没有数据显示
-					if(OverTime(3,exitTime)) break;
+					/*//超时了还没有数据显示
+					if(OverTime(3,exitTime)) break;*/
+					if ((System.currentTimeMillis() - exitTime) > 1000)
+					{   break;
+					}
 				}
 				mDataList=dao.findByOrderType("扫码订单");
-				handler.sendEmptyMessage(0);
+				handler.sendEmptyMessage(mDataList.size());
 
 
 
@@ -358,7 +382,9 @@ public class MainPayinfoFragment   extends Fragment {
 			}
 			mainAllInfoAdapter.notifyDataSetChanged();
 		} else if (freshType.equals("refresh")) {
-			Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
+			Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
+			new DownLoadAsyncTask(getActivity()).execute("http://store.tuihs.com/store/orders?page=0&size=10");
+			initItemData();
 
 			mainAllInfoAdapter.notifyDataSetChanged();
 		}

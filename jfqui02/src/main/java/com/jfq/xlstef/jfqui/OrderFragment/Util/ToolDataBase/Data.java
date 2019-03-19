@@ -86,4 +86,5 @@ public class Data {
      * 时间字段的降序，采用date函数比较
      */
     public static final String ORDER_BY="date("+COLUMN_id+") desc";
+    public static final String ORDER_BY_TIME="date("+Data.playTime+") desc";
 }

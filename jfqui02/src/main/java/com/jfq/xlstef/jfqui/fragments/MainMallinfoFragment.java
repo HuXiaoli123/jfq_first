@@ -36,6 +36,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 //商城订单
 public class MainMallinfoFragment  extends Fragment {
     private RecyclerView allinfo_list;
@@ -59,7 +61,7 @@ public class MainMallinfoFragment  extends Fragment {
     int selectfragment; //当前处于哪个fragment
     private List<CategoryBean>mDataTemp=new ArrayList<>();
     boolean isfinish=false;//是否完成所有加载内容
-
+    private  ProgressBar mProgressBar;
     //处理子线层传过来的信息
     private Handler handler =null;
     // TODO: Rename parameter arguments, choose names that match
@@ -86,16 +88,26 @@ public class MainMallinfoFragment  extends Fragment {
         {
             @Override
             public void handleMessage(Message msg) {
-               initParentThread();
+                switch (msg.what)
+                {
+                    case 0:
+                        mProgressBar.setVisibility(View.GONE);
+                        emptymessage.setVisibility(View.VISIBLE);
+                        Log.i("mProgressBar1",emptymessage.getVisibility()+"");
+                        break;
+                    default:
+                        mProgressBar.setVisibility(View.GONE);
+                        Log.i("mProgressBar",mProgressBar.getVisibility()+"");
+                        emptymessage.setVisibility(View.GONE);
+                        initParentThread();
+                        break;
+                }
             }
         };
     }
     void initParentThread()
     {
-        Log.i("Mall","initParentThread");
-        if(mDataList.size()>0)
-        {
-            emptymessage.setVisibility(View.GONE);
+
               /*
         控制第一次刷新的条数
          */
@@ -122,13 +134,13 @@ public class MainMallinfoFragment  extends Fragment {
                 }
             });
             mainAllInfoAdapter.notifyDataSetChanged();
-        }else
-            emptymessage.setVisibility(View.VISIBLE);
+
     }
 
 
     void initView() {
         activity = getActivity();
+        mProgressBar=activity.findViewById(R.id.myMallprogressbar);
         selectfragment=2;
         emptymessage=activity.findViewById(R.id.mallinfo_item_emptymessage);
         allinfo_list = activity.findViewById(R.id.mallinfo_list);//RecyclerView
@@ -266,22 +278,27 @@ public class MainMallinfoFragment  extends Fragment {
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
                 /*判断数据库是否有数据*/
-                while(dao.allCaseNum()<=0)
-                {
-                    //超时了还没有数据显示
-                    if(OverTime(3,exitTime)) break;
+
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                mDataList=dao.findByOrderType("商城订单");//找到订单类型为商城订单
+                while(dao.allCaseNumView(Data.VIEW_COMODITYORDER)<=0)
+                {
 
-                handler.sendEmptyMessage(0);
+                    if ((System.currentTimeMillis() - exitTime) > 1000)
+                    {   break;
+                    }
+                }
+               // mDataList=dao.findByOrderType("商城订单");//找到订单类型为商城订单
+                 mDataList=dao.findOrderByComdity(Data.VIEW_COMODITYORDER);
+                Log.i("daoooooooo",  mDataList.size()+"."+dao.allCaseNumView(Data.VIEW_COMODITYORDER));
 
-
+                handler.sendEmptyMessage(mDataList.size());
 
             }
         }).start();
-
-
-
     }
 
 
@@ -299,7 +316,7 @@ public class MainMallinfoFragment  extends Fragment {
      */
     private  boolean  OverTime(float time ,float lastTime)
     {
-        if ((System.currentTimeMillis() - lastTime) > 3000)   return  true;
+        if ((System.currentTimeMillis() - lastTime) > time)   return  true;
         return  false;
     }
 
@@ -349,8 +366,9 @@ public class MainMallinfoFragment  extends Fragment {
             }
             mainAllInfoAdapter.notifyDataSetChanged();
         } else if (freshType.equals("refresh")) {
-            Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
+            new DownLoadAsyncTask(getActivity()).execute("http://store.tuihs.com/store/orders?page=0&size=10");
+            initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();
         }
     }

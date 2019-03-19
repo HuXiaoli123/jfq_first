@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/top_state_default"
+                    android:textColor="@color/top_title_fontcolor"
                     android:text="@string/title_main_allinfo" />
             </RelativeLayout>
 
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/top_state_default"
+                    android:textColor="@color/top_title_fontcolor"
                     android:text="@string/title_main_mallinfo" />
             </RelativeLayout>
 
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/top_state_default"
+                    android:textColor="@color/top_title_fontcolor"
                     android:text="@string/title_main_payinfo" />
             </RelativeLayout>
 
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/top_state_default"
+                    android:textColor="@color/top_title_fontcolor"
                     android:text="@string/title_main_commissioninfo" />
             </RelativeLayout>
 
@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/top_state_default"
+                    android:textColor="@color/top_title_fontcolor"
                     android:text="@string/title_main_summaryinfo" />
             </RelativeLayout>
 
