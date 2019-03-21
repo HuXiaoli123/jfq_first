@@ -133,6 +133,12 @@ public class MainAllinfoFragment extends Fragment {
             mainAllInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void OnItemClick(int position) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, MoreDeail_Activity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                    intent.putExtra("beanData",mDataList.get(position));
+                    intent.putExtra("selectfrag",1);
+                    activity.startActivityForResult(intent,1);
                 }
             });
             mainAllInfoAdapter.notifyDataSetChanged();
@@ -260,12 +266,14 @@ public class MainAllinfoFragment extends Fragment {
         return footerView;
     }
 
+
+
     /*
         设置初始item数据(假设）
         真实设定需要访问数据库
      */
     private  boolean isFirstTime=true;
-    private  String path="http://store.tuihs.com/store/orders?page=0&size=10";
+    private  String path=Data.loadPath;
     private void initItemData() {
         mDataList.clear();
         mDataTemp.clear();
@@ -279,6 +287,7 @@ public class MainAllinfoFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.i("MYtestt",isFirstTime+"");
 
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
@@ -298,8 +307,6 @@ public class MainAllinfoFragment extends Fragment {
                 while(dao.allCaseNum()<=0|| dao.allCaseNum()<DownLoadAsyncTask.mCompeleteOrderList||!DownLoadAsyncTask.mFinishLoad)
                 {
                     Log.i("mypathtest1112",dao.allCaseNum()+"，"+myAsyTask.mCompeleteOrderList+";"+DownLoadAsyncTask.mFinishLoad);
-
-
                     //超时了还没有数据显示
 
                     if ((System.currentTimeMillis() - lastTime) > 1000)
@@ -388,7 +395,9 @@ public class MainAllinfoFragment extends Fragment {
             mainAllInfoAdapter.notifyDataSetChanged();
 
         } else if (freshType.equals("refresh")) {
+
             Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
+            new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();
         }

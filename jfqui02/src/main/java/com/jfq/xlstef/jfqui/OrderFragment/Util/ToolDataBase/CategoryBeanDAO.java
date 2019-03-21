@@ -10,11 +10,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static android.provider.Settings.System.DATE_FORMAT;
 
 public class CategoryBeanDAO {
     DBHelper dbHelper=null;
@@ -181,6 +177,40 @@ public class CategoryBeanDAO {
 
         Log.i("myadapter","findByOrderType"+cursor.getCount());
         return GetData(cursor);
+    }
+
+
+    /*
+   查询商城订单并且不是未支付的订单
+    */
+    public  ArrayList findByOrderPay( )
+    {
+        ArrayList<CategoryBean> arrayList=new ArrayList<>();
+        SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
+
+
+        /* 将数据库中数据倒序的取出*/
+        Cursor  results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{"扫码订单","加价购订单","paid" },
+                    null, null, ORDER_BY_ID);
+        for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
+            CategoryBean listInfo=new CategoryBean();
+            listInfo.set_id(results.getInt(0));
+            listInfo.setOrderNumber(results.getString(1));
+            listInfo.setOderType(results.getString(2));
+            listInfo.setItemPrice(results.getString(3));
+            listInfo.setPlatformDeduction(results.getString(4));
+            listInfo.setUserPlay(results.getString(5));
+            listInfo.setStoreEntry(results.getString(6));
+            listInfo.setPlayTime(results.getString(7));
+            listInfo.setAddpriceAmount(results.getString(8));
+            listInfo.setAddpriceName(results.getString(9));
+            listInfo.setNameOfCommodity(results.getString(10));
+
+            arrayList.add(listInfo);
+        }
+        results.close();
+        return arrayList;
     }
 
     public  ArrayList findByOrderComdity()
@@ -352,6 +382,8 @@ public class CategoryBeanDAO {
 
     }
 
+
+
     public ArrayList findOrderByName( String tableName,String payStatus) {
         ArrayList<CategoryBean> arrayList=new ArrayList<>();
         SQLiteDatabase readDB=dbHelper.getReadableDatabase(); //USER_NAME + "='" + userName+"'"
@@ -443,15 +475,23 @@ public class CategoryBeanDAO {
         return count;
     }
 
-    public String LastCateanTimer()
+    public String LastCateanTimer(String table)
     {
-        String sql = "select playTime from " +Data.COMPELETE_ORDER_TABLE_NAME+" order by _id desc LIMIT 1" ;
+        String sql = "select playTime from " +table+" order by _id desc LIMIT 1" ;
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToFirst();
 
-        Log.i("lllllll",cursor.getString(0)+"");
-       return cursor.getString(0);
+        if(cursor.moveToFirst())
+        {
+            Log.i("lllllll",cursor.getString(0)+"");
+            return cursor.getString(0);
+        }else
+        {
+            return  "0";
+        }
+
+
+
 
     }
 
@@ -471,19 +511,22 @@ public class CategoryBeanDAO {
     }
 
 
-
+    String mLastTime="";
+    String mCurrentDate="";
     /**
      * 测试：统计每一天的总销量
      */
-    public  List<DailyOrder> DailySales()
+    public  List<DailyOrder> DailySales(String lastTime,String currentDate)
     {
-
+        mLastTime=lastTime;
+        mCurrentDate=currentDate;
+        // mCurrentDate="2019-03-21";
         SQLiteDatabase Db=dbHelper.getReadableDatabase();
        // Cursor compelteCusor=resultCursor(Db,Data.VIEW_ALL_ORDER,new String[]{"date("+Data.playTime+")"},null);
-        Cursor sweepcodeCursor=resultCursor(Db,Data.VIEW_SWEEPCODE);
-        Cursor addCountCursor=resultCursor(Db,Data.VIEW_AddCount);
-        Cursor comodityOrderCursor=resultCursor(Db,Data.VIEW_COMODITYORDER);
-        Cursor commissionCursor=resultCursor(Db,Data.DETAILS_OF_COMMISSION);
+        Cursor sweepcodeCursor=resultCursor(Db,Data.VIEW_SWEEPCODE,Data.storeEntry);
+        Cursor addCountCursor=resultCursor(Db,Data.VIEW_AddCount,Data.addpriceAmount);
+        Cursor comodityOrderCursor=resultCursor(Db,Data.VIEW_COMODITYORDER,Data.storeEntry);
+        Cursor commissionCursor=resultCursor(Db,Data.DETAILS_OF_COMMISSION,Data.storeEntry);
 
        /* Map<String,List<String>>mdic=new HashMap<>();
         Cursor allOrderCusor=resultCursor(Db,Data.VIEW_ALL_ORDER,new String[]{"date("+Data.playTime+")"},null);*/
@@ -494,6 +537,9 @@ public class CategoryBeanDAO {
         Db.execSQL(dropTemp);
 
         Db.execSQL(DBHelper.CreatTempTable());  //创建一张临时表
+
+
+
         if(sweepcodeCursor.moveToFirst())
         {
             do{
@@ -561,11 +607,11 @@ public class CategoryBeanDAO {
                         tempSummary.getString(4)+";"+tempSummary.getString(5));
             }while (tempSummary.moveToNext());
         }
-
-
         return  dailyOrderList;
 
         //select  playTime>=datetime('now','start of day','-7 day','weekday 1') AND playTime<datetime('now','start of day','+0 day','weekday 1') from completeOrder
+
+
     }
 
 
@@ -589,25 +635,49 @@ public class CategoryBeanDAO {
      * selection:
      * @param readDB
      * @param table
+     * @param storeEntry :因为在扫码订单中门店入账包括了扫码支付+加价购
      * @return
      */
-    public  Cursor resultCursor(SQLiteDatabase readDB,String table)
+    public  Cursor resultCursor(SQLiteDatabase readDB,String table,String storeEntry )
     {
-        Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },null,null,
+      /*  Cursor cursor1=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "strftime('%Y-%m-%d',"+Data.COLUMN_playTime+")"+"<=?",
+                new String[]{StartTimer,endTimer},null,null,"date("+COLUMN_DATE+") desc");*/
+
+      //也需要将它存储起来，不然的话，这个只是在有新数据进来的时候才进行执行，如果想统计除了当天的数据可以在日定单表中进行（Data.playTime+" < "+"date('now')"）查询
+    /*    Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },
+                "date(playTime)<? and date(playTime)>?",new String[]{"'now'",mLastTime},
+                "date(playTime)",null,null);*/
+      /*  Cursor cursor=readDB.query(table,new String[]{ "SUM(storeEntry)","date("+Data.playTime+")" },
+                "date(playTime)"+"<?",new String[]{"date('now')"},
+                "date(playTime)",null,null);*/
+
+      Log.i("mycursor",mLastTime);
+
+        Cursor cursor=readDB.query(table,new String[]{ "SUM("+storeEntry+")","date("+Data.playTime+")" },
+                "date(playTime)>?"+" and "+"date(playTime)<?",
+                new String[]{ mLastTime,mCurrentDate},
                 "date(playTime)",null,null);
+
         return cursor;
     }
-
+  /*  cursor=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
+            new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"加价购订单","paid"},
+            null, null, ORDER_BY);*/
     /*
     获取最后的总结结果    selection :Data.playTime+" < "+"date('now')"  之前设置统计前天
      */
+
+    //使用date("now") 进行多条件查询出错
+
     public  Cursor resultEndCursor(SQLiteDatabase readDB,String table)
     {
         Cursor cursor=readDB.query(table,new String[]{ "date("+Data.playTime+")","SUM("+Data.sweepPay+")", "SUM("+Data.addpriceAmount+")",
                         "SUM("+Data.comdityOrder+")","SUM("+Data.comissionOrder+")",
-                       "SUM(sweepPay)+SUM(addpriceAmount)+SUM(comdityOrder)+SUM(comissionOrder)" },null,null,
-                "date(playTime)",null,Data.ORDER_BY_TIME);
+                       "SUM(sweepPay)+SUM(addpriceAmount)+SUM(comdityOrder)+SUM(comissionOrder)" },"date(playTime)<? ",new String[]{mCurrentDate},
+                "date(playTime)",null,Data.ORDER_BY_TIME_ASC);
         return cursor;
     }
+
+
 
 }

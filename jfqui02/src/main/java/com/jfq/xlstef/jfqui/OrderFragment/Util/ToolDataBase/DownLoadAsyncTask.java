@@ -1,6 +1,7 @@
 package com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
@@ -20,7 +21,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -93,7 +96,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         Log.i("codeErro","codeErro"+outputStream.toString());
         return outputStream.toString();
     }
-
+    CategoryBeanDAO dao=null;
     @Override
     protected void onPostExecute(String s) {
 
@@ -104,12 +107,22 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              InsertToDetailTable(mContext);
             // s=parseData(s);
             // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
-             CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(mContext) );
+              dao=new CategoryBeanDAO(new DBHelper(mContext) );
              long dataBaseData=dao.allCaseNum();  //数据库中总长度
-             String lastTimer =dao.LastCateanTimer();
+             String lastTimer =dao.LastCateanTimer(Data.COMPELETE_ORDER_TABLE_NAME);
+             String currentDate=getCurrentDate();
              mCompeleteOrder=Tooljson.getjfqdata("content",s,lastTimer);
+             if(!Tooljson.isFinishAllSerach)
+             {
+                 Data.page++;
+
+             }
+            String lastDailyTimer =dao.LastCateanTimer(Data.ORDERDAILY_TABLE_NAME);
+
+
+
              mCompeleteOrderList=mCompeleteOrder.size();
-             Log.i("mypathtest-----",mCompeleteOrderList+":");
+             Log.i("mypathtest--------",mCompeleteOrderList+":");
              //mCompeleteOrder=testData();
              int newDownData=mCompeleteOrder.size();  //新下载的网络数据
              //如果数据数量没有变化，不需要插入数据
@@ -118,12 +131,40 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
             // dao.DailySales();//    ----------------------test
 
 
-             if(dataBaseData>=newDownData){
+            /* if(dataBaseData>=newDownData){
                  mFinishLoad=true;
+                 return;
+             }*/
+     /*     String tempTimer= String.format("%sA", lastDailyTimer) ;*/
+
+
+             if(newDownData<=0)
+             {
+
+                 String tempTimer = lastTimer.substring(0,10);
+
+                 mFinishLoad=true;
+                if(lastDailyTimer.compareTo(tempTimer)<0)
+                {
+                    //处理日常订单
+                    HandleDailyOrder(lastDailyTimer,currentDate);
+                }
+                 Log.i("mypathtest----",lastDailyTimer.compareTo(tempTimer) +"");
+
                  return;
              }
 
-             int index=(int)(newDownData-dataBaseData-1);
+             /*if(newDownData<=0)
+             {
+                 mFinishLoad=true;
+                     //处理日常订单
+                     HandleDailyOrder(lastDailyTimer);
+
+                 return;
+             }*/
+
+           //  int index=(int)(newDownData-dataBaseData-1);
+             int index= newDownData-1 ;
              Log.i("mypath",index+":"+newDownData);
 
 
@@ -139,27 +180,30 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
              }
 
-             try {
-                 sleep(1000);
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
-
-
              //处理日常订单
-             List<DailyOrder>myDailyOrder=dao.DailySales();//    ----------------------test
-             Log.i("my-----------","s:"+myDailyOrder.size());
-             DailyOrderDao orderDao=new DailyOrderDao(mContext);
-             for(int i=0;i<myDailyOrder.size();i++)
-             {
-                 orderDao.insert(myDailyOrder.get(i));
-             }
-
-             mFinishLoad=true;
-             Log.i("mypathtest-----",mFinishLoad+":");
+             HandleDailyOrder(lastDailyTimer,currentDate);
 
 
          }
+    }
+
+    private  void HandleDailyOrder(String lastTimer,String currentDate)
+    {
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<DailyOrder>myDailyOrder=dao.DailySales(lastTimer,currentDate);//    ----------------------test
+
+        DailyOrderDao orderDao=new DailyOrderDao(mContext);
+        for(int i=0;i<myDailyOrder.size();i++)
+        {
+            orderDao.insert(myDailyOrder.get(i));
+        }
+
+        mFinishLoad=true;
+        Log.i("mypathtest-----",mFinishLoad+":");
     }
 
     //因为是我自己在sdn博客做的测试，所进行以下解析
@@ -231,6 +275,18 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         detailOrder.setStoreEntry("15");
         detailOrder.setPlayTime("2019-01-12 11:33:09");
         detailDao.insert(detailOrder);
+    }
+
+
+    /**
+     * 获取当前日期
+     * @return
+     */
+    public static String getCurrentDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String now = simpleDateFormat.format(date);
+        return now;
     }
 
  /* public static String DownLoadData(final String orderUrl)

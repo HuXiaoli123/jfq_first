@@ -1,6 +1,7 @@
 package com.jfq.xlstef.jfqui.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +65,7 @@ public class MainMallinfoFragment  extends Fragment {
     private  ProgressBar mProgressBar;
     //处理子线层传过来的信息
     private Handler handler =null;
+    boolean mFirstCreate ;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -75,13 +77,22 @@ public class MainMallinfoFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_main_mallinfo, container, false);
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i("MyActivity","onActivityCreated");
+        mFirstCreate=true;
+    }
+
+
+
+    @Override
     public void onStart() {
         super.onStart();
+        Log.i("MyActivity","onStart");
         initView();
         initItemData();
         handler=new Handler()
@@ -96,6 +107,7 @@ public class MainMallinfoFragment  extends Fragment {
                         Log.i("mProgressBar1",emptymessage.getVisibility()+"");
                         break;
                     default:
+                        mFirstCreate=false;
                         mProgressBar.setVisibility(View.GONE);
                         Log.i("mProgressBar",mProgressBar.getVisibility()+"");
                         emptymessage.setVisibility(View.GONE);
@@ -278,20 +290,31 @@ public class MainMallinfoFragment  extends Fragment {
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
                 /*判断数据库是否有数据*/
-
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                Log.i("MyActivity",mFirstCreate+"");
+                if(mFirstCreate)
+                {
+                    Log.i("MyActivity",mFirstCreate+"intosleep");
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mFirstCreate=false;
                 }
+
+
+
                 while(dao.allCaseNumView(Data.VIEW_COMODITYORDER)<=0)
                 {
 
+
                     if ((System.currentTimeMillis() - exitTime) > 1000)
-                    {   break;
+                    {
+                        break;
                     }
                 }
                // mDataList=dao.findByOrderType("商城订单");//找到订单类型为商城订单
+
                  mDataList=dao.findOrderByComdity(Data.VIEW_COMODITYORDER);
                 Log.i("daoooooooo",  mDataList.size()+"."+dao.allCaseNumView(Data.VIEW_COMODITYORDER));
 
@@ -355,6 +378,7 @@ public class MainMallinfoFragment  extends Fragment {
         if (freshType.equals("loadmore")) {
             if(!isfinish)
             {
+
                 LoadMoreRecycleViewclass();
                 // mCategoryAdapter.notifyItemChanged(1,1);
                 if(mDataTemp.size()==mDataList.size() )isfinish=true;
@@ -366,8 +390,9 @@ public class MainMallinfoFragment  extends Fragment {
             }
             mainAllInfoAdapter.notifyDataSetChanged();
         } else if (freshType.equals("refresh")) {
+            mFirstCreate=true;
             Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
-            new DownLoadAsyncTask(getActivity()).execute("http://store.tuihs.com/store/orders?page=0&size=10");
+            new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();
         }

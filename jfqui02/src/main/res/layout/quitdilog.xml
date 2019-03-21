@@ -3,19 +3,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_margin="60dp"
     android:background="#fffefe">
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="20dp"
         android:gravity="center"
         android:text="系统提示"
         android:textColor="#ff0044"
         android:textSize="18sp" />
-
-
 
     <View
         android:layout_width="fill_parent"
@@ -26,39 +23,46 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
         android:gravity="left|center"
         android:layout_marginTop="5dp"
         android:textColor="@color/black"
         android:text="确定要退出吗"
         />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="#d6cfd2"
 
-    <LinearLayout
+        />
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:paddingLeft="-10dp"
-            android:background="@null"
-            android:text="取消"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:background="#e9e3e3"
             android:onClick="SystemTip"
-            />
+            android:text="取消" />
 
         <Button
             android:id="@+id/btn_quit"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginLeft="100dp"
-            android:background="@null"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="0dp"
+            android:background="#e9e3e3"
             android:onClick="SystemTip"
             android:text="确定" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

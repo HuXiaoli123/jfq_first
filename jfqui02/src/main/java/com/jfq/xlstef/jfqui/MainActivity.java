@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -210,6 +211,16 @@ float exitTime=0;
 			tabHost.getCurrentView().startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_in));
 		}
 	}
+
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.i("ondestroy","ondestroy");
+		DBHelper.getInstance(this,true);
+	}
+
+
 
 
 }

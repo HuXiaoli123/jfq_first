@@ -6,13 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
@@ -180,6 +180,11 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     // 参数String query返回当前文本框可见的文字
     @Override
     public boolean onQueryTextSubmit(String query){
+
+      /*  // 设置SearchView默认是否自动缩小为图标
+        searchView.setIconifiedByDefault(true);
+        // 显示搜索按钮
+        searchView.setSubmitButtonEnabled(true);*/
         return false;
     }
     //每次当文本框的内容发生改变该方法会回调,

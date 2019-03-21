@@ -3,13 +3,14 @@ package com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * 数据库信息
      */
-    public static final String DATABASE_NAME="mygetuitest01_DB";
+    public static final String DATABASE_NAME="mygetuitest01_DB"+Data.USER_NUMBER;
     public static final int VERSION=1;
 
     public static final String LISTINFO_TABLE_NAME="listinfo_table";//语音表
@@ -21,9 +22,30 @@ public class DBHelper extends SQLiteOpenHelper {
         this(context,DATABASE_NAME,null,VERSION);
     }
 
+    //------------------  数据库实例
+    private static DBHelper  instance;
+    public static DBHelper getInstance(Context context,boolean isone) {
+        if (instance != null)
+            instance = null;
+        return instance;
+    }
+
+
+   /* private static final class Holder {
+        private static final DBHelper INSTANCE = new DBHelper();
+    }
+
+    public static DBHelper getInstance() {
+        return Holder.INSTANCE;
+    }*/
+
+
+    //------------------------------
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        Log.i("ondestroy","onCreate()" +Data.USER_NUMBER);
        /* String compelteOrserSql="create table "+ Data.COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"oderType text not null,"+"itemPrice text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
@@ -107,6 +129,8 @@ public class DBHelper extends SQLiteOpenHelper {
  /*
         创建一张临时表
          */
+        /*CREATE TEMPORARY TABLE tmp_table */
+
         //创建每日订单表
         String CREATE_DailyOrder="create table "+ Data.TEMPORDERDAILY_TABLE_NAME +"("+
                 Data.COLUMN_id+" integer primary key autoincrement,"+

@@ -47,7 +47,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TabMessageActivity" />
+        <activity android:name=".TabMessageActivity"
+            android:launchMode="singleTask"
+            />
         <activity android:name=".TabSearchActivity" />
         <activity android:name=".TabMycenterActivity" />
         <activity android:name=".TabMainActivity" />

@@ -265,12 +265,18 @@ public class MainPayinfoFragment   extends Fragment {
 		footerTextView.setText("上拉加载更多...");
 		return footerView;
 	}
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mFirstCreate=true;
+	}
 
 	/*
         设置初始item数据(假设）
         真实设定需要访问数据库
      */
-	private  boolean isFirstTime=true;
+
+	private  boolean mFirstCreate=true;
 	private  String path="http://store.tuihs.com/store/orders?page=0&size=10";
 	private void initItemData() {
 		mDataList.clear();
@@ -287,15 +293,18 @@ public class MainPayinfoFragment   extends Fragment {
 
 				//进行数据库查询
 				CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
-
-
 				//当数据库中数据<新加载的数据
 				Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
 
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				if(mFirstCreate)
+				{
+					Log.i("MyActivity",mFirstCreate+"intosleep");
+					try {
+						sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					mFirstCreate=false;
 				}
 				long exitTime=System.currentTimeMillis();
 				while(dao.allCaseNum()<=0)
@@ -306,7 +315,8 @@ public class MainPayinfoFragment   extends Fragment {
 					{   break;
 					}
 				}
-				mDataList=dao.findByOrderType("扫码订单");
+				// mDataList=dao.findByOrderType("扫码订单");
+				mDataList=dao.findByOrderPay();
 				handler.sendEmptyMessage(mDataList.size());
 
 
@@ -382,10 +392,10 @@ public class MainPayinfoFragment   extends Fragment {
 			}
 			mainAllInfoAdapter.notifyDataSetChanged();
 		} else if (freshType.equals("refresh")) {
+            mFirstCreate=true;
 			Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
-			new DownLoadAsyncTask(getActivity()).execute("http://store.tuihs.com/store/orders?page=0&size=10");
+			new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
 			initItemData();
-
 			mainAllInfoAdapter.notifyDataSetChanged();
 		}
 	}

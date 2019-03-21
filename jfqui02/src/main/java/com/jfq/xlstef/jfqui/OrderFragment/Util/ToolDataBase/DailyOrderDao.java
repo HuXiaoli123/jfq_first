@@ -15,10 +15,16 @@ public class DailyOrderDao implements DAO<DailyOrder> {
 
     private Context context;
     private DBHelper dbHelper;
+    private String mLastTimer;
 
     public DailyOrderDao(Context context) {
         this.context = context;
         this.dbHelper = new DBHelper(this.context);
+    }
+    public DailyOrderDao(Context context,String lastTimer) {
+        this.context = context;
+        this.dbHelper = new DBHelper(this.context);
+        this.mLastTimer=lastTimer;
     }
     @Override
     public List<DailyOrder> queryAll() {
@@ -90,7 +96,7 @@ public class DailyOrderDao implements DAO<DailyOrder> {
         List<DailyOrder> list = new ArrayList<>();
         try {
             sqLiteDatabase = dbHelper.getReadableDatabase();
-            cursor = sqLiteDatabase.query(Data.ORDERDAILY_TABLE_NAME, null, selection, selectionArgs, null, null, Data.ORDER_BY_TIME);
+            cursor = sqLiteDatabase.query(Data.ORDERDAILY_TABLE_NAME, null, selection, selectionArgs, null, null, Data.ORDER_BY);
             list=new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
                 do {

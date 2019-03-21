@@ -191,7 +191,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
     {
         // 这两句是放在点击返回控件触发的事件里面
         MoreDeail_Activity.this.setResult(mSelectFrag);
-        MoreDeail_Activity.this.finish();
+        finish();
 
     }
 

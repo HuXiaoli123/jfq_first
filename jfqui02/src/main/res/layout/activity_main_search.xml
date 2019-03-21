@@ -40,18 +40,62 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/shape_search"
 
         android:orientation="horizontal">
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right">
 
-        </android.support.v7.widget.SearchView>
+        <SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:queryHint="请输入搜索内容"
+            android:iconifiedByDefault="false"
+           >
+
+        </SearchView>
+      <!--  <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:iconifiedByDefault="false"
+            android:queryHint="请输入搜索内容"
+            >
+
+        </android.support.v7.widget.SearchView>-->
+
+
+        <!-- 输入的搜索信息 -->
+
+       <!-- <ImageView
+            android:layout_width="19dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/imgv_search" />
+
+        <EditText
+            android:id="@+id/search_view"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="输入内容进行搜索"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textColor="#0e0e0e"
+            android:textColorHint="#d4cecd"
+            android:textSize="13sp" />
+
+
+        <Button
+            android:id="@+id/bt_clear"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/imgv_delete" />-->
 
 
         <ImageView

@@ -24,6 +24,7 @@ import com.igexin.sdk.PushManager;
 import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService;
 import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
 import com.jfq.xlstef.jfqui.MainActivity;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.utils.ParserJsonUtils;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
@@ -695,6 +696,8 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                             JSONObject jsonObject=new JSONObject(result);
                             JSONObject jsonData=jsonObject.getJSONObject("principal");
                             String member=jsonData.getString("username");
+
+                            Data.USER_NUMBER=member;
 
                             boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),member,clientid);
 

@@ -46,7 +46,7 @@
             android:layout_alignBottom="@id/iv_blur"
             android:orientation="horizontal">
 
-            <ImageView
+           <!-- <ImageView
                 android:id="@+id/user_line"
                 android:layout_width="1dp"
                 android:layout_height="25dp"
@@ -64,14 +64,13 @@
                 android:text="张三"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/txt_black"
-                android:textSize="17sp" />
+                android:textSize="17sp" />-->
 
             <TextView
                 android:id="@+id/user_val"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/user_line"
+                android:layout_centerInParent="true"
                 android:text="17775474113"
                 android:textColor="@color/txt_black"
                 android:textSize="17sp" />

@@ -152,20 +152,21 @@ public class TabMainActivity extends AppCompatActivity  {
 		int screenl_5 = (screenWidth-DisplayUtil.dp2px(this,10))/5;
 		titlebar_front=new ImageView(this);
 
-			/*titlebar_front=new TextView(this);*/
-			/*titlebar_front.setBackgroundResource(R.drawable.slidebar);*/
-		titlebar_front.setImageResource(R.drawable.slidebar);
+		/*titlebar_front=new TextView(this);*/
+		titlebar_front.setImageResource(R.mipmap.slidebar);
 			/*titlebar_front.setTextColor(Color.WHITE);
 			titlebar_front.setText(R.string.title_main_allinfo);
 			titlebar_front.setGravity(Gravity.CENTER);*/
-			RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(screenl_5,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
-			params.addRule(RelativeLayout.CENTER_VERTICAL,RelativeLayout.TRUE);
-			titlebar_Layout.addView(titlebar_front,params);
+		RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(screenl_5,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		params.addRule(RelativeLayout.CENTER_VERTICAL,RelativeLayout.TRUE);
+		titlebar_Layout.addView(titlebar_front,params);
+		Log.d("titlebar_Layout",String.valueOf(screenl_5));
 		lastMove_titlebar=titlebar_allinfo;
 		lastMove_titlebar.setTextColor(getResources().getColor(R.color.foot_text_select));
 
 		mcurrentName=OrderName.CompleteOrder;
+
 
 	}
 	OrderName mcurrentName;
@@ -270,16 +271,18 @@ public class TabMainActivity extends AppCompatActivity  {
 		return super.onKeyDown(keyCode, event);
 	}
 
+
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		/**
-		 *  判断requestCode, resultCode 来确定要执行的代码
-		 */
+		 *  判断requestCode, resultCode 来确定要执行的代码*/
+
 		Log.i("MyCode",requestCode+","+resultCode);
-		/*if(requestCode==1){
+		if(requestCode==1){
 			// 在这设置选中你要显示的fragment
-			switch (requestCode)
+			switch (resultCode)
 			{
 				case 1:
 					layout_body.setCurrentItem(0);
@@ -297,7 +300,7 @@ public class TabMainActivity extends AppCompatActivity  {
 					layout_body.setCurrentItem(4);
 					break;
 			}
-		}*/
+		}
 
 	}
 

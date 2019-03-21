@@ -4,6 +4,8 @@ public class Data {
     /**
      * 信息表，及其字段
      */
+
+    public static    String USER_NUMBER="";
     public static final String COMPELETE_ORDER_TABLE_NAME="completeOrder"; //所有订单总表
     public static final String DETAILS_OF_COMMISSION ="DetailsOfCommission"; //佣金明细表
     public static  final String ORDERDAILY_TABLE_NAME="orderdaily";//每日订单表
@@ -86,5 +88,10 @@ public class Data {
      * 时间字段的降序，采用date函数比较
      */
     public static final String ORDER_BY="date("+COLUMN_id+") desc";
-    public static final String ORDER_BY_TIME="date("+Data.playTime+") desc";
+    public static final String ORDER_BY_TIME_ASC ="date("+Data.playTime+") ASC";
+    public static final String ORDER_BY_TIME_DESC ="date("+Data.playTime+") ASC";
+
+    public  static  int page=0;
+    public  static  String loadPath="http://store.tuihs.com/store/orders?page="+page+"&size=200";
+
 }

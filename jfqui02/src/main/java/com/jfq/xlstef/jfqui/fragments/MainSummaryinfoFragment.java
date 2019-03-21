@@ -29,6 +29,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DailyOrderDao;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DownLoadAsyncTask;
 import com.jfq.xlstef.jfqui.OrderFragment.WrapContentLinearLayoutManager;
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.SerachDetail.SerachActivity;
@@ -265,12 +266,18 @@ public class MainSummaryinfoFragment extends Fragment {
         return footerView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mFirstCreate=true;
+    }
+
     /*
-        设置初始item数据(假设）
-        真实设定需要访问数据库
-     */
-    private  boolean isFirstTime=true;
-    private  String path="http://store.tuihs.com/store/orders?page=0&size=10";
+            设置初始item数据(假设）
+            真实设定需要访问数据库
+         */
+    private  boolean mFirstCreate=true;
+
     private void initItemData() {
         mDataList.clear();
         selectfragment=5;
@@ -289,12 +296,16 @@ public class MainSummaryinfoFragment extends Fragment {
 				DailyOrderDao dao = new DailyOrderDao(getActivity());
 
 
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(mFirstCreate)
+                {
+                    Log.i("MyActivity",mFirstCreate+"intosleep");
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    mFirstCreate=false;
                 }
-
 				/*判断数据库是否有数据*/
 				while(dao.queryAll().size()<=0)
 				{
@@ -394,21 +405,10 @@ public class MainSummaryinfoFragment extends Fragment {
 
             mainSummaryInfoAdapter.notifyDataSetChanged();
         } else if (freshType.equals("refresh")) {
-            Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
-          /*  int d2 = mDataList.size();
-            mDataList.clear();
-            DecimalFormat df = new DecimalFormat("00");
-            for (int i = d2; i < d2 + 10; i++) {
-                CategoryBean allInfoData=new CategoryBean();
-                allInfoData.setOrderNumber("ord2018122416281205715" + df.format((long) i));
-                float totalFee = 1000 + i * 5;
-                float totalReduction = 1 + i * 0.1f;
-                allInfoData.setStoreEntry("12");
-                allInfoData.setPlayTime("2019");
-                allInfoData.setPlatformDeduction(String.valueOf(totalReduction));
-                allInfoData.setPlatformDeduction(String.valueOf(totalFee - totalReduction));
-                mDataList.add(allInfoData);
-            }*/
+            mFirstCreate=true;
+            Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
+            new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
+            initItemData();
 			mainSummaryInfoAdapter.notifyDataSetChanged();
         }
     }
