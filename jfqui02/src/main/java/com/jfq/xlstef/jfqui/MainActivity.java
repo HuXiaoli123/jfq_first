@@ -216,8 +216,7 @@ float exitTime=0;
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.i("ondestroy","ondestroy");
-		DBHelper.getInstance(this,true);
+
 	}
 
 

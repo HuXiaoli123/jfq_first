@@ -144,12 +144,11 @@ public class Tooljson {
     CategoryBean myCategoryBean8=new CategoryBean("1234567","扫码订单","29","2.6",
             "26.4","29","2019-03-20 09:30:39","12",
             "桃子","香蕉","paid");
-             list.add(myCategoryBean1);
+             /*list.add(myCategoryBean1);
             list.add(myCategoryBean2);
            list.add(myCategoryBean10);
             list.add(myCategoryBean9);
-            list.add(myCategoryBean8);
-
+            list.add(myCategoryBean8);*/
             //--------------test
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
@@ -351,7 +350,7 @@ public class Tooljson {
 
    private  static  String EngToChinese(String word)
    {
-       if(word.equals("combined"))return "加价购订单";
+       if(word.equals("combined"))return "扫码+加价购";
        else if(word.equals("pay")) return "扫码订单";
        else if(word.equals("commodity")) return "商城订单";
        return  word;

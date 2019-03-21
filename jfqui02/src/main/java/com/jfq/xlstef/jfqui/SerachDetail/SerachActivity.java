@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
@@ -67,6 +69,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     int mOrderName=0;
     String table;
     TextView unFoundData;
+    private String mType;
 
 
     /**
@@ -100,19 +103,22 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
             case 1:
                 SetGone();
                 table=Data.VIEW_ALL_ORDER;
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName);
+                mType="";
+                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
                 mRcSearch.setAdapter(myadpter);
                 break;
             case 2:
                 SetGone();
                 table=Data.VIEW_COMODITYORDER;
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName);
+                mType="商品名:";
+                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
                 mRcSearch.setAdapter(myadpter);
                 break;
             case 3:
                 SetGone();
                 table=Data.VIEW_SWEEPCODE;
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName);
+                mType="类别:";
+                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
                 mRcSearch.setAdapter(myadpter);
                 break;
             case 5:
@@ -125,6 +131,8 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
 
     }
+
+
    /* void Listtest(List<? extends CategoryBean> t){
 
     }*/
@@ -298,35 +306,36 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         String[]timers=timer.split("#");
         String startTimer=timers[0];
         String endTimer=timers[1];
+
+
+
         if(mOrderName!=5)
         {
             CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getApplicationContext()));
-           List<CategoryBean> quearydata=  dao.queryByTimer(table,startTimer,endTimer);
-            myadpter=new MainAllInfoAdapter(this,quearydata,mOrderName);
-            if(quearydata.size()<=0)
-                unFoundData.setVisibility(View.VISIBLE);
-            else
-            {
-                unFoundData.setVisibility(View.GONE);
-            } unFoundData.setVisibility(View.VISIBLE);
+             List<CategoryBean> quearydata=  dao.queryByTimer(table,startTimer,endTimer);
+            myadpter=new MainAllInfoAdapter(this,quearydata,mOrderName,mType);
+            UnfundShow(quearydata.size());
             mRcSearch.setAdapter(myadpter);
         }else
         {
             DailyOrderDao dao = new DailyOrderDao(getApplicationContext());
             List<DailyOrder> quearydata=  dao.queryByTimer(startTimer,endTimer);
             mysumAdpter=new MainSummaryInfoAdapter(this,quearydata);
-            if(quearydata.size()<=0)
-                unFoundData.setVisibility(View.VISIBLE);
-            else
-            {
-                unFoundData.setVisibility(View.GONE);
-            } unFoundData.setVisibility(View.VISIBLE);
+           UnfundShow(quearydata.size());
             mRcSearch.setAdapter(mysumAdpter);
         }
 
+    }
 
-
-
+    private  void UnfundShow(int datasize)
+    {
+        if(datasize<=0)
+            unFoundData.setVisibility(View.VISIBLE);
+        else
+        {
+            unFoundData.setVisibility(View.GONE);
+        } unFoundData.setVisibility(View.VISIBLE);
+        mRcSearch.setAdapter(mysumAdpter);
     }
 
 

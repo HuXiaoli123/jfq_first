@@ -46,6 +46,8 @@ public class MainAllinfoFragment extends Fragment {
     private List<CategoryBean> mDataList=new ArrayList<>();
     private List<CategoryBean>mDataTemp=new ArrayList<>();
 
+    private String selectType="";
+
     // Header View
     private ProgressBar headProgressBar;
     private TextView headTextView;
@@ -120,13 +122,13 @@ public class MainAllinfoFragment extends Fragment {
                 {
                     mDataTemp.add(mDataList.get(i));
                 }
-               mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataTemp,1);//adapter
+               mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataTemp,1,selectType);//adapter
                 Log.i("mypath_basefrag--:-----",mDataList.size()+""+mDataTemp.size());
 
             }else
             {
 
-                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,1);//adapter
+                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,1,selectType);//adapter
             }
             Log.i("mypath_basefrag--:-----",mDataList.size()+""+mDataTemp.size()+mFirstCount);
             allinfo_list.setAdapter(mainAllInfoAdapter);
@@ -396,7 +398,7 @@ public class MainAllinfoFragment extends Fragment {
 
         } else if (freshType.equals("refresh")) {
 
-            Toast.makeText(getContext(),"上拉刷新",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();

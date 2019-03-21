@@ -37,12 +37,14 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
     private List<CategoryBean> mDataSet;
 
     private  int mSelectfragment;
+    private  String mType="";
 
-    public MainAllInfoAdapter(Activity context, List<CategoryBean> DataSet,int selectfragment ){
+    public MainAllInfoAdapter(Activity context, List<CategoryBean> DataSet,int selectfragment,String type ){
         mContext=context;
         mDataSet=DataSet;
         temp_number=DataSet;
         this.mSelectfragment=selectfragment;
+        this.mType=type;
     }
     @NonNull
     @Override
@@ -66,7 +68,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
 
             if(text!=null&&hasMatch) {
                 allInfoViewHolder.code_text.setText(CorlorChangeText(allInfoData.getOrderNumber()));
-                allInfoViewHolder.orderType_text.setText(CorlorChangeText(allInfoData.getOderType()));
+                allInfoViewHolder.orderType_text.setText(CorlorChangeText(mType+ allInfoData.getOderType()));
                 allInfoViewHolder.totalFee_text.setText(CorlorChangeText("总额："+String.valueOf(allInfoData.getStoreEntry())+"元"));
                 allInfoViewHolder.salesAmount_text.setText(CorlorChangeText("实付：  "+String.valueOf(allInfoData.getUserPlay())+"元"));
                 allInfoViewHolder.totalReduction_text.setText(CorlorChangeText("抵扣：  "+String.valueOf(allInfoData.getPlatformDeduction())+"元"));
@@ -74,7 +76,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
             }else
             {
                 allInfoViewHolder.code_text.setText(allInfoData.getOrderNumber());
-                allInfoViewHolder.orderType_text.setText(allInfoData.getOderType());
+                allInfoViewHolder.orderType_text.setText(mType+allInfoData.getOderType());
                 allInfoViewHolder.totalFee_text.setText("总额："+String.valueOf(allInfoData.getStoreEntry())+"元");
                 allInfoViewHolder.salesAmount_text.setText("实付：  "+String.valueOf(allInfoData.getUserPlay())+"元");
                 allInfoViewHolder.totalReduction_text.setText("抵扣：  "+String.valueOf(allInfoData.getPlatformDeduction())+"元");

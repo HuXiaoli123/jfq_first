@@ -16,10 +16,14 @@ import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.LoginPage.Login_Activity;
 import com.jfq.xlstef.jfqui.Message.Mycenter_MsgActivity;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
+
 
 public class TabMycenterActivity extends AppCompatActivity {
 
+    private  TextView number;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,8 +32,15 @@ public class TabMycenterActivity extends AppCompatActivity {
 		TextView layout_top_text=(TextView)findViewById(R.id.layout_top_text);
 		layout_top_text.setText(R.string.tab_message_title_text);
 
+		initView();
 		initButton();
 	}
+
+	private void initView()
+    {
+        number=(TextView) findViewById(R.id.numberName);
+        number.setText(Data.USER_NUMBER);
+    }
 	Dialog	dialog;
 	private void initButton()
 	{
@@ -119,9 +130,18 @@ public class TabMycenterActivity extends AppCompatActivity {
 		}
 		Log.i("test",Utils_set.getBoolean("isRemeberUser",false)+"");
 		intent.setClass(getApplicationContext(), Login_Activity.class);
+		destroyDBHelp();
 		/* 启动一个新的Activity */
 		 this.startActivity(intent);
+
+
 		/* 关闭当前的Activity */
 		// finish();
+	}
+
+	//销毁DBHelp的实例
+	public void destroyDBHelp()
+	{
+		DBHelper.getInstance(getApplicationContext()).closeDBHelper();
 	}
 }

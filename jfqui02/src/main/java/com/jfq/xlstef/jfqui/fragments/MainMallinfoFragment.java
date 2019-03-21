@@ -60,6 +60,7 @@ public class MainMallinfoFragment  extends Fragment {
     private TextView emptymessage;
     private  int mFirstCount;
     int selectfragment; //当前处于哪个fragment
+    String selectType="";
     private List<CategoryBean>mDataTemp=new ArrayList<>();
     boolean isfinish=false;//是否完成所有加载内容
     private  ProgressBar mProgressBar;
@@ -130,13 +131,13 @@ public class MainMallinfoFragment  extends Fragment {
                 {
                     mDataTemp.add(mDataList.get(i));
                 }
-                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataTemp,selectfragment);//adapter
+                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataTemp,selectfragment,selectType);//adapter
                 Log.i("mypath_basefrag--:-----",mDataList.size()+""+mDataTemp.size());
 
             }else
             {
 
-                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,selectfragment);//adapter
+                mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,selectfragment,selectType);//adapter
             }
             Log.i("mypath_basefrag--:-----",mDataList.size()+""+mDataTemp.size()+mFirstCount);
             allinfo_list.setAdapter(mainAllInfoAdapter);
@@ -154,6 +155,7 @@ public class MainMallinfoFragment  extends Fragment {
         activity = getActivity();
         mProgressBar=activity.findViewById(R.id.myMallprogressbar);
         selectfragment=2;
+        selectType="商品名:";
         emptymessage=activity.findViewById(R.id.mallinfo_item_emptymessage);
         allinfo_list = activity.findViewById(R.id.mallinfo_list);//RecyclerView
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
@@ -391,7 +393,7 @@ public class MainMallinfoFragment  extends Fragment {
             mainAllInfoAdapter.notifyDataSetChanged();
         } else if (freshType.equals("refresh")) {
             mFirstCreate=true;
-            Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
             mainAllInfoAdapter.notifyDataSetChanged();
@@ -404,7 +406,7 @@ public class MainMallinfoFragment  extends Fragment {
 
         Intent intent = new Intent();
         intent.setClass(getActivity(), SerachActivity.class);
-        intent.putExtra("orderName", 1);
+        intent.putExtra("orderName", 2);
 
         intent.putExtra("lstBean", (Serializable) mDataList);
 

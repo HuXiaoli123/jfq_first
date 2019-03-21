@@ -209,11 +209,18 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
                     break;
         }
 
-       if(isQuit)
-           if (mPickerDialog != null && mPickerDialog.isShowing()) {
-             mPickerDialog.dismiss();
-               isQuit=false;
-           }
+        closeQuery();
+    }
+
+    public void closeQuery( )
+    {
+
+
+        if(isQuit)
+            if (mPickerDialog != null && mPickerDialog.isShowing()) {
+                mPickerDialog.dismiss();
+                isQuit=false;
+            }
     }
 
     @Override

@@ -191,7 +191,7 @@ public class CategoryBeanDAO {
 
         /* 将数据库中数据倒序的取出*/
         Cursor  results=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
-                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{"扫码订单","加价购订单","paid" },
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{"扫码订单","扫码+加价购","paid" },
                     null, null, ORDER_BY_ID);
         for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
             CategoryBean listInfo=new CategoryBean();
@@ -257,7 +257,7 @@ public class CategoryBeanDAO {
         if(orderType.equals("扫码订单"))
         {
             cursor=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
-                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"加价购订单","paid"},
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"扫码+加价购","paid"},
                     null, null, ORDER_BY);
         }
         else {
@@ -290,7 +290,7 @@ public class CategoryBeanDAO {
         if(orderType.equals("扫码订单"))
         {
             cursor=readDB.query(Data.COMPELETE_ORDER_TABLE_NAME,
-                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"加价购订单","paid"},
+                    new String[]{ }, "oderType=? or oderType=? and payStatus=? ", new String[]{orderType,"扫码+加价购","paid"},
                     null, null, ORDER_BY);
         }
         else {
@@ -556,7 +556,7 @@ public class CategoryBeanDAO {
             List<String>values=new ArrayList<>();
             do{
                 final String swwepcodepay=addCountCursor.getString(0);
-                Log.i("mycursor1----","加价购" +addCountCursor.getString(1) +":"+addCountCursor.getString(0));
+                Log.i("mycursor1----","扫码+加价购" +addCountCursor.getString(1) +":"+addCountCursor.getString(0));
                 Db.insert(Data.TEMPORDERDAILY_TABLE_NAME,null,ValuesTransform.inserIntoTemp(
                         addCountCursor.getString(1),Data.addpriceAmount,addCountCursor.getString(0)));
             }while (addCountCursor.moveToNext());

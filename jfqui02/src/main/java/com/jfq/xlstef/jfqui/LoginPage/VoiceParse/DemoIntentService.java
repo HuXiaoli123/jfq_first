@@ -46,7 +46,7 @@ public class DemoIntentService extends GTIntentService {
     public void onCreate() {
         super.onCreate();
         Log.e("MyIntent","onCreate");
-        dbHelper=new DBHelper(this);
+
     }
 
 

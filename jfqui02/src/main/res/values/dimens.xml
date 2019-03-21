@@ -255,4 +255,6 @@
 
     <dimen name="margin_dp">10dp</dimen>
 
+    <dimen name="quit_layout">10dp</dimen>
+
 </resources>

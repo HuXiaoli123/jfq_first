@@ -33,22 +33,21 @@
            android:textColor="#fff" />
    </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="23dp"
         android:layout_gravity="center"
         android:background="@drawable/shape_search"
-
         android:orientation="horizontal">
 
         <SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:queryHint="请输入搜索内容"
+            android:queryHint="搜索"
             android:iconifiedByDefault="false"
            >
 
@@ -99,15 +98,16 @@
 
 
         <ImageView
-            android:layout_marginRight="3dp"
             android:id="@+id/imgv_delete"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
             android:layout_gravity="center"
             android:scaleType="centerInside"
             android:src="@drawable/imgv_delete"
             android:visibility="gone" />
-    </LinearLayout>
+    </RelativeLayout>
 
 <LinearLayout
     android:layout_width="match_parent"

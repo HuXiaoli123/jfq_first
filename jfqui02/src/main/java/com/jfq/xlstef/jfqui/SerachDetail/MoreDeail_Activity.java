@@ -78,7 +78,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
                storeEntry.setText("门店入账： "+mCategoryBaen.getStoreEntry()+"元");
                payTimer.setText("支付时间： "+mCategoryBaen.getPlayTime());
 
-               if(mCategoryBaen.getOderType().equals("加价购订单"))
+               if(mCategoryBaen.getOderType().equals("扫码+加价购"))
                {
                    seepcodedetail.setVisibility(View.VISIBLE);
                    Log.i("seepcodedetail",seepcodedetail.getVisibility()+";;;");

@@ -67,7 +67,7 @@
                 android:textSize="17sp" />-->
 
             <TextView
-                android:id="@+id/user_val"
+                android:id="@+id/numberName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
-                 android:layout_below="@id/user_val"
+                 android:layout_below="@id/numberName"
                 android:background="@color/colorBomttom" />
 
 

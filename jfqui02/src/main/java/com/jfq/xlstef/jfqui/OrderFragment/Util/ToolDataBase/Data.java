@@ -5,11 +5,10 @@ public class Data {
      * 信息表，及其字段
      */
 
-    public static    String USER_NUMBER="";
+    public static  String USER_NUMBER="";
     public static final String COMPELETE_ORDER_TABLE_NAME="completeOrder"; //所有订单总表
     public static final String DETAILS_OF_COMMISSION ="DetailsOfCommission"; //佣金明细表
     public static  final String ORDERDAILY_TABLE_NAME="orderdaily";//每日订单表
-
     public static  final  String TEMPORDERDAILY_TABLE_NAME="temptable";
 
 

@@ -65,6 +65,7 @@ public class MainSummaryinfoFragment extends Fragment {
     TextView  emptymessage;
     private  int mFirstCount;
     int selectfragment; //当前处于哪个fragment
+    private String   selectType;
     private List<DailyOrder>mDataTemp=new ArrayList<>();
     boolean isfinish=false;//是否完成所有加载内容
     private  ProgressBar mProgressBar;
@@ -406,7 +407,7 @@ public class MainSummaryinfoFragment extends Fragment {
             mainSummaryInfoAdapter.notifyDataSetChanged();
         } else if (freshType.equals("refresh")) {
             mFirstCreate=true;
-            Toast.makeText(getContext(),"下拉刷新",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
 			mainSummaryInfoAdapter.notifyDataSetChanged();

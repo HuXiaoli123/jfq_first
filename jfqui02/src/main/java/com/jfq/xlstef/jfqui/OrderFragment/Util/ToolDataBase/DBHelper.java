@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * 数据库信息
      */
-    public static final String DATABASE_NAME="mygetuitest01_DB"+Data.USER_NUMBER;
+    public static final String DATABASE_NAME="mygetuitest01_DB";
     public static final int VERSION=1;
 
     public static final String LISTINFO_TABLE_NAME="listinfo_table";//语音表
@@ -19,25 +19,53 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
     public DBHelper(Context context){
-        this(context,DATABASE_NAME,null,VERSION);
+        this(context,getDBName(),null,VERSION);
     }
+
+
+    /**
+     * 数据库名字
+     *
+     * @return
+     */
+    private static String getDBName() {
+
+        Log.i("ondestroy","getDBName：" +DATABASE_NAME+Data.USER_NUMBER + ".db");
+        return   DATABASE_NAME+Data.USER_NUMBER + ".db";
+    }
+
 
     //------------------  数据库实例
-    private static DBHelper  instance;
-    public static DBHelper getInstance(Context context,boolean isone) {
-        if (instance != null)
-            instance = null;
-        return instance;
+
+
+    private static DBHelper helper;
+    /**
+     * 获取一个SQLiteOpenHelper的实例
+     *
+     * @return
+     */
+    public static DBHelper getInstance(Context context ) {
+        if (null == helper) {
+            synchronized (DBHelper.class) {
+                if (null == helper) {
+                    helper = new DBHelper(  context);
+                }
+            }
+        }
+        return helper;
     }
 
-
-   /* private static final class Holder {
-        private static final DBHelper INSTANCE = new DBHelper();
+    /**
+     * 当用户退出、或被挤出APP，当换用户登录的时候就需要切换数据库，这时就需要重新建数据库
+     *
+     * @return
+     */
+    public static void closeDBHelper() {
+        if (null != helper) {
+            helper.close();
+        }
+        helper = null;
     }
-
-    public static DBHelper getInstance() {
-        return Holder.INSTANCE;
-    }*/
 
 
     //------------------------------
@@ -45,7 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.i("ondestroy","onCreate()" +Data.USER_NUMBER);
+        Log.i("ondestroy--","onCreate()" +Data.USER_NUMBER);
        /* String compelteOrserSql="create table "+ Data.COMPELETE_ORDER_TABLE_NAME +"(_id integer primary key AUTOINCREMENT,"
                 +"orderNumber text not null,"+"oderType text not null,"+"itemPrice text not null,"
                 +"platformDeduction text not null,"+"userPlay text not null,"+"storeEntry text not null,"+
@@ -111,7 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CreateView_all);
         db.execSQL(CreateViewSql(Data.VIEW_COMODITYORDER,"商城订单",Data.nameOfCommodity,Data.itemPrice));
         db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.userPlay,Data.addpriceAmount));
-        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"加价购订单",Data.userPlay,Data.addpriceAmount));
+        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"扫码+加价购",Data.userPlay,Data.addpriceAmount));
         db.execSQL(CREATE_DailyOrder);//每日订单表
         db.execSQL(yuyinsql);
         /*db.execSQL(sweepcode_sql);
@@ -119,7 +147,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sql1="drop table if exists "+DATABASE_NAME;
+        String sql1="drop table if exists "+getDBName();
         db.execSQL(sql1);
         this.onCreate(db);
     }
