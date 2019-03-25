@@ -2,6 +2,7 @@ package com.jfq.xlstef.jfqui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout;
+import com.igexin.sdk.PushManager;
+import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
@@ -30,6 +33,7 @@ import com.jfq.xlstef.jfqui.SerachDetail.MoreDeail_Activity;
 import com.jfq.xlstef.jfqui.SerachDetail.SerachActivity;
 import com.jfq.xlstef.jfqui.adapter.MainAllInfoAdapter;
 import com.jfq.xlstef.jfqui.interfaces.OnItemClickListener;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -64,6 +68,8 @@ public class MainAllinfoFragment extends Fragment {
 
     //处理子线层传过来的信息
     protected Handler handler =null;
+    boolean mFirstCreate ;
+    int  mdatalistsize;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -80,11 +86,40 @@ public class MainAllinfoFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mFirstCreate=true;
+
+        bindClientid();
+
+    }
+
+    /**
+     * 绑定别名
+     */
+    void bindClientid()
+    {
+        SharedPreferencesUtils utils=new SharedPreferencesUtils(getContext(),"settings");
+
+        if(!utils.getBoolean("bindclientid",false))
+        {
+              boolean isBind=  PushManager.getInstance().bindAlias(getContext(),Data.USER_NUMBER);
+            utils.putValues(new SharedPreferencesUtils.ContentValue("bindclientid",isBind));
+
+            Log.i("utils",utils.getBoolean("bindclientid",false)+","+isBind+Data.USER_NUMBER);
+        }
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        Log.i("test","onstart");
-        initView();
-        initItemData();
+        Log.i("test","onstart"+isFirstTime);
+        if(mFirstCreate)
+        {
+            initView();
+            initItemData();
+        }
         handler=new Handler()
         {
             @Override
@@ -135,12 +170,12 @@ public class MainAllinfoFragment extends Fragment {
             mainAllInfoAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void OnItemClick(int position) {
-                    Intent intent = new Intent();
+                   /* Intent intent = new Intent();
                     intent.setClass(activity, MoreDeail_Activity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                     intent.putExtra("beanData",mDataList.get(position));
                     intent.putExtra("selectfrag",1);
-                    activity.startActivityForResult(intent,1);
+                    activity.startActivityForResult(intent,1);*/
                 }
             });
             mainAllInfoAdapter.notifyDataSetChanged();
@@ -155,8 +190,8 @@ public class MainAllinfoFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
         allinfo_list.setLayoutManager(linearLayoutManager);
         allinfo_list.setItemAnimator(new DefaultItemAnimator());
-        /*mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList);//adapter
-        allinfo_list.setAdapter(mainAllInfoAdapter);*/
+        mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,1,"");//adapter
+        allinfo_list.setAdapter(mainAllInfoAdapter);
         superSwipeRefreshLayout = activity.findViewById(R.id.main_allinfo_swiperefresh);//superswiperefresh
         //设定下拉刷新栏的背景色
         superSwipeRefreshLayout.setHeaderViewBackgroundColor(0xff888888);
@@ -271,33 +306,39 @@ public class MainAllinfoFragment extends Fragment {
 
 
     /*
-        设置初始item数据(假设）
-        真实设定需要访问数据库
-     */
+            设置初始item数据(假设）
+            真实设定需要访问数据库
+         */
     private  boolean isFirstTime=true;
     private  String path=Data.loadPath;
+
+
+    CategoryBeanDAO dao=null;
     private void initItemData() {
         mDataList.clear();
         mDataTemp.clear();
         isfinish=false;
         mFirstCount=getActivity().getResources().getInteger(R.integer.first_load_count);
-        CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
+        dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath_",":"+dao.allCaseNum()+" test");
-        final DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
+
 
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i("MYtestt",isFirstTime+"");
 
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
+
+                mdatalistsize= (int)dao.allCaseNum();
 //---------------------------------
                /* 判断数据库是否有数据*/
                 if(isFirstTime) {
                     isFirstTime=false;
-                 myAsyTask.execute(path);
+                    mFirstCreate=false;
+                    DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
+                    myAsyTask.execute(path);
                 }else
                 {
 
@@ -306,26 +347,30 @@ public class MainAllinfoFragment extends Fragment {
                 //当数据库中数据<新加载的数据
 
                  long lastTime=System.currentTimeMillis();
-                while(dao.allCaseNum()<=0|| dao.allCaseNum()<DownLoadAsyncTask.mCompeleteOrderList||!DownLoadAsyncTask.mFinishLoad)
+                //此时修改了 dao.allCaseNum()<DownLoadAsyncTask.mCompeleteOrderList不行，因为mCompeleteOrderList是新增的数量
+                Log.i("mypathtest1112--",dao.allCaseNum()+"，"+DownLoadAsyncTask.mCompeleteOrderList+";"+DownLoadAsyncTask.mFinishLoad+mdatalistsize);
+                while(dao.allCaseNum()<=0|| dao.allCaseNum()<(DownLoadAsyncTask.mCompeleteOrderList+mdatalistsize)||!DownLoadAsyncTask.mFinishLoad)
                 {
-                    Log.i("mypathtest1112",dao.allCaseNum()+"，"+myAsyTask.mCompeleteOrderList+";"+DownLoadAsyncTask.mFinishLoad);
+                    Log.i("mypathtest1112",dao.allCaseNum()+"，"+DownLoadAsyncTask.mCompeleteOrderList+";"+DownLoadAsyncTask.mFinishLoad+mdatalistsize);
                     //超时了还没有数据显示
 
-                    if ((System.currentTimeMillis() - lastTime) > 1000)
+                    if ((System.currentTimeMillis() - lastTime) >1500)
                     {
                         Log.i("mypathtest1112",System.currentTimeMillis()+"OverTime11"+"，"+(System.currentTimeMillis() - lastTime)+","+lastTime);
                         break;
                     }
-                   /* if(OverTime(500,exitTime))
-                    {
 
-                    }*/
                 }
+                if(mFirstCreate)
+                {
 
+                }
                 //  mCategoryBean=myAsyTask.getCompeleteOrder();
-                //从数据库中获取
-                mDataList=dao.findOrderByAll(Data.VIEW_ALL_ORDER);;
 
+                //从数据库中获取
+                mDataList=dao.findOrderByAll(Data.VIEW_ALL_ORDER);
+
+                Log.i("mypathtest1112",mDataList.size()+""+mdatalistsize);
 
                 handler.sendEmptyMessage(mDataList.size());
 
@@ -394,13 +439,16 @@ public class MainAllinfoFragment extends Fragment {
                 Toast.makeText(getContext(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
                // mCategoryAdapter.notifyItemRemoved(mCategoryAdapter.getItemCount());
             }
-            mainAllInfoAdapter.notifyDataSetChanged();
+
+              mainAllInfoAdapter.notifyDataSetChanged();
 
         } else if (freshType.equals("refresh")) {
 
-            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
+            Log.i("MYtestt",isFirstTime+""+dao.allCaseNum());
+            mdatalistsize=(int)dao.allCaseNum();
             new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
+            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             mainAllInfoAdapter.notifyDataSetChanged();
         }
     }

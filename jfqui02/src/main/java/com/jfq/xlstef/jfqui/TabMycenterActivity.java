@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.igexin.sdk.PushManager;
 import com.jfq.xlstef.jfqui.LoginPage.Login_Activity;
 import com.jfq.xlstef.jfqui.Message.Mycenter_MsgActivity;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
@@ -119,6 +120,8 @@ public class TabMycenterActivity extends AppCompatActivity {
 
 		sharedPreferencesUtils.clear();*/
 
+		/*PushManager.getInstance().unBindAlias(getApplicationContext(),Data.USER_NUMBER,true);*/
+		bindClientid();
         SharedPreferencesUtils  Utils_set=new SharedPreferencesUtils(getApplication(),"settings");
 
         if(Utils_set.getBoolean("isAutoLogin",false))
@@ -137,6 +140,21 @@ public class TabMycenterActivity extends AppCompatActivity {
 
 		/* 关闭当前的Activity */
 		// finish();
+	}
+
+	/**
+	 * 解除别名绑定
+	 */
+	void bindClientid()
+	{
+		SharedPreferencesUtils utils=new SharedPreferencesUtils(getApplicationContext(),"settings");
+		//如果绑定了
+		if(utils.getBoolean("bindclientid",false))
+		{
+			boolean isBind=  PushManager.getInstance().unBindAlias(getApplicationContext(),Data.USER_NUMBER,true);
+			utils.putValues(new SharedPreferencesUtils.ContentValue("bindclientid",!isBind));
+		}
+
 	}
 
 	//销毁DBHelp的实例

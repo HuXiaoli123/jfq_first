@@ -16,6 +16,7 @@ public class SummaryInfoViewHolder extends BaseViewHolder {
     public TextView comdityOrder;//商城订单
     public TextView comissionOrder;      //佣金入账
     public TextView entryValue;       //入账总额
+    public TextView storeName;      //门店名称
 
     public SummaryInfoViewHolder(View itemView) {
         super(itemView);
@@ -26,5 +27,7 @@ public class SummaryInfoViewHolder extends BaseViewHolder {
         comdityOrder=(TextView)itemView.findViewById(R.id.item_comdity);
         comissionOrder=(TextView)itemView.findViewById(R.id.item_commission);
         entryValue= (TextView) itemView.findViewById(R.id.item_info_amount);
+        storeName=(TextView) itemView.findViewById(R.id.item_name);
+
     }
 }

@@ -14,7 +14,7 @@ android {
 
         manifestPlaceholders = [
 
-                GETUI_APP_ID    : " HKxjsmoNuh76VKMECvzsr3",
+                GETUI_APP_ID    : "HKxjsmoNuh76VKMECvzsr3",
                 GETUI_APP_KEY   : "7j5iQuNYsz6c7usgMvmrJ8",
                 GETUI_APP_SECRET: "fpaN2LxPAN6O72qkQh2Ad9"
         ]

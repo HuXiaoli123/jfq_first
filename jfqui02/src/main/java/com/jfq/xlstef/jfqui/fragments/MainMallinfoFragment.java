@@ -84,7 +84,6 @@ public class MainMallinfoFragment  extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("MyActivity","onActivityCreated");
         mFirstCreate=true;
     }
 
@@ -93,9 +92,13 @@ public class MainMallinfoFragment  extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i("MyActivity","onStart");
-        initView();
-        initItemData();
+        Log.i("MyActivity","onStart"+mFirstCreate);
+        if(mFirstCreate)
+        {
+            initView();
+            initItemData();
+
+        }
         handler=new Handler()
         {
             @Override
@@ -117,6 +120,8 @@ public class MainMallinfoFragment  extends Fragment {
                 }
             }
         };
+
+
     }
     void initParentThread()
     {
@@ -161,8 +166,8 @@ public class MainMallinfoFragment  extends Fragment {
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
         allinfo_list.setLayoutManager(linearLayoutManager);
         allinfo_list.setItemAnimator(new DefaultItemAnimator());
-        /*mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList);//adapter
-        allinfo_list.setAdapter(mainAllInfoAdapter);*/
+        mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,1,"");//adapter
+        allinfo_list.setAdapter(mainAllInfoAdapter);
         superSwipeRefreshLayout = activity.findViewById(R.id.main_malllinfo_swiperefresh);//superswiperefresh
         //设定下拉刷新栏的背景色
         superSwipeRefreshLayout.setHeaderViewBackgroundColor(0xff888888);
@@ -385,17 +390,19 @@ public class MainMallinfoFragment  extends Fragment {
                 // mCategoryAdapter.notifyItemChanged(1,1);
                 if(mDataTemp.size()==mDataList.size() )isfinish=true;
 
+
             }else
             {
                 Toast.makeText(getContext(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
                 // mCategoryAdapter.notifyItemRemoved(mCategoryAdapter.getItemCount());
             }
             mainAllInfoAdapter.notifyDataSetChanged();
+
         } else if (freshType.equals("refresh")) {
             mFirstCreate=true;
-            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             new DownLoadAsyncTask(getActivity()).execute(Data.loadPath);
             initItemData();
+            Toast.makeText(getContext(),"已刷新订单信息",Toast.LENGTH_SHORT).show();
             mainAllInfoAdapter.notifyDataSetChanged();
         }
     }

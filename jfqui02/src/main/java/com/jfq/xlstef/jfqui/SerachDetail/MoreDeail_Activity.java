@@ -2,8 +2,13 @@ package com.jfq.xlstef.jfqui.SerachDetail;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,11 +68,26 @@ public class MoreDeail_Activity extends AppCompatActivity {
         payTimer=(TextView)findViewById(R.id.payTimer);
         seepcodedetail=(TextView)findViewById(R.id.txt_arrow);
         layout_addcount=(RelativeLayout) findViewById(R.id.layout_addCount);
+
+      /*  SpannableString spanText = new SpannableString("请输入需要查询内容");
+
+
+    // 设置字体大小
+        spanText.setSpan(new AbsoluteSizeSpan(20, true), 0, spanText.length(),
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        // 设置字体颜色
+        spanText.setSpan(new ForegroundColorSpan(Color.WHITE), 0,
+                spanText.length(),     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);*/
+
+
+
     }
 
     private void initData(final CategoryBean mCategoryBaen ,int selectfrag)
     {
         orderNumber.setText("订单编号："+mCategoryBaen.getOrderNumber());
+        Log.i("selectfrag",selectfrag+"");
+
         switch (selectfrag)
        {
            case 1:
@@ -100,7 +120,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
                lastCls=MainAllinfoFragment.class;
                break;
            case 2:
-               oderType.setText("产品名称："+mCategoryBaen.getNameOfCommodity() );
+               oderType.setText("产品名称："+mCategoryBaen.getOderType() );
                itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice()+"元");
                platformDeduction.setText("平台抵扣： "+mCategoryBaen.getPlatformDeduction()+"元");
                userPlay.setText("用户支付："+mCategoryBaen.getUserPlay()+"元");

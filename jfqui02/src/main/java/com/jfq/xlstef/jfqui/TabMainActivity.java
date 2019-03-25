@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.jfq.xlstef.jfqui.OrderFragment.CompleteOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Enum_Order.OrderName;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.Tooljson;
 import com.jfq.xlstef.jfqui.fragments.*;
 import com.jfq.xlstef.jfqui.utils.DisplayUtil;
 import com.jfq.xlstef.jfqui.utils.MoveBg;
@@ -236,7 +237,7 @@ public class TabMainActivity extends AppCompatActivity  {
 	MainSummaryinfoFragment mainSummaryinfoFragment;
 	public void research(View v)
 	{
-		  switch (mcurrentName)
+		switch (mcurrentName)
 		  {
 			  case CompleteOrder:
 				  if(null != mainAllinfoFragment){
@@ -266,6 +267,7 @@ public class TabMainActivity extends AppCompatActivity  {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode==KeyEvent.KEYCODE_BACK)
 		{
+			Tooljson.isTest=true;
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -273,11 +275,11 @@ public class TabMainActivity extends AppCompatActivity  {
 
 
 
-	@Override
+	/*@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		/**
-		 *  判断requestCode, resultCode 来确定要执行的代码*/
+		*//**
+		 *  判断requestCode, resultCode 来确定要执行的代码*//*
 
 		Log.i("MyCode",requestCode+","+resultCode);
 		if(requestCode==1){
@@ -302,7 +304,7 @@ public class TabMainActivity extends AppCompatActivity  {
 			}
 		}
 
-	}
+	}*/
 
 
 }

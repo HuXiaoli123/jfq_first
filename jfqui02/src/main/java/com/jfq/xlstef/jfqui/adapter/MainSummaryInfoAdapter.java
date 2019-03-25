@@ -20,6 +20,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.SerachDetail.MoreDeail_Activity;
 import com.jfq.xlstef.jfqui.interfaces.OnItemClickListener;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 import com.jfq.xlstef.jfqui.viewholder.AllInfoViewHolder;
 import com.jfq.xlstef.jfqui.viewholder.BaseViewHolder;
 import com.jfq.xlstef.jfqui.viewholder.RefreshFooterViewHolder;
@@ -36,14 +37,20 @@ public class MainSummaryInfoAdapter extends RecyclerView.Adapter<BaseViewHolder>
     private Context mContext;
     private List<DailyOrder> mDataSet;
 
+    private  String storeName;
+
     public MainSummaryInfoAdapter(Context context, List<DailyOrder> DataSet){
         mContext=context;
         mDataSet=DataSet;
         temp_number=DataSet;
+        SharedPreferencesUtils helper = new SharedPreferencesUtils(mContext, "settings");
+        storeName=helper.getString("store_name");
+
     }
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+       // Log.i("store_name","onCreateViewHolder");//门店名称
         if(viewType==TYPE_FOOTER){
             View view=LayoutInflater.from(mContext).inflate(R.layout.layout_refresh_footer,parent,false);
             return new RefreshFooterViewHolder(view);
@@ -61,6 +68,8 @@ public class MainSummaryInfoAdapter extends RecyclerView.Adapter<BaseViewHolder>
             SummaryInfoViewHolder summaryInfoViewHolder=(SummaryInfoViewHolder)holder;
             DailyOrder dailyOrder=mDataSet.get(position);
 
+
+            summaryInfoViewHolder.storeName. setText( storeName  );
 
             if(text!=null&&hasMatch)
             {

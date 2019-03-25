@@ -30,7 +30,7 @@ public class DemoPushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
          super.onStartCommand(intent, flags, startId);
-        Log.e("push","onStartCommand");
+         Log.e("push","onStartCommand");
          return GTServiceManager.getInstance().onStartCommand(this,intent, flags, startId);
     }
 

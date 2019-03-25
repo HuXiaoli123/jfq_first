@@ -1,5 +1,9 @@
 package com.jfq.xlstef.jfqui.LoginPage.VoiceParse;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks;
 import android.content.Context;
@@ -9,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RadioButton;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushManager;
@@ -16,6 +21,7 @@ import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.jfq.xlstef.jfqui.LoginPage.KqwSpeechCompound;
+import com.jfq.xlstef.jfqui.LoginPage.Login_Activity;
 import com.jfq.xlstef.jfqui.MainActivity;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.R;
@@ -26,6 +32,7 @@ import com.jfq.xlstef.jfqui.widget.BadgeView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import static com.jfq.xlstef.jfqui.MainActivity.mInstance;
 
@@ -113,7 +120,7 @@ public class DemoIntentService extends GTIntentService {
     }
     //--------------------------------------------------
 
-    private KqwSpeechCompound kqwSpeechCompound;
+    private  KqwSpeechCompound kqwSpeechCompound;
 
 
     //构造函数
@@ -138,7 +145,9 @@ public class DemoIntentService extends GTIntentService {
     //重启了应用，重新接收了
     @Override
     public void onReceiveServicePid(Context context, int i) {
-        Log.e("MyIntent","Pid_i"+i);
+
+
+        Log.e("MyIntent---","Pid_i"+i);
     }
 
     @Override
@@ -184,11 +193,13 @@ public class DemoIntentService extends GTIntentService {
 
             Log.e(TAG, "MyIntent receiver payload = " + data);
 
-           // Toast.makeText(this,"收到数据："+data,Toast.LENGTH_LONG).show();
+
+           Test(data);
+
+
 
             kqwSpeechCompound.infoQue.add(data);
             Log.e("test1","几条数据："+kqwSpeechCompound.infoQue.size());
-
 
             Log.e("test1","是否开始"+KqwSpeechCompound.IsStart);
           //  kqwSpeechCompound.speaking(data);
@@ -265,6 +276,28 @@ public class DemoIntentService extends GTIntentService {
 
     }
 
+
+
+    public void Test(String data )
+    {
+        NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification.Builder builder = new Notification.Builder(DemoIntentService.this);
+        builder.setSmallIcon(R.drawable.message);
+        builder.setTicker("显示第一个通知");
+        builder.setContentTitle("第一个通知");
+        builder.setContentText(data);
+        builder.setWhen(System.currentTimeMillis()); //发送时间
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        Notification notification = builder.build();
+        notificationManager.notify( (int) (Math.random() * 10000), notification);
+
+       // startForeground(1, notification);
+
+
+    }
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -280,7 +313,7 @@ public class DemoIntentService extends GTIntentService {
     @Override
     public void onReceiveCommandResult(Context context, GTCmdMessage gtCmdMessage)
     {
-        Log.e("MyIntent","onReceiveCommandResult");
+        Log.e("MyIntent","onReceiveCommandResult" +gtCmdMessage.toString());
     }
 
     @Override
@@ -292,6 +325,8 @@ public class DemoIntentService extends GTIntentService {
     public void onNotificationMessageClicked(Context context, GTNotificationMessage gtNotificationMessage) {
 
     }
+
+    
 
 
     //插入数据

@@ -462,7 +462,7 @@ public class CategoryBeanDAO {
 
 
     /**
-     * 查询数据库中的总条数.
+     * 查询数据库中的总条数.:这里应该选择ViewAll
      * @return
      */
     public long allCaseNum(){

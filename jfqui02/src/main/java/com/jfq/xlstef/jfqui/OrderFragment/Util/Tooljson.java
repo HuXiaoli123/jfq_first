@@ -9,6 +9,7 @@ import com.jfq.xlstef.jfqui.OrderFragment.Goods.SweepCodeOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.CategoryBeanDAO;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -120,35 +121,32 @@ public class Tooljson {
      * @param timer
      * @return
      */
+    public  static boolean isTest=false;
    public  static boolean  isFinishAllSerach=false;
-    public static List<CategoryBean> getjfqdata(String key, String jsonString,String  timer) {
+    public static List<CategoryBean> getjfqdata(String key, String jsonString,String  timer,Context context) {
         List list = new ArrayList();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             // 返回json的数组   1.获取json对象数组
             JSONArray jsonArray = jsonObject.getJSONArray(key);
 
-            //--------------test
-            CategoryBean myCategoryBean1=new CategoryBean("1234567","扫码订单","29","2.6",
-                    "26.4","29","2019-03-20 10:30:39","12",
-                    "桃子","香蕉","paid");
-            CategoryBean myCategoryBean2=new CategoryBean("1234567","扫码订单","29","2.6",
-                    "26.4","29","2019-03-20 09:51:20","12",
-                    "桃子","香蕉","paid");
-            CategoryBean myCategoryBean10=new CategoryBean("1234567","扫码订单","29","2.6",
-                    "26.4","29","2019-03-20 09:34:39","12",
-                    "桃子","香蕉","paid");
-                    CategoryBean myCategoryBean9=new CategoryBean("1234567","扫码订单","29","2.6",
-            "26.4","29","2019-03-20 09:33:39","12",
+            String storeName=jsonArray.getJSONObject(0).getJSONObject("store").getString("name");
+            Log.i("store_name",storeName);//门店名称
+
+            SharedPreferencesUtils helper = new SharedPreferencesUtils(context, "settings");
+            helper.putValues(new SharedPreferencesUtils.ContentValue("store_name", storeName));
+
+
+
+            CategoryBean myCategoryBean8=new CategoryBean("1234567","扫码订单","29","2.6",
+            "26.4","29","2019-03-22 22:59:39","12",
             "桃子","香蕉","paid");
-    CategoryBean myCategoryBean8=new CategoryBean("1234567","扫码订单","29","2.6",
-            "26.4","29","2019-03-20 09:30:39","12",
-            "桃子","香蕉","paid");
-             /*list.add(myCategoryBean1);
-            list.add(myCategoryBean2);
-           list.add(myCategoryBean10);
-            list.add(myCategoryBean9);
-            list.add(myCategoryBean8);*/
+
+          /* if(isTest)
+           {
+               list.add(myCategoryBean8);
+           }*/
+
             //--------------test
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);

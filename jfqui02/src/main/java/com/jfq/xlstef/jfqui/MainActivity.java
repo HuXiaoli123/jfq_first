@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -20,7 +21,10 @@ import android.widget.RadioGroup;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.igexin.sdk.PushManager;
+import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
+import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 import com.readystatesoftware.viewbadger.BadgeView;
 
@@ -91,9 +95,27 @@ public class MainActivity extends TabActivity {
 		tabInit();
 
 	}
+	/**
+	 * 进行个推的实例化
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PushManager.getInstance().initialize(this.getApplicationContext(),com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class);
 
+		// com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
+		PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class);
 
-float exitTime=0;
+		Log.i("onResume","onResume");
+		/*boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),Data.USER_NUMBER);
+
+		*//*messageHandle(4,"绑定成功?"+ isBins+"   meber:"+member+"\n cid: "+clientid);*//*
+		Toast.makeText(this,Data.USER_NUMBER+",\n"+isBins,Toast.LENGTH_LONG).show();
+		Log.i("onResume","onResume");*/
+
+	}
+
+	float exitTime=0;
 	//双击退出程序
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -101,12 +123,17 @@ float exitTime=0;
 			if(event.getRepeatCount() == 0)
 			{
 				// 判断间隔时间 大于2秒就退出应用
+				Log.i("quitTIme", ","+System.currentTimeMillis()+","+exitTime);
+				Log.i("quitTIme", (System.currentTimeMillis() - exitTime)+"," );
+				Log.i("quitTIme", ","+exitTime);
 				if ((System.currentTimeMillis() - exitTime) > 2000) {
-					Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
 					// 计算两次返回键按下的时间差
 					exitTime = System.currentTimeMillis();
-					return  false;
+					Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+					Log.i("quitTIme", ","+exitTime);
+					return  true;
 				} else {
+					Log.i("quitTIme","quit");
 					// 关闭应用程序
 					Intent home = new Intent(Intent.ACTION_MAIN);
 					home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -129,12 +156,16 @@ float exitTime=0;
 		utils.putValues(new SharedPreferencesUtils.ContentValue("msg_count", 0));
 	}
 	void initView()
-	{ 	mInstance = this;
+	{
+		mInstance = this;
 
-		button=findViewById(R.id.btn_msg);
+
+
+
+        button=findViewById(R.id.btn_msg);
 		badgeView=new BadgeView(this,button);
 		IntentFilter intentFilter=new IntentFilter("StartQueryData");
-		getApplication().registerReceiver(new MainActivity.InsertReceiver(),intentFilter);
+		getApplication().registerReceiver(new InsertReceiver(),intentFilter);
 
 
 		/*badgeView.setBadgeMargin(8); //各边间隔
@@ -156,16 +187,19 @@ float exitTime=0;
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			Log.i( "MyCOunt",intent.getExtras().getInt("badge_count")+"");
-            badgeView.setText(String.valueOf(intent.getExtras().getInt("badge_count"))); // 需要显示的提醒类容
-            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);// 显示的位置.右上角,BadgeView.POSITION_BOTTOM_LEFT,下左，还有其他几个属性
-            badgeView.setTextColor(Color.WHITE); // 文本颜色
-            badgeView.setBadgeBackgroundColor(Color.RED); // 提醒信息的背景颜色，自己设置
-            badgeView.setTextSize(12); // 文本大小
-            badgeView.setBadgeMargin(10, 3); // 水平和竖直方向的间距
-            badgeView.setBadgeMargin(5); //各边间隔
-            // badge1.toggle(); //显示效果，如果已经显示，则影藏，如果影藏，则显示
-            badgeView.show();// 只有显示
+			Log.i("currTab",tabHost.getCurrentTab()+"");
+
+			  if(tabHost.getCurrentTab()!=1) {
+				  badgeView.setText(String.valueOf(intent.getExtras().getInt("badge_count"))); // 需要显示的提醒类容
+				  badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);// 显示的位置.右上角,BadgeView.POSITION_BOTTOM_LEFT,下左，还有其他几个属性
+				  badgeView.setTextColor(Color.WHITE); // 文本颜色
+				  badgeView.setBadgeBackgroundColor(Color.RED); // 提醒信息的背景颜色，自己设置
+				  badgeView.setTextSize(12); // 文本大小
+				  badgeView.setBadgeMargin(10, 3); // 水平和竖直方向的间距
+				  badgeView.setBadgeMargin(5); //各边间隔
+				  // badge1.toggle(); //显示效果，如果已经显示，则影藏，如果影藏，则显示
+				  badgeView.show();// 只有显示
+			  }
 
 		}
 

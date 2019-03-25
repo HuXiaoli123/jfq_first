@@ -36,6 +36,7 @@ import com.jfq.xlstef.jfqui.SerachDetail.SerachActivity;
 import com.jfq.xlstef.jfqui.adapter.MainAllInfoAdapter;
 import com.jfq.xlstef.jfqui.adapter.MainSummaryInfoAdapter;
 import com.jfq.xlstef.jfqui.interfaces.OnItemClickListener;
+import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -90,8 +91,12 @@ public class MainSummaryinfoFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        initView();
-        initItemData();
+        if(mFirstCreate)
+        {
+            initView();
+            initItemData();
+
+        }
         handler=new Handler()
         {
             @Override
@@ -153,8 +158,9 @@ public class MainSummaryinfoFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
         allinfo_list.setLayoutManager(linearLayoutManager);
         allinfo_list.setItemAnimator(new DefaultItemAnimator());
-        /*mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList);//adapter
-        allinfo_list.setAdapter(mainAllInfoAdapter);*/
+        //如果不进行初始化，后面没有数据的时候刷新mainSummaryInfoAdapter.notified()会报空指针
+        mainSummaryInfoAdapter = new MainSummaryInfoAdapter(activity, mDataList);//adapter
+        allinfo_list.setAdapter(mainSummaryInfoAdapter);
         superSwipeRefreshLayout = activity.findViewById(R.id.main_summaryinfo_swiperefresh);//superswiperefresh
         //设定下拉刷新栏的背景色
         superSwipeRefreshLayout.setHeaderViewBackgroundColor(0xff888888);
@@ -287,6 +293,7 @@ public class MainSummaryinfoFragment extends Fragment {
         mFirstCount=getActivity().getResources().getInteger(R.integer.first_load_count);
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath_",":"+dao.allCaseNum()+" test");
+
 
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
         new Thread(new Runnable() {

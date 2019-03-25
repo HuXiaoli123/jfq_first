@@ -14,7 +14,6 @@ public class ListInfo{
     }
 
     public String getIcon() {
-
         return icon;
     }
 

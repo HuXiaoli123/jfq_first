@@ -89,15 +89,19 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 public void onClick(View v) {
                     if (mOnItemClickListener != null)
                         mOnItemClickListener.OnItemClick(position);
-                    Log.i("mydata",mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay());
-
-                    /*Intent intent = new Intent();
+                    Log.i("mydata",position+mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay());
+                    Log.i("mydata",mSelectfragment+mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay()+mDataSet.get(position).getOderType());
+                    if(mSelectfragment==2)
+                    {
+                        Log.i("mydata",mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay());
+                    }
+                    Intent intent = new Intent();
                     intent.setClass(mContext, MoreDeail_Activity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("beanData",mDataSet.get(position));
                     intent.putExtra("selectfrag",mSelectfragment);
 
-                    mContext.startActivityForResult(intent,1);*/
+                    mContext.startActivityForResult(intent,1);
 
                 }
             });

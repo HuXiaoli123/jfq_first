@@ -36,9 +36,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
     private  List<CategoryBean> mCompeleteOrder=new ArrayList<>();
     private List<SweepCodeOrder> mSweepCodeOrder= new ArrayList<>();
 
-    public static int getmCompeleteOrderList() {
-        return mCompeleteOrderList;
-    }
+
 
     public static int mCompeleteOrderList;
     public  static boolean mFinishLoad=false;
@@ -103,7 +101,7 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
 
         if(!"".equals(s)&&s!=null)
          {
-
+             mFinishLoad=false;
              InsertToDetailTable(mContext);
             // s=parseData(s);
             // List<CategoryBean> myCompeleteOrder=Tooljson.getjfqdata("content",s,true);
@@ -111,15 +109,13 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
              long dataBaseData=dao.allCaseNum();  //数据库中总长度
              String lastTimer =dao.LastCateanTimer(Data.COMPELETE_ORDER_TABLE_NAME);
              String currentDate=getCurrentDate();
-             mCompeleteOrder=Tooljson.getjfqdata("content",s,lastTimer);
+             mCompeleteOrder=Tooljson.getjfqdata("content",s,lastTimer,mContext);
              if(!Tooljson.isFinishAllSerach)
              {
                  Data.page++;
 
              }
             String lastDailyTimer =dao.LastCateanTimer(Data.ORDERDAILY_TABLE_NAME);
-
-
 
              mCompeleteOrderList=mCompeleteOrder.size();
              Log.i("mypathtest--------",mCompeleteOrderList+":");
@@ -144,7 +140,9 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
                  String tempTimer = lastTimer.substring(0,10);
 
                  mFinishLoad=true;
-                if(lastDailyTimer.compareTo(tempTimer)<0)
+                 Log.i("currentData",currentDate+","+tempTimer+","+lastDailyTimer+",\n"+
+                         currentDate.compareTo(lastDailyTimer)+","+ lastDailyTimer.compareTo(tempTimer) );
+                if(currentDate.compareTo(lastDailyTimer)>0 &&lastDailyTimer.compareTo(tempTimer)<0)
                 {
                     //处理日常订单
                     HandleDailyOrder(lastDailyTimer,currentDate);
@@ -203,7 +201,6 @@ public class DownLoadAsyncTask extends AsyncTask<String,Void,String> {
         }
 
         mFinishLoad=true;
-        Log.i("mypathtest-----",mFinishLoad+":");
     }
 
     //因为是我自己在sdn博客做的测试，所进行以下解析

@@ -86,8 +86,12 @@ public class MainPayinfoFragment   extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		initView();
-		initItemData();
+        if(mFirstCreate)
+        {
+            initView();
+            initItemData();
+
+        }
 		handler=new Handler()
 		{
 			@Override
@@ -154,8 +158,8 @@ public class MainPayinfoFragment   extends Fragment {
 		linearLayoutManager = new LinearLayoutManager(activity);//LayoutManager
 		allinfo_list.setLayoutManager(linearLayoutManager);
 		allinfo_list.setItemAnimator(new DefaultItemAnimator());
-        /*mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList);//adapter
-        allinfo_list.setAdapter(mainAllInfoAdapter);*/
+		mainAllInfoAdapter = new MainAllInfoAdapter(activity, mDataList,1,"");//adapter
+		allinfo_list.setAdapter(mainAllInfoAdapter);
 		superSwipeRefreshLayout = activity.findViewById(R.id.main_payinfo_swiperefresh);//superswiperefresh
 		//设定下拉刷新栏的背景色
 		superSwipeRefreshLayout.setHeaderViewBackgroundColor(0xff888888);

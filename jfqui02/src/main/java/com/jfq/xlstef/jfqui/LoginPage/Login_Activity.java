@@ -105,7 +105,6 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
              if(keyCode==KeyEvent.KEYCODE_BACK)
              {
-
                  // 返回桌面操作
                  Intent home = new Intent(Intent.ACTION_MAIN);
                  home.addCategory(Intent.CATEGORY_HOME);
@@ -249,6 +248,7 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
                         }
                     }*/
 
+               // boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),Data.USER_NUMBER);
 
                 Log.i("btn_",isAutoLogin+","+isRemeberUser+UserName+Password);
 
@@ -699,11 +699,11 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
                             Data.USER_NUMBER=member;
 
-                            boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),member,clientid);
+                           /* boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),member);
 
-                            messageHandle(4,"绑定成功?"+ isBins+"   meber:"+member+"\n cid: "+clientid);
+                            messageHandle(4,"绑定成功?"+ isBins+"   meber:"+member+"\n cid: "+clientid);*/
 
-                            Log.e("my_test----",member+","+isBins+","+clientid );
+                           /* Log.e("my_test----",member+","+isBins+","+clientid );*/
 
 
                         } catch (JSONException e) {
@@ -775,12 +775,12 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
         //保存数据
         void  InitialSaveData()
         {
-            Log.i("mysend","DemoPushService");
+
             // com.getui.demo.DemoPushService 为第三方自定义推送服务
-            PushManager.getInstance().initialize(this.getApplicationContext(),com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class);
+           /* PushManager.getInstance().initialize(this.getApplicationContext(),com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class);
 
             // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
-            PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class);
+            PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class);*/
             // appid="HKxjsmoNuh76VKMECvzsr3";
             appid=getString(R.string.GETUI_APP_ID);
             // clientid="fe078966f82648f8f1d1c9fbafcc9366";
