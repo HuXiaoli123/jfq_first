@@ -26,11 +26,19 @@ public class DemoPushService extends Service {
 
     }
 
-
+    LockScreenMsgReceiver mScreenReceiver;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
          super.onStartCommand(intent, flags, startId);
          Log.e("push","onStartCommand");
+
+        if (mScreenReceiver == null) {
+            mScreenReceiver = new LockScreenMsgReceiver(this);
+            mScreenReceiver.registerScreenBroadcastReceiver(this);
+
+        }
+
+
          return GTServiceManager.getInstance().onStartCommand(this,intent, flags, startId);
     }
 

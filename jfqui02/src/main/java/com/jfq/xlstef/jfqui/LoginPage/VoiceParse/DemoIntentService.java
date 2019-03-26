@@ -278,7 +278,7 @@ public class DemoIntentService extends GTIntentService {
 
 
 
-    public void Test(String data )
+    public   Notification Test(String data )
     {
         NotificationManager notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(DemoIntentService.this);
@@ -291,6 +291,7 @@ public class DemoIntentService extends GTIntentService {
         Notification notification = builder.build();
         notificationManager.notify( (int) (Math.random() * 10000), notification);
 
+        return  notification;
        // startForeground(1, notification);
 
 

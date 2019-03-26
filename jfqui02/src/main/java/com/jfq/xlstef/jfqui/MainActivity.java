@@ -1,6 +1,7 @@
 package com.jfq.xlstef.jfqui;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.TabActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,10 +24,13 @@ import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
 import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
+import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.LockScreenMsgReceiver;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
 import com.readystatesoftware.viewbadger.BadgeView;
+
+import java.util.List;
 
 
 public class MainActivity extends TabActivity {
@@ -101,6 +105,7 @@ public class MainActivity extends TabActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
 		PushManager.getInstance().initialize(this.getApplicationContext(),com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class);
 
 		// com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
@@ -113,7 +118,42 @@ public class MainActivity extends TabActivity {
 		Toast.makeText(this,Data.USER_NUMBER+",\n"+isBins,Toast.LENGTH_LONG).show();
 		Log.i("onResume","onResume");*/
 
+
+		Log.i("onResume","onResume"+isAppOnForeground());
+
+
 	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.i("onResume","onResume"+isAppOnForeground()+"stop");
+	}
+
+	/**
+	 * APP是否处于前台唤醒状态
+	 *
+	 * @return
+	 */
+	public boolean isAppOnForeground() {
+		ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+		String packageName = getApplicationContext().getPackageName();
+		List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+				.getRunningAppProcesses();
+		if (appProcesses == null)
+			return false;
+
+		for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+			// The name of the process that this object is associated with.
+			if (appProcess.processName.equals(packageName)
+					&& appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	float exitTime=0;
 	//双击退出程序
@@ -155,12 +195,16 @@ public class MainActivity extends TabActivity {
 		SharedPreferencesUtils utils=new SharedPreferencesUtils(getApplicationContext(),"msgs");
 		utils.putValues(new SharedPreferencesUtils.ContentValue("msg_count", 0));
 	}
+	LockScreenMsgReceiver mScreenReceiver;
 	void initView()
 	{
 		mInstance = this;
 
+		/*if (mScreenReceiver == null) {
+			mScreenReceiver = new LockScreenMsgReceiver(getCurrentActivity());
+			mScreenReceiver.registerScreenBroadcastReceiver(this);
 
-
+		}*/
 
         button=findViewById(R.id.btn_msg);
 		badgeView=new BadgeView(this,button);
