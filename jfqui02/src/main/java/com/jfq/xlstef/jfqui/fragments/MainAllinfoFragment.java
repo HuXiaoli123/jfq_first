@@ -89,7 +89,7 @@ public class MainAllinfoFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mFirstCreate=true;
-
+        Log.i("test","onstart"+isFirstTime+ "onActivityCreated");
         bindClientid();
 
     }
@@ -321,7 +321,7 @@ public class MainAllinfoFragment extends Fragment {
         mFirstCount=getActivity().getResources().getInteger(R.integer.first_load_count);
         dao=new CategoryBeanDAO(new DBHelper(getActivity()) );
         Log.i("mypath_",":"+dao.allCaseNum()+" test");
-
+        mFirstCreate=false;
 
         /*mCategoryBean=Tooljson.JsonParse(getContext());*/
         new Thread(new Runnable() {
@@ -361,10 +361,7 @@ public class MainAllinfoFragment extends Fragment {
                     }
 
                 }
-                if(mFirstCreate)
-                {
 
-                }
                 //  mCategoryBean=myAsyTask.getCompeleteOrder();
 
                 //从数据库中获取

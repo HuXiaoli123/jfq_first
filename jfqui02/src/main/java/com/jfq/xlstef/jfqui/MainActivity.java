@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.igexin.sdk.PushManager;
 import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService;
 import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.LockScreenMsgReceiver;
+import com.jfq.xlstef.jfqui.LoginPage.VoiceParse.ServiceUtils;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.DBHelper;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.ToolDataBase.Data;
 import com.jfq.xlstef.jfqui.utils.SaveDifData.SharedPreferencesUtils;
@@ -119,7 +120,14 @@ public class MainActivity extends TabActivity {
 		Log.i("onResume","onResume");*/
 
 
-		Log.i("onResume","onResume"+isAppOnForeground());
+
+		boolean isRunService=ServiceUtils.isServiceRunning(getApplicationContext(),"com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService");
+		if(!isRunService)
+		{
+			startService(new Intent(this,com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class));
+		}
+		Log.i("onResume","app在前台吗?"+isAppOnForeground()+"push服务在运行吗？"+ServiceUtils.isServiceRunning(getApplicationContext(),"com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class")+"\n"+
+				ServiceUtils.isServiceRunning(getApplicationContext(),"com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService")+isRunService);
 
 
 	}
@@ -127,7 +135,7 @@ public class MainActivity extends TabActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		Log.i("onResume","onResume"+isAppOnForeground()+"stop");
+		Log.i("onResume","app在前台吗?"+isAppOnForeground()+"stop");
 	}
 
 	/**
@@ -138,6 +146,7 @@ public class MainActivity extends TabActivity {
 	public boolean isAppOnForeground() {
 		ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 		String packageName = getApplicationContext().getPackageName();
+		Log.i("onResume",packageName);
 		List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
 				.getRunningAppProcesses();
 		if (appProcesses == null)

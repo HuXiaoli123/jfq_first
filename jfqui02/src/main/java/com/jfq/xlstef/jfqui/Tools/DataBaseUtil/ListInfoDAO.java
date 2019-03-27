@@ -59,7 +59,7 @@ public class ListInfoDAO {
         ArrayList<ListInfo> arrayList=new ArrayList<>();
         Log.i("queryDB1","queryDB1");
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
-        Cursor results=readDB.query(DBHelper.LISTINFO_TABLE_NAME,new String[]{"_id","timer","content"},null,null,null,null,null);
+        Cursor results=readDB.query(DBHelper.LISTINFO_TABLE_NAME,new String[]{"_id","timer","content"},null,null,null,null,ORDER_BY);
         Log.i("queryDB2","queryDB2");
         for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
             ListInfo listInfo=new ListInfo();

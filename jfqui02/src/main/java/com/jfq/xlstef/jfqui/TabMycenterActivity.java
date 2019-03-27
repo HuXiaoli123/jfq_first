@@ -31,7 +31,7 @@ public class TabMycenterActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_tab_mycenter);
 		//设置标题文字
 		TextView layout_top_text=(TextView)findViewById(R.id.layout_top_text);
-		layout_top_text.setText(R.string.tab_message_title_text);
+		layout_top_text.setText(R.string.tab_mycenter_title_text);
 
 		initView();
 		initButton();

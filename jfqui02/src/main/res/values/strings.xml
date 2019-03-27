@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JFQ</string>
+    <string name="app_name">积分圈商户版</string>
 
     <!-- <string name="app_name">积分圈商户版</string>-->
     <string name="post_url">https://store.tuihs.com/oauth/token?</string>

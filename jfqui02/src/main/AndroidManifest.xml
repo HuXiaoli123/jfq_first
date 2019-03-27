@@ -42,9 +42,9 @@
     <application
         android:name=".LoginPage.VoiceParse.MyAPP"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/jfq_login_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/jfq_login_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginPage.Login_Activity">
@@ -84,8 +84,8 @@
             android:enabled="true"
             android:exported="true"
             android:label="PushService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice"></service>
+            android:process=":pushservice"
+            android:permission="android.permission.BIND_JOB_SERVICE"></service>
 
         <!-- 用户自定义服务名 -->
 

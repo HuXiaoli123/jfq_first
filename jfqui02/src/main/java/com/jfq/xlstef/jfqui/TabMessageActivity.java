@@ -52,7 +52,7 @@ public class TabMessageActivity extends AppCompatActivity implements LoadListVie
 		setContentView(R.layout.activity_tab_message);
 
 		TextView layout_top_text=(TextView)findViewById(R.id.layout_top_text);
-		layout_top_text.setText(R.string.tab_mycenter_title_text);
+		layout_top_text.setText(R.string.tab_message_title_text);
 
 		IntentFilter intentFilter=new IntentFilter("StartQueryData");
 		getApplication().registerReceiver(new TabMessageActivity.InsertReceiver(),intentFilter);

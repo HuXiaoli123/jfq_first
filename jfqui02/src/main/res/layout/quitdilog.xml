@@ -25,7 +25,7 @@
         android:layout_height="40dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="确定要退出吗?退出后不会删除任何信息"
+        android:text="确定要退出吗?退出后需重新登录"
         android:textColor="@color/black" />
     <View
         android:layout_width="fill_parent"

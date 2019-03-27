@@ -55,8 +55,6 @@ public class DemoIntentService extends GTIntentService {
         Log.e("MyIntent","onCreate");
 
     }
-
-
 //--------------------------------------------------
 
     @Override
@@ -192,11 +190,9 @@ public class DemoIntentService extends GTIntentService {
             String data = new String(payload);
 
             Log.e(TAG, "MyIntent receiver payload = " + data);
-
+            data="积分圈"+data;
 
            Test(data);
-
-
 
             kqwSpeechCompound.infoQue.add(data);
             Log.e("test1","几条数据："+kqwSpeechCompound.infoQue.size());

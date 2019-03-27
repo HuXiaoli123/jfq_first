@@ -10,12 +10,13 @@
             android:id="@+id/tablayout_search_title"
             layout="@layout/layout_tab_top"
     />
+
     <TextView
-            android:layout_below="@id/tablayout_search_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="12dp"
+        android:layout_below="@id/tablayout_search_title"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="240dp"
         android:text="栏目建设中..."
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
 </RelativeLayout>
