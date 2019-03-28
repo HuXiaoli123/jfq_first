@@ -46,6 +46,7 @@ public class DemoPushService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.e("PushService_onDestroy","yes");
+        mScreenReceiver.unRegisterScreenBroadcastReceiver(getApplicationContext());
         GTServiceManager.getInstance().onDestroy();
     }
 

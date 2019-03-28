@@ -126,8 +126,8 @@ public class MainActivity extends TabActivity {
 		{
 			startService(new Intent(this,com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService.class));
 		}
-		Log.i("onResume","app在前台吗?"+isAppOnForeground()+"push服务在运行吗？"+ServiceUtils.isServiceRunning(getApplicationContext(),"com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class")+"\n"+
-				ServiceUtils.isServiceRunning(getApplicationContext(),"com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoPushService")+isRunService);
+		Log.i("onResume","app在前台吗?"+isAppOnForeground()+"push服务在运行吗？"+"\n"+
+				isRunService);
 
 
 	}

@@ -14,7 +14,7 @@
             android:id="@+id/iv_icon01"
             android:layout_width="54dp"
             android:layout_height="54dp"
-            android:src="@drawable/jfqpic"
+            android:src="@drawable/jfq_login_logo"
             android:layout_marginBottom="2dp"
             android:layout_gravity="center_vertical"
             />
@@ -33,7 +33,7 @@
         android:layout_toRightOf="@id/layout"
         android:text="时间："
         android:textSize="18sp"
-        android:textColor="#aa0000"/>
+        android:textColor="@color/black"/>
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
@@ -43,6 +43,6 @@
         android:layout_marginTop="5dp"
         android:text="内容："
         android:textSize="18sp"
-        android:textColor="#00aa00"/>
+        android:textColor="@color/black"/>
 
 </RelativeLayout>
