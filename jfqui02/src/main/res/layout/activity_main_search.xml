@@ -29,7 +29,7 @@
            android:layout_height="wrap_content"
            android:layout_gravity="center"
            android:background="@color/top_title_background"
-           android:text="搜索匹配关键字(全部变色)"
+           android:text="搜索匹配(关键字会高亮显示)"
            android:textColor="#fff" />
    </LinearLayout>
 
@@ -46,7 +46,7 @@
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:queryHint="搜索"
+            android:queryHint="搜索:请输入订单号/金额"
             android:paddingTop="10dp"
             android:iconifiedByDefault="false"
            >

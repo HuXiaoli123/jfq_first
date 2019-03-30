@@ -329,14 +329,15 @@ public class MainAllinfoFragment extends Fragment {
             public void run() {
 
                 //进行数据库查询
-                CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
+                /*CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));*/
 
-                mdatalistsize= (int)dao.allCaseNum();
+
 //---------------------------------
                /* 判断数据库是否有数据*/
                 if(isFirstTime) {
                     isFirstTime=false;
                     mFirstCreate=false;
+                    mdatalistsize= (int)dao.allCaseNum();
                     DownLoadAsyncTask myAsyTask=  new DownLoadAsyncTask(getActivity());
                     myAsyTask.execute(path);
                 }else
@@ -368,6 +369,7 @@ public class MainAllinfoFragment extends Fragment {
                 mDataList=dao.findOrderByAll(Data.VIEW_ALL_ORDER);
 
                 Log.i("mypathtest1112",mDataList.size()+""+mdatalistsize);
+                mdatalistsize=(int)dao.allCaseNum();
 
                 handler.sendEmptyMessage(mDataList.size());
 

@@ -22,6 +22,8 @@ public class LoadListView extends ListView  implements AbsListView.OnScrollListe
 
     ILoadListener iLoadListener;
 
+    int isFirst;
+
     public LoadListView(Context context) {
         super(context);
         initView(context);
@@ -62,7 +64,8 @@ public class LoadListView extends ListView  implements AbsListView.OnScrollListe
         this.lastVisibleItem=firstVisibleItem+visibleItemCount;
         this.totalitemCount=totalItemCount;
 
-        Log.i("totalitemCount",totalitemCount+","+firstVisibleItem+","+visibleItemCount);
+
+        Log.i("totalitemCount",totalitemCount+","+firstVisibleItem+","+visibleItemCount+","+firstVisibleItem);
 
     }
     //判断加载到界面最低端
@@ -80,6 +83,10 @@ public class LoadListView extends ListView  implements AbsListView.OnScrollListe
                }
            }
     }
+
+
+
+
 
     /*
     加载完毕

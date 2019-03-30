@@ -108,12 +108,12 @@
               style="@style/style_table_gray6_18_130_text"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-               android:layout_marginLeft="350dp"
               android:layout_marginTop="10dp"
-              android:paddingLeft="3dp"
-              android:text=">"
+             android:layout_alignParentEnd="true"
+              android:layout_marginRight="5dp"
+              android:text="点击查看商品名 >"
               android:textSize="@dimen/text_title"
-              android:visibility="invisible"
+              android:visibility="visible"
               android:textStyle="bold" />
       </RelativeLayout>
        <TextView

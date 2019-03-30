@@ -190,7 +190,7 @@ public class DemoIntentService extends GTIntentService {
             String data = new String(payload);
 
             Log.e(TAG, "MyIntent receiver payload = " + data);
-            data="积分圈"+data;
+            data="积分圈到账"+data+"元";
 
            Test(data);
 
@@ -304,7 +304,8 @@ public class DemoIntentService extends GTIntentService {
     @Override
     public void onReceiveOnlineState(Context context, boolean b)
     {
-        Log.e("MyIntent","是否在线"+b);
+
+        Log.e("MyIntent","clientid是否在线"+b);
     }
 
     @Override

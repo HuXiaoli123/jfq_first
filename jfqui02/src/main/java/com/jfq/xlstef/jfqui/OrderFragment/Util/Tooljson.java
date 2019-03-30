@@ -276,6 +276,7 @@ public class Tooljson {
                     Log.i("Mytesttt",allitemprice+","+addpriceAmount+","+String.valueOf( allitemprice -addpriceAmount));
                     orderGood.setItemPrice(String.valueOf(sub(allitemprice,addpriceAmount) ));
 
+
                 }
 
 
@@ -294,9 +295,6 @@ public class Tooljson {
             Log.i("my_test",e.toString());
             Log.i("my_test","handle exception");
         }
-
-
-
         return list;
     }
 

@@ -16,7 +16,7 @@
         android:paddingTop="70dp"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/jfqpic"
+        android:src="@drawable/logos_web"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         />

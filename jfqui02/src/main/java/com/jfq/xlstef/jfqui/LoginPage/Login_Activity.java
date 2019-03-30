@@ -259,9 +259,6 @@ public class Login_Activity extends AppCompatActivity   implements View.OnClickL
 
 
 
-
-
-
         //设置密码显示和隐藏
         @Override
         public void onClick(View v) {

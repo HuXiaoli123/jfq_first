@@ -29,6 +29,7 @@
                 android:src="@mipmap/jfq_head_logo" />
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,12 +40,13 @@
                 android:textSize="13sp" />
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="5dp"
                 android:gravity="center_vertical"
                 android:text="2018-02-09  20:00:00"
                 android:textSize="14sp" />
@@ -61,6 +63,7 @@
             android:layout_height="150dp">
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_info_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,6 +95,7 @@
             android:text=">" />-->
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_sweepcodepay"
                 android:layout_width="120dp"
                 android:layout_height="20dp"
@@ -103,6 +107,7 @@
 
             <TextView
                 android:id="@+id/item_addcount"
+                style="@style/style_table_black_text"
                 android:layout_width="120dp"
                 android:layout_height="20dp"
                 android:layout_below="@+id/item_sweepcodepay"
@@ -112,6 +117,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_comdity"
                 android:layout_width="120dp"
                 android:layout_height="20dp"
@@ -122,6 +128,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                style="@style/style_table_black_text"
                 android:id="@+id/item_commission"
                 android:layout_width="120dp"
                 android:layout_height="20dp"

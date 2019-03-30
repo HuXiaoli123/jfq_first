@@ -63,6 +63,8 @@
     <color name="c_black_1">#8a8a8a</color>
     <color name="line">#706d6d</color>
     <color name="black">#180303</color>
+    <color name="light_black">#4d4c4c</color>
+
 
     <string name="cancel">取消</string>
     <string name="title">请选择时间</string>

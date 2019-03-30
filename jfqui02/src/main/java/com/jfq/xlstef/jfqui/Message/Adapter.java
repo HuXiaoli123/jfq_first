@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.Tools.DataBaseUtil.ListInfo;
+import com.jfq.xlstef.jfqui.custom_ui.CircleImageView;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class Adapter extends BaseAdapter{
             convertView= LayoutInflater.from(context).inflate(R.layout.list_item,null);
             holder=new ViewHolder();
 
-            holder.iv_icon01= (ImageView) convertView.findViewById(R.id.iv_icon01);
+          //  holder.iv_icon01= (CircleImageView) convertView.findViewById(R.id.iv_icon01);//动态对CircleImageView图片进行设置会出现图片变形
            // holder.iv_icon02= (ImageView) convertView.findViewById(R.id.iv_icon02);
             holder.tv_timer= (TextView) convertView.findViewById(R.id.tv_timer);
             holder.tv_content= (TextView) convertView.findViewById(R.id.tv_content);
@@ -70,7 +71,7 @@ public class Adapter extends BaseAdapter{
         int imgId01=context.getResources().getIdentifier(Name,"drawable",context.getPackageName());
        // int imageId02=context.getResources().getIdentifier(Name,"drawable",context.getPackageName());
 
-        holder.iv_icon01.setImageResource(imgId01);
+//        holder.iv_icon01.setImageResource(imgId01);
       // holder.iv_icon02.setImageResource(imageId02);
         holder.tv_timer.setText(list.get(position).getTimer());
         holder.tv_content.setText(list.get(position).getContent());
@@ -79,7 +80,7 @@ public class Adapter extends BaseAdapter{
 
 
     static class ViewHolder{
-        ImageView iv_icon01,iv_icon02;//左侧--图片
+        CircleImageView iv_icon01,iv_icon02;//左侧--图片
         TextView tv_timer,tv_content;//右侧--时间内容
     }
 

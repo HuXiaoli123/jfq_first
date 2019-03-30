@@ -100,6 +100,7 @@ public class MainActivity extends TabActivity {
 		tabInit();
 
 	}
+    byte[] b ={1,23};
 	/**
 	 * 进行个推的实例化
 	 */
@@ -112,7 +113,15 @@ public class MainActivity extends TabActivity {
 		// com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
 		PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), com.jfq.xlstef.jfqui.LoginPage.VoiceParse.DemoIntentService.class);
 
-		Log.i("onResume","onResume");
+		if(PushManager.getInstance().isPushTurnedOn(getApplicationContext()))
+        {
+
+            PushManager.getInstance().turnOnPush(getApplicationContext());
+
+        }
+		Log.i("onResume","onResume"+PushManager.getInstance().isPushTurnedOn(getApplicationContext())  );
+
+/*		Log.i("onResume", PushManager.getInstance().sendMessage(getApplicationContext(),"123", b)+"");*/
 		/*boolean isBins= PushManager.getInstance().bindAlias(getApplicationContext(),Data.USER_NUMBER);
 
 		*//*messageHandle(4,"绑定成功?"+ isBins+"   meber:"+member+"\n cid: "+clientid);*//*
