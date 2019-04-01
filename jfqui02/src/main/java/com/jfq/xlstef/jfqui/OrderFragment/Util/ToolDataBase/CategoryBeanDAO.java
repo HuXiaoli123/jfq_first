@@ -43,6 +43,7 @@ public class CategoryBeanDAO {
         cv.put("nameOfCommodity",listInfo.getNameOfCommodity());
         cv.put("payStatus",listInfo.getPayStatus());
         cv.put(Data.sweepPay,listInfo.getSweepPay());
+        cv.put(Data.itemQuantity,listInfo.getItemQuantity());
 
         Log.i("mypayStatus",listInfo.getPayStatus());
         SQLiteDatabase writeDB=dbHelper.getWritableDatabase();
@@ -203,9 +204,10 @@ public class CategoryBeanDAO {
             listInfo.setUserPlay(results.getString(5));
             listInfo.setStoreEntry(results.getString(6));
             listInfo.setPlayTime(results.getString(7));
-            listInfo.setAddpriceAmount(results.getString(8));
+            listInfo.setAddpriceAmount(results.getString(8));//加价购价格·
             listInfo.setAddpriceName(results.getString(9));
             listInfo.setNameOfCommodity(results.getString(10));
+            listInfo.setItemQuantity(results.getString(11));
 
             arrayList.add(listInfo);
         }
@@ -375,6 +377,8 @@ public class CategoryBeanDAO {
             listInfo.setUserPlay(results.getString(5));
             listInfo.setStoreEntry(results.getString(6));
             listInfo.setPlayTime(results.getString(7));
+            Log.i("mydatas",results.getString(results.getColumnIndex(Data.itemQuantity)));
+            listInfo.setItemQuantity(results.getString(results.getColumnIndex(Data.itemQuantity)));
             arrayList.add(listInfo);
         }
         results.close();
@@ -405,6 +409,8 @@ public class CategoryBeanDAO {
             listInfo.setPlayTime(results.getString(7));
             listInfo.setAddpriceAmount(results.getString(8));
             listInfo.setAddpriceName(results.getString(9));
+            Log.i("mydatas",results.getColumnName(results.getColumnIndex(Data.itemQuantity)));
+            listInfo.setItemQuantity(results.getColumnName(results.getColumnIndex(Data.itemQuantity)));
             arrayList.add(listInfo);
         }
         results.close();

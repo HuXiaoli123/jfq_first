@@ -70,6 +70,10 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 allInfoViewHolder.code_text.setText(CorlorChangeText(allInfoData.getOrderNumber()));
                 if("商品名:"!=mType)
                 allInfoViewHolder.orderType_text.setText(CorlorChangeText(mType+ allInfoData.getOderType()));
+                else
+                {
+                    allInfoViewHolder.orderType_text.setText(CorlorChangeText("商品数量"+ allInfoData.getItemQuantity()));
+                }
                 allInfoViewHolder.totalFee_text.setText(CorlorChangeText("总额："+String.valueOf(allInfoData.getStoreEntry())+"元"));
                 allInfoViewHolder.salesAmount_text.setText(CorlorChangeText("实付：  "+String.valueOf(allInfoData.getUserPlay())+"元"));
                 allInfoViewHolder.totalReduction_text.setText(CorlorChangeText("抵扣：  "+String.valueOf(allInfoData.getPlatformDeduction())+"元"));
@@ -79,6 +83,10 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 allInfoViewHolder.code_text.setText(allInfoData.getOrderNumber());
                 if("商品名:"!=mType)
                     allInfoViewHolder.orderType_text.setText(mType+allInfoData.getOderType());
+                else
+                {
+                    allInfoViewHolder.orderType_text.setText("商品数量"+ allInfoData.getItemQuantity());
+                }
                 allInfoViewHolder.totalFee_text.setText("总额："+String.valueOf(allInfoData.getStoreEntry())+"元");
                 allInfoViewHolder.salesAmount_text.setText("实付：  "+String.valueOf(allInfoData.getUserPlay())+"元");
                 allInfoViewHolder.totalReduction_text.setText("抵扣：  "+String.valueOf(allInfoData.getPlatformDeduction())+"元");

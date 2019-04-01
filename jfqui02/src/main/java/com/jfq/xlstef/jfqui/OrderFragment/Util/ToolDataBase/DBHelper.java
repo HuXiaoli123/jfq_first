@@ -91,7 +91,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 Data. addpriceName+" text,"+
                 Data. nameOfCommodity+" text,"+
                 Data. payStatus+" text,"+
-                Data. sweepPay+" text"
+                Data. sweepPay+" text,"+
+                Data. itemQuantity+" text"
                 +")";
 
         //创建佣金明细表
@@ -126,7 +127,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
-                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+" from "+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemQuantity+
+                " from "+
                 Data.COMPELETE_ORDER_TABLE_NAME +" where "+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
 
@@ -137,9 +140,9 @@ public class DBHelper extends SQLiteOpenHelper {
        /* db.execSQL(DATA_VIEW_COMMISSION_DETAIL); //佣金明细View
         db.execSQL(DATA_VIEW_DAILY_ORDER); //每日订单*/
         db.execSQL(CreateView_all);
-        db.execSQL(CreateViewSql(Data.VIEW_COMODITYORDER,"商城订单",Data.nameOfCommodity,Data.itemPrice));
-        db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.userPlay,Data.addpriceAmount));
-        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"扫码+加价购",Data.userPlay,Data.addpriceAmount));
+        db.execSQL(CreateViewSql(Data.VIEW_COMODITYORDER,"商城订单",Data.nameOfCommodity,Data.itemPrice,  ","+Data.itemQuantity));
+        db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.userPlay,Data.addpriceAmount,""));
+        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"扫码+加价购",Data.userPlay,Data.addpriceAmount,""));
         db.execSQL(CREATE_DailyOrder);//每日订单表
         db.execSQL(yuyinsql);
         /*db.execSQL(sweepcode_sql);
@@ -187,7 +190,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param price  ----视图的第四个参数
      * @return
      */
-     public  String CreateViewSql(String view_Name,String orderType,String item,String price)
+     public  String CreateViewSql(String view_Name,String orderType,String item,String price,String itemQuatity)
      {
          String CreateView_Mode=" create view "+view_Name+" as select "+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
@@ -197,7 +200,9 @@ public class DBHelper extends SQLiteOpenHelper {
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
-                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+" from "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+
+                 itemQuatity+
+                 " from "+
                  Data.COMPELETE_ORDER_TABLE_NAME +" where "+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+orderType+"'"+" and "+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";

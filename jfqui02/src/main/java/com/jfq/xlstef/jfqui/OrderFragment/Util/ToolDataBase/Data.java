@@ -47,6 +47,7 @@ public class Data {
     public static final String nameOfCommodity="nameOfCommodity";
     public static final String payStatus="payStatus";
     public static final String sweepPay="sweepPay";
+    public static  final  String itemQuantity="itemQuantity";
 
     //商城订单总值
     public static final String comdityOrder="comdityOrder";

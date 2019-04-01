@@ -190,7 +190,7 @@ public class DemoIntentService extends GTIntentService {
             String data = new String(payload);
 
             Log.e(TAG, "MyIntent receiver payload = " + data);
-            data="积分圈到账"+data+"元";
+            //data="积分圈到账"+data+"元";
 
            Test(data);
 

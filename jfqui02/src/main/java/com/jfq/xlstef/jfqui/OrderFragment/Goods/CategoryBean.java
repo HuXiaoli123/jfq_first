@@ -23,6 +23,17 @@ public  class CategoryBean extends  BasicOrder implements Serializable {
     private String payStatus;     //支付状态
     private String sweepPay;//扫码支付的价格
 
+    private  String itemQuantity;//商品数量
+
+    public String getItemQuantity() {
+        return itemQuantity;
+    }
+
+    public void setItemQuantity(String itemQuantity) {
+        this.itemQuantity = itemQuantity;
+    }
+
+
     //下面两行代码为了测试用的
     public  CategoryBean(){};
     public CategoryBean(String orderNumber, String oderType, String itemPrice, String platformDeduction, String userPlay, String storeEntry, String playTime, String addpriceAmount, String addpriceName, String nameOfCommodity, String payStatus) {

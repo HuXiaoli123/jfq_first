@@ -276,9 +276,9 @@ public class Tooljson {
                     Log.i("Mytesttt",allitemprice+","+addpriceAmount+","+String.valueOf( allitemprice -addpriceAmount));
                     orderGood.setItemPrice(String.valueOf(sub(allitemprice,addpriceAmount) ));
 
-
                 }
-
+                Log.i("totalQuantity1","totalQuantity"+jsonObject2.getString("totalQuantity"));
+                orderGood.setItemQuantity(jsonObject2.getString("totalQuantity"));//商品总数量
 
                // Double temp=sub(jsonObject2.getDouble("totalFee"),addpriceAmount);////商家最后获取的价格-加价购商品 （未去掉bargin的价格）
                // orderGood.setItemPrice(String.valueOf(add(temp,totalBargain)));
