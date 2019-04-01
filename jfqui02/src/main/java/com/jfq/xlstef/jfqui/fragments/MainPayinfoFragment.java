@@ -283,7 +283,6 @@ public class MainPayinfoFragment   extends Fragment {
      */
 
 	private  boolean mFirstCreate=true;
-	private  String path="http://store.tuihs.com/store/orders?page=0&size=10";
 	private void initItemData() {
 		mDataList.clear();
         mDataTemp.clear();
@@ -300,7 +299,7 @@ public class MainPayinfoFragment   extends Fragment {
 				//进行数据库查询
 				CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
 				//当数据库中数据<新加载的数据
-				Log.i("mypath_basefrag",dao.allCaseNum()+"，"+myAsyTask.getCompeleteOrder().size()+";");
+
 
 				if(mFirstCreate)
 				{
@@ -321,8 +320,8 @@ public class MainPayinfoFragment   extends Fragment {
 					{   break;
 					}
 				}
-				// mDataList=dao.findByOrderType("扫码订单");
-				mDataList=dao.findByOrderPay();
+				 mDataList=dao.findByOrderType("扫码订单");
+				//	mDataList=dao.findByOrderPay();
 				handler.sendEmptyMessage(mDataList.size());
 
 
@@ -336,11 +335,6 @@ public class MainPayinfoFragment   extends Fragment {
 
 
 
-	//查询数据
-	public ArrayList QueryData(DBHelper dbHelper,String status) {
-		CategoryBeanDAO dao = new CategoryBeanDAO(dbHelper);
-		return  dao.findOrderByName(Data.COMPELETE_ORDER_TABLE_NAME,status);
-	}
 
 	/**
 	 * 超时

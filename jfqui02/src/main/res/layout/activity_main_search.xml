@@ -170,10 +170,30 @@
 
 
 
-       <android.support.v7.widget.RecyclerView
+    <!--   <android.support.v7.widget.RecyclerView
            android:id="@+id/rc_search"
            android:layout_width="match_parent"
-           android:layout_height="match_parent"/>
+           android:layout_height="match_parent"/>-->
+
+    <com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout
+        android:id="@+id/main_allinfo_swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rc_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout>
+    <ProgressBar
+        android:id="@+id/myAllprogressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/circle_bg"
+        android:visibility="visible"
+        />
+
 
     <TextView
         android:id="@+id/unfond"

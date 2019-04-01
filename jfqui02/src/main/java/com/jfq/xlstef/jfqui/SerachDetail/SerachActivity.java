@@ -2,6 +2,7 @@ package com.jfq.xlstef.jfqui.SerachDetail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.nuptboyzhb.lib.SuperSwipeRefreshLayout;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.DailyOrder;
 import com.jfq.xlstef.jfqui.OrderFragment.Util.CustomDatePicker;
@@ -47,6 +51,25 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
     MainAllInfoAdapter myadpter;
     MainSummaryInfoAdapter mysumAdpter;
+    private SuperSwipeRefreshLayout superSwipeRefreshLayout;
+    private LinearLayoutManager linearLayoutManager;
+
+    private List<CategoryBean>mDataTemp=new ArrayList<>();
+    private List<DailyOrder>mDailyDataTemp=new ArrayList<>();
+    private String queryText="";
+
+
+    // Header View
+    private ProgressBar headProgressBar;
+    private TextView headTextView;
+    private ImageView headImageView;
+
+    // Footer View
+    private ProgressBar footerProgressBar;
+    private TextView footerTextView;
+    private ImageView footerImageView;
+
+
 
     /**
      * 搜索框
@@ -71,6 +94,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     TextView unFoundData;
     private String mType;
 
+    private  int mFirstCount;
 
     /**
      * 此list用来保存符合我们规则的数据
@@ -104,38 +128,288 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 SetGone();
                 table=Data.VIEW_ALL_ORDER;
                 mType="";
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
-                mRcSearch.setAdapter(myadpter);
+                /*myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
+                mRcSearch.setAdapter(myadpter);*/
+                initData();
                 break;
             case 2:
                 SetGone();
                 table=Data.VIEW_COMODITYORDER;
                 mType="商品名:";
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
-                mRcSearch.setAdapter(myadpter);
+                initData();
+             /*   myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
+                mRcSearch.setAdapter(myadpter);*/
                 break;
             case 3:
                 SetGone();
                 table=Data.VIEW_SWEEPCODE;
                 mType="类别:";
-                myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
-                mRcSearch.setAdapter(myadpter);
+                initData();
+              /*  myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
+                mRcSearch.setAdapter(myadpter);*/
                 break;
             case 5:
                 SetVisible();
                 table=Data.ORDERDAILY_TABLE_NAME;
-                mysumAdpter=new MainSummaryInfoAdapter(getApplicationContext(), dailysBean);
-                mRcSearch.setAdapter(mysumAdpter);
+               /* mysumAdpter=new MainSummaryInfoAdapter(getApplicationContext(), dailysBean);
+                mRcSearch.setAdapter(mysumAdpter);*/
+               initDailyData();
                 break;
         }
 
+        initSwipeRefreshLayout();
 
+       // initData();
+
+    }
+
+    private  void initSwipeRefreshLayout()
+    {
+        superSwipeRefreshLayout = (SuperSwipeRefreshLayout) findViewById(R.id.main_allinfo_swiperefresh);//superswiperefresh
+        //设定下拉刷新栏的背景色
+        superSwipeRefreshLayout.setHeaderViewBackgroundColor(0xff888888);
+        //加上自定义的下拉头部刷新栏
+        //superSwipeRefreshLayout.setHeaderView(createHeaderView());
+        //加上自定义的上拉尾部刷新栏
+        superSwipeRefreshLayout.setFooterView(createFooterView());
+        //设置子View是否跟随手指的滑动而滑动
+        superSwipeRefreshLayout.setTargetScrollWithLayout(true);
+        //设置下拉刷新监听
+        superSwipeRefreshLayout.setOnPullRefreshListener(new SuperSwipeRefreshLayout.OnPullRefreshListener() {
+            @Override
+            public void onRefresh() {
+               /* headTextView.setText("正在刷新...");
+                headImageView.setVisibility(View.GONE);
+                headProgressBar.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshItemData("refresh");
+                        headProgressBar.setVisibility(View.GONE);
+                        superSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);*/
+                superSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onPullDistance(int distance) {
+
+            }
+
+            //是否下拉到执行刷新的位置
+            @Override
+            public void onPullEnable(boolean enable) {
+              /*  headTextView.setText(enable ? "松开刷新" : "下拉刷新");
+                headImageView.setVisibility(View.VISIBLE);
+                headImageView.setRotation(enable ? 180 : 0);*/
+            }
+        });
+        //设置上拉加载监听
+        superSwipeRefreshLayout.setOnPushLoadMoreListener(new SuperSwipeRefreshLayout.OnPushLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                footerTextView.setText("正在加载...");
+                footerImageView.setVisibility(View.GONE);
+                footerProgressBar.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshItemData("loadmore");
+                        footerImageView.setVisibility(View.VISIBLE);
+                        footerProgressBar.setVisibility(View.GONE);
+                        superSwipeRefreshLayout.setLoadMore(false);
+                    }
+                }, 3000);
+            }
+            @Override
+            public void onPushDistance(int distance) {
+
+            }
+
+            //是否上拉到执行加载的位置
+            @Override
+            public void onPushEnable(boolean enable) {
+                footerTextView.setText(enable ? "松开加载" : "上拉加载");
+                footerImageView.setVisibility(View.VISIBLE);
+                footerImageView.setRotation(enable ? 0 : 180);
+            }
+        });
+    }
+
+    private  void initData()
+    {
+        if(lstBean.size()>mFirstCount)
+        {
+            for(int i=0;i<mFirstCount+1;i++)
+            {
+                mDataTemp.add(lstBean.get(i));
+            }
+
+            myadpter=new MainAllInfoAdapter(this, mDataTemp,mOrderName,mType);
+
+        }else
+        {
+
+            myadpter = new MainAllInfoAdapter(this, lstBean,1,mType);//adapter
+        }
+
+        mRcSearch.setAdapter(myadpter);
+    }
+
+    private  void initDailyData()
+    {
+        if(dailysBean.size()>mFirstCount)
+        {
+            for(int i=0;i<mFirstCount+1;i++)
+            {
+                mDailyDataTemp.add(dailysBean.get(i));
+            }
+
+            mysumAdpter=new MainSummaryInfoAdapter(this, mDailyDataTemp );
+
+        }else
+        {
+
+            mysumAdpter = new MainSummaryInfoAdapter(this, dailysBean);//adapter
+        }
+
+        mRcSearch.setAdapter(mysumAdpter);
+    }
+
+    private void LoadMoreRecycleViewclass()
+    {
+
+        int count=mDataTemp.size();
+          /*  Log.i("InsertData6", mCategoryTemp.size()+","+mCategoryBean.size()+"count"+count);
+            Log.i("InsertData6-------", mCategoryTemp.size()+","+mCategoryBean.size());*/
+        if(lstBean.size()- mDataTemp.size()>mFirstCount)
+        {
+            for(int i=mDataTemp.size();i<count+mFirstCount+1;i++)
+            {
+
+                mDataTemp.add(lstBean.get(i));
+            }
+
+        }else
+        {
+
+            for(int i=count;i<lstBean.size();i++)
+            {
+
+                mDataTemp.add(lstBean.get(i));
+            }
+        }
+    }
+
+    private void LoadMoreDailyRecycleViewclass()
+    {
+
+        int count=mDailyDataTemp.size();
+          /*  Log.i("InsertData6", mCategoryTemp.size()+","+mCategoryBean.size()+"count"+count);
+            Log.i("InsertData6-------", mCategoryTemp.size()+","+mCategoryBean.size());*/
+        if(dailysBean.size()- mDailyDataTemp.size()>mFirstCount)
+        {
+            for(int i=mDailyDataTemp.size();i<count+mFirstCount+1;i++)
+            {
+
+                mDailyDataTemp.add(dailysBean.get(i));
+            }
+
+        }else
+        {
+
+            for(int i=count;i<dailysBean.size();i++)
+            {
+
+                mDailyDataTemp.add(dailysBean.get(i));
+            }
+        }
+    }
+
+    Boolean isfinish;
+    private void refreshItemData(String freshType) {
+        if (freshType.equals("loadmore")) {
+
+            Log.i("mOrderName",mOrderName+","+isfinish);
+            if(mOrderName<=4)
+            {
+                if(!isfinish)
+                {
+                    LoadMoreRecycleViewclass();
+
+                    myadpter.getFilter().filter(queryText);
+                    // mCategoryAdapter.notifyItemChanged(1,1);
+                    if(mDataTemp.size()==lstBean.size() )isfinish=true;
+
+                }else
+                {
+                    Toast.makeText(getBaseContext(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
+                    // mCategoryAdapter.notifyItemRemoved(mCategoryAdapter.getItemCount());
+                }
+
+                myadpter.notifyDataSetChanged();
+            }else
+            {
+                if(!isfinish)
+                {
+                    LoadMoreDailyRecycleViewclass();
+                    mysumAdpter.getFilter().filter(queryText);
+                    // mCategoryAdapter.notifyItemChanged(1,1);
+                    if(mDailyDataTemp.size()==dailysBean.size() )isfinish=true;
+
+                }else
+                {
+                    Toast.makeText(getBaseContext(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
+                    // mCategoryAdapter.notifyItemRemoved(mCategoryAdapter.getItemCount());
+                }
+
+                mysumAdpter.notifyDataSetChanged();
+            }
+
+        }
+    }
+
+    /*
+       下拉头部刷新栏可以自定义
+    */
+    private View createHeaderView() {
+        View headerView = LayoutInflater.from(superSwipeRefreshLayout.getContext())
+                .inflate(R.layout.layout_refresh_head, null);
+        headProgressBar = (ProgressBar) headerView.findViewById(R.id.head_pb_view);
+        headTextView = (TextView) headerView.findViewById(R.id.head_text_view);
+        headTextView.setText("下拉刷新");
+        headImageView = (ImageView) headerView.findViewById(R.id.head_image_view);
+        headImageView.setVisibility(View.VISIBLE);
+        headImageView.setImageResource(R.mipmap.down_arrow);
+        headProgressBar.setVisibility(View.GONE);
+        return headerView;
+    }
+
+    /*
+        上拉尾部刷新栏也可以自定义
+     */
+    private View createFooterView() {
+        View footerView = LayoutInflater.from(superSwipeRefreshLayout.getContext())
+                .inflate(R.layout.layout_refresh_footer, null);
+        footerProgressBar = (ProgressBar) footerView
+                .findViewById(R.id.footer_pb_view);
+        footerImageView = (ImageView) footerView
+                .findViewById(R.id.footer_image_view);
+        footerTextView = (TextView) footerView
+                .findViewById(R.id.footer_text_view);
+        footerProgressBar.setVisibility(View.GONE);
+        footerImageView.setVisibility(View.VISIBLE);
+        footerImageView.setImageResource(R.mipmap.down_arrow);
+        footerTextView.setText("上拉加载更多...");
+        return footerView;
     }
 
 
 
 
-   /* void Listtest(List<? extends CategoryBean> t){
+
+    /* void Listtest(List<? extends CategoryBean> t){
 
     }*/
     void SetGone()
@@ -156,6 +430,9 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     //按月查询
     RelativeLayout monthLayout;
     private void initView() {
+
+        isfinish=false;
+        mFirstCount=getApplicationContext().getResources().getInteger(R.integer.first_load_count);
 
         monthLayout=findViewById(R.id.month);
 
@@ -202,6 +479,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextChange(String newText){
 
+        queryText=newText;
         if(mOrderName<5)
         {
             myadpter.getFilter().filter(newText);

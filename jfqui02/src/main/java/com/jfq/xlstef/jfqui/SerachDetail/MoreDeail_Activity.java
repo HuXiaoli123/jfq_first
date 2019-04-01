@@ -92,7 +92,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
        {
            case 1:
                oderType.setText("订单类型："+mCategoryBaen.getOderType());
-               itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice()+"元");
+
                platformDeduction.setText("平台抵扣： "+mCategoryBaen.getPlatformDeduction()+"元");
                userPlay.setText("用户支付："+mCategoryBaen.getUserPlay()+"元");
                storeEntry.setText("门店入账： "+mCategoryBaen.getStoreEntry()+"元");
@@ -100,6 +100,7 @@ public class MoreDeail_Activity extends AppCompatActivity {
 
                if(mCategoryBaen.getOderType().equals("扫码+加价购"))
                {
+                   itemPrice.setText("加价购："+mCategoryBaen.getAddpriceAmount()+"元");
                    seepcodedetail.setVisibility(View.VISIBLE);
                    Log.i("seepcodedetail",seepcodedetail.getVisibility()+";;;");
                    layout_addcount.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +116,9 @@ public class MoreDeail_Activity extends AppCompatActivity {
                            DetailMsg(allPriceName);
                        }
                    });
+               }else
+               {
+                   itemPrice.setText("商品原价："+mCategoryBaen.getItemPrice()+"元");
                }
 
                lastCls=MainAllinfoFragment.class;

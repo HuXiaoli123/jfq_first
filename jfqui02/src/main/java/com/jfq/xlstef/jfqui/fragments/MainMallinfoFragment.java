@@ -293,7 +293,7 @@ public class MainMallinfoFragment  extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                long exitTime=System.currentTimeMillis();
+
                 //进行数据库查询
                 CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getActivity()));
                 /*判断数据库是否有数据*/
@@ -310,7 +310,7 @@ public class MainMallinfoFragment  extends Fragment {
                 }
 
 
-
+                long exitTime=System.currentTimeMillis();
                 while(dao.allCaseNumView(Data.VIEW_COMODITYORDER)<=0)
                 {
 

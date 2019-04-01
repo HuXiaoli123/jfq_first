@@ -99,7 +99,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 public void onClick(View v) {
                     if (mOnItemClickListener != null)
                         mOnItemClickListener.OnItemClick(position);
-                    Log.i("mydata",position+mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay());
+                    Log.i("mydata",position+mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay()+";"+mDataSet.get(position).getAddpriceAmount());
                     Log.i("mydata",mSelectfragment+mDataSet.get(position).get_id()+";"+mDataSet.get(position).getSweepPay()+mDataSet.get(position).getOderType());
                     if(mSelectfragment==2)
                     {

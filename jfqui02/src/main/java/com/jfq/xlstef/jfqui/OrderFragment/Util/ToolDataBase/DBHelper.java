@@ -118,6 +118,15 @@ public class DBHelper extends SQLiteOpenHelper {
         /*String CREATE_DailyOrder="create table "+ Data.ORDERDAILY_TABLE_NAME +" as select SUM(storeEntry) "+
                 Data.sweepPay +" from "+Data.VIEW_SWEEPCODE +" GROUP BY date(playTime) ";*/
 
+
+
+        String yuyinsql="create table "+LISTINFO_TABLE_NAME+"(_id integer primary key AUTOINCREMENT,"+"timer date not null,"+
+                "content text not null)" ;
+        db.execSQL(compelteOrserSql);
+        db.execSQL(CREATE_DETAILOFCOMMISSION);
+       /* db.execSQL(DATA_VIEW_COMMISSION_DETAIL); //佣金明细View
+        db.execSQL(DATA_VIEW_DAILY_ORDER); //每日订单*/
+
         //创建所有订单视图 只含已支付订单
         String CreateView_all=" create view "+Data.VIEW_ALL_ORDER+" as select "+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
@@ -128,21 +137,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+","+
-                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemQuantity+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemQuantity+","+
+                Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.addpriceAmount+
                 " from "+
                 Data.COMPELETE_ORDER_TABLE_NAME +" where "+
                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
 
-        String yuyinsql="create table "+LISTINFO_TABLE_NAME+"(_id integer primary key AUTOINCREMENT,"+"timer date not null,"+
-                "content text not null)" ;
-        db.execSQL(compelteOrserSql);
-        db.execSQL(CREATE_DETAILOFCOMMISSION);
-       /* db.execSQL(DATA_VIEW_COMMISSION_DETAIL); //佣金明细View
-        db.execSQL(DATA_VIEW_DAILY_ORDER); //每日订单*/
         db.execSQL(CreateView_all);
         db.execSQL(CreateViewSql(Data.VIEW_COMODITYORDER,"商城订单",Data.nameOfCommodity,Data.itemPrice,  ","+Data.itemQuantity));
-        db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.userPlay,Data.addpriceAmount,""));
-        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"扫码+加价购",Data.userPlay,Data.addpriceAmount,""));
+        db.execSQL(CreateViewSql(Data.VIEW_SWEEPCODE,"扫码订单",Data.itemPrice,Data.addpriceAmount,""));
+        db.execSQL(CreateViewSql(Data.VIEW_AddCount,"扫码+加价购",Data.itemPrice,Data.addpriceAmount,""));
+        db.execSQL(CreateViewSweepAdd(Data.VIEW_SWEEP_SADD,"扫码订单","扫码+加价购"));
         db.execSQL(CREATE_DailyOrder);//每日订单表
         db.execSQL(yuyinsql);
         /*db.execSQL(sweepcode_sql);
@@ -205,6 +210,27 @@ public class DBHelper extends SQLiteOpenHelper {
                  " from "+
                  Data.COMPELETE_ORDER_TABLE_NAME +" where "+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+orderType+"'"+" and "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
+         return  CreateView_Mode;
+     }
+
+     public String  CreateViewSweepAdd(String view_Name ,String orderType1,String orderType2)
+     {
+         String CreateView_Mode=" create view "+view_Name+" as select "+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.COLUMN_id+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.orderNumber+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.itemPrice+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.platformDeduction+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.userPlay+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.storeEntry+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.playTime+ ","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.addpriceAmount+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.addpriceName+","+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.sweepPay+
+                 " from "+
+                 Data.COMPELETE_ORDER_TABLE_NAME +" where "+"("+
+                 Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+orderType1+"'"+" or "+Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.oderType+" ='"+orderType2+"'"+") and "+
                  Data.COMPELETE_ORDER_TABLE_NAME+"."+Data.payStatus+" ='"+"paid"+"'";
          return  CreateView_Mode;
      }

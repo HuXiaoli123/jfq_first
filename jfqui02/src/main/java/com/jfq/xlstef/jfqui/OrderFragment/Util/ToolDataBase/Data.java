@@ -64,6 +64,7 @@ public class Data {
     public  static String VIEW_COMODITYORDER="comodityOrder";//商城订单视图的名称
     public  static String VIEW_SWEEPCODE="SweepCodeView";//扫码订单视图的名称
     public  static String VIEW_AddCount="addCountView";//加价购视图的名称
+    public  static String VIEW_SWEEP_SADD="Sweep_Add";//扫码+扫码加价购
     /*public  static String DATA_VIEW_DAILY_ORDER="create view "
             + Data.VIEW_NAME + " as select "
             + Data.COMPELETE_ORDER_TABLE_NAME + ".*" + ", "
