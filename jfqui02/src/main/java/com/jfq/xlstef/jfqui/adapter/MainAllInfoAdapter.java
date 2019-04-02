@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.jfq.xlstef.jfqui.OrderFragment.Goods.CategoryBean;
 import com.jfq.xlstef.jfqui.R;
 import com.jfq.xlstef.jfqui.SerachDetail.MoreDeail_Activity;
+import com.jfq.xlstef.jfqui.SerachDetail.SerachActivity;
 import com.jfq.xlstef.jfqui.interfaces.OnItemClickListener;
 import com.jfq.xlstef.jfqui.viewholder.AllInfoViewHolder;
 import com.jfq.xlstef.jfqui.viewholder.BaseViewHolder;
@@ -46,6 +47,19 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
         this.mSelectfragment=selectfragment;
         this.mType=type;
     }
+
+    SerachActivity serachActivity;
+
+    public MainAllInfoAdapter(Activity context, List<CategoryBean> DataSet,int selectfragment,String type, List<CategoryBean> tempDataSet ){
+        mContext=context;
+        serachActivity=(SerachActivity)context;
+        mDataSet=DataSet;
+        temp_number=tempDataSet;
+        this.mSelectfragment=selectfragment;
+        this.mType=type;
+    }
+
+
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -195,24 +209,27 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
         protected FilterResults performFiltering(CharSequence constraint) {
             hasMatch=false;
             text=constraint.toString();
+
+            Log.i("publishResults","myquaryData："+text);
             List<CategoryBean> new_number=new ArrayList();
             if (constraint != null && constraint.toString().trim().length() > 0) {
+                Log.i("publishResults","myquaryData："+text+constraint);
                 for (int i = 0; i < temp_number.size(); i++) {
-
                     switch (mSelectfragment)
                     {
                         case 1:
-                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getOderType().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)
+                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getOderType().contains(constraint)
                                     ||temp_number.get(i).getStoreEntry().contains(constraint)||temp_number.get(i).getUserPlay().contains(constraint)
                                     ||temp_number.get(i).getPlatformDeduction().contains(constraint)||temp_number.get(i).getPlayTime().contains(constraint))
                             {
                                 new_number.add( temp_number.get(i));
+
                                 hasMatch=true;
                             }
                             break;
                         case 2:
 
-                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getNameOfCommodity().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)
+                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getItemQuantity().contains(constraint)
                                     ||temp_number.get(i).getStoreEntry().contains(constraint)||temp_number.get(i).getUserPlay().contains(constraint)
                                     ||temp_number.get(i).getPlatformDeduction().contains(constraint)||temp_number.get(i).getPlayTime().contains(constraint))
                             {
@@ -221,7 +238,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                             }
                             break;
                         case 3:
-                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getItemPrice().contains(constraint)||temp_number.get(i).getAddpriceAmount().contains(constraint)
+                            if( temp_number.get(i).getOrderNumber().contains(constraint)||temp_number.get(i).getOderType().contains(constraint)
                                     ||temp_number.get(i).getStoreEntry().contains(constraint)||temp_number.get(i).getUserPlay().contains(constraint)
                                     ||temp_number.get(i).getPlatformDeduction().contains(constraint)||temp_number.get(i).getPlayTime().contains(constraint))
                             {
@@ -235,10 +252,12 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                     }
 
                 }
-
+                Tiptext="没有符合条件的结果";
             }else {
+                Tiptext="没有输入关键字";
 
-                new_number=temp_number;
+                //如果没有匹配的就清零
+                /*new_number=temp_number;*/
             }
             FilterResults filterResults = new FilterResults();
             filterResults.count = new_number.size();
@@ -250,20 +269,42 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //这里对number进行过滤后重新赋值
-            mDataSet = (List<CategoryBean>)(results.values);
+            mDataSet.clear();
+
+
+            List<CategoryBean>myquaryData=(List<CategoryBean>)(results.values);
+
+            Log.i("publishResults","myquaryData"+myquaryData.size());
+            //mDataSet = (List<CategoryBean>)(results.values);
             //如果过滤后的返回的值的个数大于等于0的话,对Adpater的界面进行刷新
             if (results.count > 0) {
+
+                if(myquaryData.size()>=10)
+                {
+                    for(int i=0;i<10;i++)
+                    {
+                        mDataSet.add(myquaryData.get(i));
+                    }
+                }else
+                {
+                    mDataSet=myquaryData;
+                }
+
                 notifyDataSetChanged();
+                serachActivity.setQuearyData(myquaryData);
+
             } else {
                 //否则说明没有任何过滤的结果,直接提示用户"没有符合条件的结果"
                 mDataSet = new ArrayList<CategoryBean>(){};
                // mDataSet.add(new CategoryBean(" 没有符合条件的结果"));
-                Toast.makeText(mContext,"没有符合条件的结果",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,Tiptext,Toast.LENGTH_SHORT).show();
                 notifyDataSetChanged();
             }
 
         }
     }
+
+    String Tiptext;
 
 
 }

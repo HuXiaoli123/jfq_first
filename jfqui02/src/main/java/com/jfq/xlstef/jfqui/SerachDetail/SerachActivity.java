@@ -54,7 +54,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     private SuperSwipeRefreshLayout superSwipeRefreshLayout;
     private LinearLayoutManager linearLayoutManager;
 
-    private List<CategoryBean>mDataTemp=new ArrayList<>();
+
     private List<DailyOrder>mDailyDataTemp=new ArrayList<>();
     private String queryText="";
 
@@ -239,20 +239,8 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
     private  void initData()
     {
-        if(lstBean.size()>mFirstCount)
-        {
-            for(int i=0;i<mFirstCount+1;i++)
-            {
-                mDataTemp.add(lstBean.get(i));
-            }
 
-            myadpter=new MainAllInfoAdapter(this, mDataTemp,mOrderName,mType);
-
-        }else
-        {
-
-            myadpter = new MainAllInfoAdapter(this, lstBean,1,mType);//adapter
-        }
+        myadpter = new MainAllInfoAdapter(this, mquaryDataTemp,1,mType,lstBean);//adapter
 
         mRcSearch.setAdapter(myadpter);
     }
@@ -277,27 +265,37 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         mRcSearch.setAdapter(mysumAdpter);
     }
 
+
+
+    public void setQuearyData(List<CategoryBean> quearyData) {
+        this.quearyData = quearyData;
+    }
+
+    public  List<CategoryBean>quearyData;
+    public  List <CategoryBean>mquaryDataTemp=new ArrayList<>();
+
     private void LoadMoreRecycleViewclass()
     {
 
-        int count=mDataTemp.size();
+        int count=myadpter.getItemCount();
+        Log.i("mycounts",count+"数量"+quearyData.size());
           /*  Log.i("InsertData6", mCategoryTemp.size()+","+mCategoryBean.size()+"count"+count);
             Log.i("InsertData6-------", mCategoryTemp.size()+","+mCategoryBean.size());*/
-        if(lstBean.size()- mDataTemp.size()>mFirstCount)
+        if(quearyData.size()- count>mFirstCount)
         {
-            for(int i=mDataTemp.size();i<count+mFirstCount+1;i++)
+            for(int i=count;i<count+mFirstCount+1;i++)
             {
 
-                mDataTemp.add(lstBean.get(i));
+                mquaryDataTemp.add(quearyData.get(i));
             }
 
         }else
         {
 
-            for(int i=count;i<lstBean.size();i++)
+            for(int i=count;i<quearyData.size();i++)
             {
 
-                mDataTemp.add(lstBean.get(i));
+                mquaryDataTemp.add(quearyData.get(i));
             }
         }
     }
@@ -338,9 +336,9 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 {
                     LoadMoreRecycleViewclass();
 
-                    myadpter.getFilter().filter(queryText);
+                   // myadpter.getFilter().filter(queryText);
                     // mCategoryAdapter.notifyItemChanged(1,1);
-                    if(mDataTemp.size()==lstBean.size() )isfinish=true;
+                    if(mquaryDataTemp.size()==quearyData.size() )isfinish=true;
 
                 }else
                 {
