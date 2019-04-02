@@ -244,6 +244,10 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
         mRcSearch.setAdapter(myadpter);
     }
+    void a()
+    {
+        
+    }
 
     private  void initDailyData()
     {
