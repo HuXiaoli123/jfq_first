@@ -15,8 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Tooljson {
     public static    List<CategoryBean> JsonParse(Context context , String test)
@@ -79,7 +83,7 @@ public class Tooljson {
 /*
         key:content
  */
-    public static List getjfqdata(String key, String jsonString) {
+    /*public static List getjfqdata(String key, String jsonString) {
         List list = new ArrayList();
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -112,7 +116,7 @@ public class Tooljson {
             Log.i("my_test","handle exception");
         }
         return list;
-    }
+    }*/
 
     /**
      * 解析数据库---------------------------------yes
@@ -151,12 +155,12 @@ public class Tooljson {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                 CategoryBean orderGood = new CategoryBean();
-                String  orderNumber=jsonObject2.getString("code");
 
-                String date = orderNumber.subSequence(3, orderNumber.length()-7).toString();
-                String payTimer=StringToDate(date);
+                /*String date = orderNumber.subSequence(3, orderNumber.length()-7).toString();
 
-
+                String payTimer=StringToDate(date);*/
+                String  date=jsonObject2.getString("createTime");
+                String payTimer=StringsToDate(date);
 
                    if(  timer.compareTo(payTimer) >=0)
                    {
@@ -165,12 +169,14 @@ public class Tooljson {
                        break;
                    }
 
+                String  orderNumber=jsonObject2.getString("code");
+
 
                 orderGood.setPlayTime( payTimer);//支付时间入账------------
 
 
 
-                Log.i("timers--",EngToChinese(jsonObject2.getString("orderType"))+","+StringToDate(date)+","+jsonObject2.getJSONObject("status").getString("code"));
+               /* Log.i("timers--",EngToChinese(jsonObject2.getString("orderType"))+","+StringToDate(date)+","+jsonObject2.getJSONObject("status").getString("code"));*/
 
 
                 orderGood.setOrderNumber(orderNumber); //订单编号orderType
@@ -308,6 +314,27 @@ public class Tooljson {
         CategoryBeanDAO dao=new CategoryBeanDAO(new DBHelper(context) );
         dao.insertDB(info,tableName);
     }*/
+
+    public   static String StringsToDate(String str)throws ParseException
+    {
+
+
+        long unixstamp=Long.parseLong(str);
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date dt=new Date(unixstamp);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        String s = sdf.format(dt);
+
+
+
+
+       /* Log.i("Mytier", "Test:"+ sdf.format(new Date( Long.parseLong("1553220069141")))
+                +sdf.format(new Date( Long.parseLong("1553994027427")))) ;*/
+        return s;
+
+    }
+
 
    private  static String StringToDate(String str)
    {

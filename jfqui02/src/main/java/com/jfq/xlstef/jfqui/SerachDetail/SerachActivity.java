@@ -55,7 +55,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     private LinearLayoutManager linearLayoutManager;
 
 
-    private List<DailyOrder>mDailyDataTemp=new ArrayList<>();
+
     private String queryText="";
 
 
@@ -142,7 +142,7 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 break;
             case 3:
                 SetGone();
-                table=Data.VIEW_SWEEPCODE;
+                table=Data.VIEW_SWEEP_SADD;
                 mType="类别:";
                 initData();
               /*  myadpter=new MainAllInfoAdapter(this, lstBean,mOrderName,mType);
@@ -153,7 +153,12 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 table=Data.ORDERDAILY_TABLE_NAME;
                /* mysumAdpter=new MainSummaryInfoAdapter(getApplicationContext(), dailysBean);
                 mRcSearch.setAdapter(mysumAdpter);*/
-               initDailyData();
+
+                mysumAdpter = new MainSummaryInfoAdapter(this, mDailyDataTemp);//adapter
+                mysumAdpter.setTemp_number(dailysBean);
+                mRcSearch.setAdapter(mysumAdpter);
+
+
                 break;
         }
 
@@ -244,45 +249,31 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
 
         mRcSearch.setAdapter(myadpter);
     }
-    void a()
-    {
-        
-    }
-
-    private  void initDailyData()
-    {
-        if(dailysBean.size()>mFirstCount)
-        {
-            for(int i=0;i<mFirstCount+1;i++)
-            {
-                mDailyDataTemp.add(dailysBean.get(i));
-            }
-
-            mysumAdpter=new MainSummaryInfoAdapter(this, mDailyDataTemp );
-
-        }else
-        {
-
-            mysumAdpter = new MainSummaryInfoAdapter(this, dailysBean);//adapter
-        }
-
-        mRcSearch.setAdapter(mysumAdpter);
-    }
 
 
 
-    public void setQuearyData(List<CategoryBean> quearyData) {
+    public void setQuearyData(List<CategoryBean> quearyData,List<CategoryBean>mquaryDataTemp) {
         this.quearyData = quearyData;
+        this.mquaryDataTemp=mquaryDataTemp;
+        isfinish=false;
+    }
+    public void setmDailyqueryData(List<DailyOrder> mDailyqueryData,List<DailyOrder>mDailyDataTemp) {
+        this.mDailyqueryData = mDailyqueryData;
+        this.mDailyDataTemp=mDailyDataTemp;
+        isfinish=false;
     }
 
-    public  List<CategoryBean>quearyData;
+    public  List<CategoryBean>quearyData=new ArrayList<>();
     public  List <CategoryBean>mquaryDataTemp=new ArrayList<>();
+
+    private List<DailyOrder>mDailyqueryData=new ArrayList<>();
+    private List<DailyOrder>mDailyDataTemp=new ArrayList<>();
 
     private void LoadMoreRecycleViewclass()
     {
 
         int count=myadpter.getItemCount();
-        Log.i("mycounts",count+"数量"+quearyData.size());
+        Log.i("mycounts",count+"数量:--"+quearyData.size());
           /*  Log.i("InsertData6", mCategoryTemp.size()+","+mCategoryBean.size()+"count"+count);
             Log.i("InsertData6-------", mCategoryTemp.size()+","+mCategoryBean.size());*/
         if(quearyData.size()- count>mFirstCount)
@@ -307,24 +298,24 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     private void LoadMoreDailyRecycleViewclass()
     {
 
-        int count=mDailyDataTemp.size();
-          /*  Log.i("InsertData6", mCategoryTemp.size()+","+mCategoryBean.size()+"count"+count);
-            Log.i("InsertData6-------", mCategoryTemp.size()+","+mCategoryBean.size());*/
-        if(dailysBean.size()- mDailyDataTemp.size()>mFirstCount)
+        int count=mysumAdpter.getItemCount();
+        /*Log.i("mycounts",count+"数量---"+mDailyqueryData.size());*/
+
+        if(mDailyqueryData.size()-count>mFirstCount)
         {
-            for(int i=mDailyDataTemp.size();i<count+mFirstCount+1;i++)
+            for(int i=count;i<count+mFirstCount+1;i++)
             {
 
-                mDailyDataTemp.add(dailysBean.get(i));
+                mDailyDataTemp.add(mDailyqueryData.get(i));
             }
 
         }else
         {
 
-            for(int i=count;i<dailysBean.size();i++)
+            for(int i=count;i<mDailyqueryData.size();i++)
             {
 
-                mDailyDataTemp.add(dailysBean.get(i));
+                mDailyDataTemp.add(mDailyqueryData.get(i));
             }
         }
     }
@@ -333,16 +324,21 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     private void refreshItemData(String freshType) {
         if (freshType.equals("loadmore")) {
 
-            Log.i("mOrderName",mOrderName+","+isfinish);
+
             if(mOrderName<=4)
             {
                 if(!isfinish)
                 {
-                    LoadMoreRecycleViewclass();
+                    Log.i("mycounts", "my数量---"+myadpter.getItemCount());
 
+                    if(myadpter.getItemCount()==quearyData.size() ) {
+                        Toast.makeText(getBaseContext(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
+                    }
+                    LoadMoreRecycleViewclass();
+                    Log.i("mycounts", "my数量--new"+myadpter.getItemCount());
                    // myadpter.getFilter().filter(queryText);
                     // mCategoryAdapter.notifyItemChanged(1,1);
-                    if(mquaryDataTemp.size()==quearyData.size() )isfinish=true;
+                    if(myadpter.getItemCount()==quearyData.size() )isfinish=true;
 
                 }else
                 {
@@ -356,9 +352,10 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
                 if(!isfinish)
                 {
                     LoadMoreDailyRecycleViewclass();
-                    mysumAdpter.getFilter().filter(queryText);
+
                     // mCategoryAdapter.notifyItemChanged(1,1);
-                    if(mDailyDataTemp.size()==dailysBean.size() )isfinish=true;
+                    /*if(mDailyDataTemp.size()==mDailyqueryData.size() )isfinish=true;*/
+                    if(mysumAdpter.getItemCount()==mDailyqueryData.size() )isfinish=true;
 
                 }else
                 {
@@ -406,10 +403,6 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         footerTextView.setText("上拉加载更多...");
         return footerView;
     }
-
-
-
-
 
     /* void Listtest(List<? extends CategoryBean> t){
 
@@ -481,13 +474,16 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
     @Override
     public boolean onQueryTextChange(String newText){
 
+
         queryText=newText;
-        if(mOrderName<5)
+        if(mOrderName<=4)
         {
             myadpter.getFilter().filter(newText);
         } else
-            mysumAdpter.getFilter().filter(newText);
+        {
 
+            mysumAdpter.getFilter().filter(newText);
+        }
         return false;
     }
     boolean isDay=true;//是否为日查询
@@ -498,12 +494,13 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         switch (v.getId())
         {
             case R.id.timerPicker:
-                searchView.setQuery("",false);
+                if(!"".equals(queryText) )
+                    searchView.setQuery("",false);
                 mDatePicker.show("12");
                 break;
             case R.id.img_month:
-                Log.i("dateStr","img_month");
-                searchView.setQuery("",false);
+                if(!"".equals(queryText) )
+                    searchView.setQuery("",false);
                 mDayPicker.show("12");
                 break;
             case R.id.backToMainfrag:
@@ -589,24 +586,73 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         String startTimer=timers[0];
         String endTimer=timers[1];
 
-
-
-        if(mOrderName!=5)
+        if(mOrderName<=4)
         {
             CategoryBeanDAO dao = new CategoryBeanDAO(new DBHelper(getApplicationContext()));
              List<CategoryBean> quearydata=  dao.queryByTimer(table,startTimer,endTimer);
-            myadpter=new MainAllInfoAdapter(this,quearydata,mOrderName,mType);
+             initTimerData(quearydata);
+           /* myadpter=new MainAllInfoAdapter(this,quearydata,mOrderName,mType);
             UnfundShow(quearydata.size());
-            mRcSearch.setAdapter(myadpter);
+            mRcSearch.setAdapter(myadpter);*/
         }else
         {
             DailyOrderDao dao = new DailyOrderDao(getApplicationContext());
             List<DailyOrder> quearydata=  dao.queryByTimer(startTimer,endTimer);
-            mysumAdpter=new MainSummaryInfoAdapter(this,quearydata);
-           UnfundShow(quearydata.size());
-            mRcSearch.setAdapter(mysumAdpter);
+            initDailyData(quearydata);
+            /*mysumAdpter=new MainSummaryInfoAdapter(this,quearydata);
+            UnfundShow(quearydata.size());
+            mRcSearch.setAdapter(mysumAdpter);*/
         }
+    }
+    //初始的时候初始化firstCount+1条数据
+    private  void initTimerData( List<CategoryBean> quearydata)
+    {
 
+        mquaryDataTemp.clear();
+        if(quearydata.size()>mFirstCount)
+        {
+            for(int i=0;i<mFirstCount+1;i++)
+            {
+                mquaryDataTemp.add(quearydata.get(i));
+            }
+
+
+
+        }else
+        {
+            mquaryDataTemp=quearydata;
+           /* myadpter = new MainAllInfoAdapter(this, mquaryDataTemp,1,mType,lstBean);//adapter*/
+           // myadpter = new MainAllInfoAdapter(this, quearydata,1,mType,quearydata);//adapter
+        }
+        myadpter=new MainAllInfoAdapter(this, mquaryDataTemp,mOrderName,mType,quearydata);
+        UnfundShow(quearydata.size());
+        mRcSearch.setAdapter(myadpter);
+        setQuearyData(quearydata,mquaryDataTemp);
+    }
+
+    //初始化日常订单初始化firstCount+1条数据
+    private  void initDailyData(List<DailyOrder>quearydata)
+    {
+        mDailyDataTemp.clear();
+        if(quearydata.size()>mFirstCount)
+        {
+            for(int i=0;i<mFirstCount+1;i++)
+            {
+                mDailyDataTemp.add(quearydata.get(i));
+            }
+
+
+
+        }else
+        {
+            mDailyDataTemp=quearydata;
+           /* mysumAdpter = new MainSummaryInfoAdapter(this, quearydata);//adapter*/
+        }
+        mysumAdpter=new MainSummaryInfoAdapter(this, mDailyDataTemp);
+        mysumAdpter.setTemp_number(quearydata);
+        UnfundShow(quearydata.size());
+        mRcSearch.setAdapter(mysumAdpter);
+        setmDailyqueryData(quearydata,mDailyDataTemp);
     }
 
     private  void UnfundShow(int datasize)
@@ -619,28 +665,56 @@ public class SerachActivity extends AppCompatActivity implements SearchView.OnQu
         } unFoundData.setVisibility(View.VISIBLE);
         mRcSearch.setAdapter(mysumAdpter);
     }
-
-
-
     //按照月份查询
     void SearchDailyOrder(String timer)
     {
-
         String[]timers=timer.split("#");
         String sTimer=timers[0];
         String eTimer=timers[1];
         DailyOrderDao dao = new DailyOrderDao(getApplicationContext());
         List<DailyOrder>quearydata=dao.querByMonth(sTimer,eTimer);
-        if(quearydata.size()<=0)
+        initDailyData(quearydata);
+
+
+      /*  if(quearydata.size()<=0)
             unFoundData.setVisibility(View.VISIBLE);
         else
         {
             unFoundData.setVisibility(View.GONE);
         }
 
-        mysumAdpter=new MainSummaryInfoAdapter(getApplicationContext(),quearydata);
-        mRcSearch.setAdapter(mysumAdpter);
+        mysumAdpter=new MainSummaryInfoAdapter(this,quearydata);
+        mRcSearch.setAdapter(mysumAdpter);*/
     }
+
+
+
+  /*  //初始化日常订单初始化firstCount+1条数据
+    private  void initDailyData1(List<DailyOrder>quearydata)
+    {
+        mDailyDataTemp.clear();
+        if(quearydata.size()>mFirstCount)
+        {
+            for(int i=0;i<mFirstCount+1;i++)
+            {
+                mDailyDataTemp.add(quearydata.get(i));
+            }
+
+            mysumAdpter=new MainSummaryInfoAdapter(this, mDailyDataTemp);
+
+        }else
+        {
+
+            mysumAdpter = new MainSummaryInfoAdapter(this, quearydata);//adapter
+        }
+       *//* mysumAdpter.setTemp_number(quearydata);*//*
+        mysumAdpter.setTemp_Number(quearydata);
+        UnfundShow(quearydata.size());
+        mRcSearch.setAdapter(mysumAdpter);
+        setmDailyqueryData(quearydata);
+    }*/
+
+
 
     private void initTimerPicker() {
         String beginTime = "2018-10-17 18:00";

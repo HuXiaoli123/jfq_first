@@ -35,7 +35,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
     private final static int TYPE_CONTENT=0;//正常内容
     private final static int TYPE_FOOTER=1;//加载View
     private Activity mContext;
-    private List<CategoryBean> mDataSet;
+    private List<CategoryBean> mDataSet=new ArrayList<>();
 
     private  int mSelectfragment;
     private  String mType="";
@@ -172,13 +172,13 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
 
 
         SpannableString spannableString = new SpannableString(text);
-        Log.i("MyWord---",keyword+keyword.indexOf(".") );
+       /* Log.i("MyWord---",keyword+keyword.indexOf(".") );*/
         //条件 keyword
         if(keyword.indexOf(".")>=0)
         {
             keyword=keyword.replace(".","\\.");
         }
-        Log.i("MyWord------",keyword  );
+       /* Log.i("MyWord------",keyword  );*/
         Pattern pattern = Pattern.compile(keyword);
         //匹配
         Matcher matcher = pattern.matcher(spannableString);
@@ -186,7 +186,7 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
             int start = matcher.start();
             int end = matcher.end();
 
-            Log.i("MyWord",text+","+keyword+","+start+","+end);
+         /*   Log.i("MyWord",text+","+keyword+","+start+","+end);*/
             //ForegroundColorSpan 需要new 不然也只能是部分变色
             spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -210,10 +210,10 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
             hasMatch=false;
             text=constraint.toString();
 
-            Log.i("publishResults","myquaryData："+text);
+            Log.i("publishResults","myquaryData："+text+ ","+temp_number.size());
             List<CategoryBean> new_number=new ArrayList();
             if (constraint != null && constraint.toString().trim().length() > 0) {
-                Log.i("publishResults","myquaryData："+text+constraint);
+
                 for (int i = 0; i < temp_number.size(); i++) {
                     switch (mSelectfragment)
                     {
@@ -269,9 +269,8 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //这里对number进行过滤后重新赋值
-            mDataSet.clear();
-
-
+            /*mDataSet.clear();*/
+            mDataSet=new ArrayList<>();
             List<CategoryBean>myquaryData=(List<CategoryBean>)(results.values);
 
             Log.i("publishResults","myquaryData"+myquaryData.size());
@@ -291,7 +290,8 @@ public class MainAllInfoAdapter extends RecyclerView.Adapter<BaseViewHolder> imp
                 }
 
                 notifyDataSetChanged();
-                serachActivity.setQuearyData(myquaryData);
+                serachActivity.setQuearyData(myquaryData,mDataSet);
+                Log.i("mycount","myquaryData："+myquaryData.size());
 
             } else {
                 //否则说明没有任何过滤的结果,直接提示用户"没有符合条件的结果"

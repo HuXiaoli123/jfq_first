@@ -479,16 +479,16 @@ public class CategoryBeanDAO {
 
     public ArrayList queryByTimer(String table,String StartTimer,String endTimer){
 
-        String  addpriceName="";
+
         SQLiteDatabase readDB=dbHelper.getReadableDatabase();
 
       /*  Cursor cursor=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "DATEDIFF(day,"+Data.COLUMN_playTime+","+endTimer+")"+"<=?",
                 new String[]{StartTimer,"0"},null,null,null);*/
         Cursor cursor=readDB.query(table,new String[]{},Data.COLUMN_playTime+">=? and "+ "strftime('%Y-%m-%d',"+Data.COLUMN_playTime+")"+"<=?",
-                new String[]{StartTimer,endTimer},null,null,"date("+COLUMN_DATE+") desc");
-        return GetAllInfoData(cursor);
+                new String[]{StartTimer,endTimer},null,null,"date("+Data.COLUMN_playTime+") desc");
+        return GetAllInfoData(cursor,table);
     }
-    private  ArrayList GetAllInfoData(Cursor results)
+    private  ArrayList GetAllInfoData(Cursor results,String table)
     {
         ArrayList<CategoryBean>arrayList=new ArrayList<>();
         for(results.moveToFirst();!results.isAfterLast();results.moveToNext()){
@@ -501,6 +501,24 @@ public class CategoryBeanDAO {
             listInfo.setUserPlay(results.getString(5));
             listInfo.setStoreEntry(results.getString(6));
             listInfo.setPlayTime(results.getString(7));
+
+            if(Data.VIEW_ALL_ORDER.equals(table))
+            {
+                listInfo.setItemQuantity(results.getString(results.getColumnIndex(Data.itemQuantity)));
+                listInfo.setAddpriceAmount(results.getString(results.getColumnIndex(Data.addpriceAmount)));
+            }else if(Data.VIEW_COMODITYORDER.equals(table))
+            {
+                listInfo.setItemQuantity(results.getString(results.getColumnIndex(Data.itemQuantity)));
+            }else if(Data.VIEW_SWEEP_SADD.equals(table))
+            {
+
+                listInfo.setAddpriceAmount(results.getString(results.getColumnIndex(Data.addpriceAmount)));
+                listInfo.setOderType(results.getString(results.getColumnIndex(Data.oderType)));
+            }
+
+
+
+
             // Log.i("myadapter",results.getString(10));
             arrayList.add(listInfo);
         }
